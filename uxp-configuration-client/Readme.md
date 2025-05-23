@@ -1,5 +1,14 @@
 UXP-ConfClient 
 Listen port 5666
+    Port used for got command when via web interface add config anchor
+        
+
+        GET /execute HTTP/1.1
+        Accept: text/plain, application/json, application/*+json, */*
+        Accept-Encoding: gzip, x-gzip, deflate
+        Host: localhost:5666
+        Connection: keep-alive
+        User-Agent: Apache-HttpClient/5.3.1 (Java/17.0.15)
 
 Files adn directories 
 
