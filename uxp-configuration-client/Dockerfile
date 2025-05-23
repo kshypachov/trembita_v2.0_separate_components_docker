@@ -48,15 +48,10 @@ RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbi
 
 #RUN apt update
 #RUN apt install -y uxp-confclient
-COPY uxp-confclient_1.22.7_amd64.deb  uxp-confclient_1.22.7_amd64.deb
-COPY "openjdk-17-jre-headless_17.0.12+7-1ubuntu2~22.04_amd64.deb"  "openjdk-17-jre-headless_17.0.12+7-1ubuntu2~22.04_amd64.deb"
-COPY libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb
-COPY libtcmalloc-minimal4_2.9.1-0ubuntu3_amd64.deb  libtcmalloc-minimal4_2.9.1-0ubuntu3_amd64.deb
+RUN mkdir "/deb"
+COPY ./deb/*.deb /deb/
 
-RUN apt install ./"openjdk-17-jre-headless_17.0.12+7-1ubuntu2~22.04_amd64.deb"
-RUN apt install ./uxp-confclient_1.22.7_amd64.deb
-RUN apt install ./libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb
-RUN apt install ./libtcmalloc-minimal4_2.9.1-0ubuntu3_amd64.deb
+RUN apt install /deb/*.deb
 
 COPY confclient-logback.xml /etc/uxp/conf.d/confclient-logback.xml
 
