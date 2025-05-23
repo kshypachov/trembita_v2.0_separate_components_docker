@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 LABEL authors="Kirill Shypachov @kshypachov"
@@ -7,11 +7,11 @@ ARG REPO_KEY=http://192.168.99.247/key.gpg
 ARG REPO_URI="http://192.168.99.247/ testing-1.22.7 trembita2-1-22-7"
 
 RUN echo "uxp-proxy uxp-common/username string uxpadmin" | debconf-set-selections
-RUN echo "uxp-identity-provider-rest-api  uxp-identity-provider/password  password uxpadminp" | debconf-set-selections
+#RUN echo "uxp-identity-provider-rest-api  uxp-identity-provider/password  password uxpadminp" | debconf-set-selections
 #RUN useradd -m uxpadmin -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/'
 
-RUN groupadd -g 1001 uxpadmin && \
-    useradd -m -u 1001 -g 1001 -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/' uxpadmin
+RUN groupadd -g 104 uxp && \
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/' uxp
 
 RUN apt-get update  \
     && apt-get install -y equivs  \
@@ -21,8 +21,8 @@ RUN apt-get update  \
     && equivs-build fake-systemd \
     && dpkg -i systemd_255.0_all.deb
 
-RUN apt-get update
-RUN apt-get install -y nano
+#RUN apt-get update
+#RUN apt-get install -y nano
 
 RUN apt-get -qq update && apt-get -qq --no-install-recommends -y install \
       locales ca-certificates perl bzip2 libc6-dev lsb-release gnupg2 \
@@ -38,14 +38,24 @@ RUN apt-get -qq update && apt-get -qq --no-install-recommends -y install \
 ADD ["$REPO_KEY","/tmp/repokey.gpg"]
 RUN apt-key add '/tmp/repokey.gpg'
 
-#RUN sed -i 's/^[A-Za-z0-9]/#&/' /etc/apt/sources.list \
+RUN sed -i 's/^[A-Za-z0-9]/#&/' /etc/apt/sources.list \
 #    && rm -rf /etc/apt/sources.list.d/* \
-#    && echo "deb http://192.168.99.247/ testing-1.22.7 trembita2-1-22-7" | tee -a /etc/apt/sources.list
-RUN echo "deb http://192.168.99.247/ testing-1.22.7 trembita2-1-22-7" | tee -a /etc/apt/sources.list
+    && echo "deb $REPO_URI" | tee -a /etc/apt/sources.list
 
 RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d \
     && printf  '#!/bin/sh\nexit 0\n' > /usr/sbin/service && chmod +x /usr/sbin/service \
     && printf '#!/bin/sh\nexit 0\n' > /bin/systemctl && chmod +x /bin/systemctl
 
+RUN mkdir "/deb"
+COPY ./deb/*.deb /deb/
+COPY uxp-identity-provider-rest-api_1.22.7_all.deb uxp-identity-provider-rest-api_1.22.7_all.deb
 
-ENTRYPOINT ["top", "-b"]
+RUN apt update
+RUN apt -qq -y --no-install-recommends install /deb/*.deb
+RUN dpkg-deb -X /uxp-identity-provider-rest-api_1.22.7_all.deb /
+
+COPY identity-provider-rest-api-logback.xml /etc/uxp/conf.d/identity-provider-rest-api-logback.xml
+
+USER uxp
+ENTRYPOINT ["/usr/share/uxp/bin/identity-provider-rest-api.sh"]
+#ENTRYPOINT ["top", "-b"]
