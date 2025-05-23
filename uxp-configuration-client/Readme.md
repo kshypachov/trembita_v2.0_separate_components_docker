@@ -18,3 +18,8 @@ Files adn directories
 /etc/uxp/services/local.conf  - load configs via confclient.conf
 /usr/share/uxp/jlib/addon/confclient/*.conf - load configs via confclient.conf
 /usr/share/uxp/bin/confclient.sh - startup script
+
+
+Needed mount paths 
+    /etc/uxp - for load configs (anchor, app configs) For storing global config
+    /usr/share/uxp/ - for load configs 

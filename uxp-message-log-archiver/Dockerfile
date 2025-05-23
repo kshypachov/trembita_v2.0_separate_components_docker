@@ -50,10 +50,11 @@ RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbi
 #RUN apt install -y uxp-confclient
 RUN mkdir "/deb"
 COPY ./deb/*.deb /deb/
+COPY uxp-proxy_1.22.7_all.deb uxp-proxy_1.22.7_all.deb
 
 RUN apt update
-RUN apt -qq -y --no-install-recommends install /deb/openjdk-17-jre-headless_17.0.12+7-1ubuntu2~22.04_amd64.deb
-RUN dpkg-deb -X /deb/uxp-proxy_1.22.7_all.deb /
+RUN apt -qq -y --no-install-recommends install /deb/*.deb
+RUN dpkg-deb -X /uxp-proxy_1.22.7_all.deb /
 
 #COPY messagelog-archiver-logback.xml /etc/uxp/conf.d/messagelog-archiver-logback.xml
 
