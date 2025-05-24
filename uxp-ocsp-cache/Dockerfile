@@ -58,6 +58,7 @@ RUN dpkg-deb -X /uxp-proxy_1.22.7_all.deb /
 
 COPY ocsp-cache-logback.xml /etc/uxp/conf.d/ocsp-cache-logback.xml
 
+
+USER uxp
 ENTRYPOINT ["top", "-b"]
-#USER uxp
 #ENTRYPOINT ["/usr/share/uxp/bin/ocsp-cache.sh"]
