@@ -13,15 +13,13 @@ RUN echo "uxp-proxy uxp-common/username string uxpadmin" | debconf-set-selection
 RUN groupadd -g 104 uxp && \
     useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/' uxp
 
-#RUN apt-get update  \
-#    && apt-get install -y equivs  \
-#    && equivs-control fake-systemd \
-#    && sed -i 's/^Package:.*/Package: systemd/' fake-systemd \
-#    && echo 'Version: 255.0\nArchitecture: all\nDescription: dummy systemd for containers' >> fake-systemd \
-#    && equivs-build fake-systemd \
-#    && dpkg -i systemd_255.0_all.deb \
-#    && apt-get clean  \
-#    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update  \
+    && apt-get install -y equivs  \
+    && equivs-control fake-systemd \
+    && sed -i 's/^Package:.*/Package: systemd/' fake-systemd \
+    && echo 'Version: 255.0\nArchitecture: all\nDescription: dummy systemd for containers' >> fake-systemd \
+    && equivs-build fake-systemd \
+    && dpkg -i systemd_255.0_all.deb
 
 #RUN apt-get update
 #RUN apt-get install -y nano
@@ -48,16 +46,18 @@ RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbi
     && printf  '#!/bin/sh\nexit 0\n' > /usr/sbin/service && chmod +x /usr/sbin/service \
     && printf '#!/bin/sh\nexit 0\n' > /bin/systemctl && chmod +x /bin/systemctl
 
+#RUN apt update
+#RUN apt install -y uxp-confclient
 RUN mkdir "/deb"
 COPY ./deb/*.deb /deb/
-COPY uxp-identity-provider-rest-api_1.22.7_all.deb uxp-identity-provider-rest-api_1.22.7_all.deb
+COPY uxp-proxy_1.22.7_all.deb uxp-proxy_1.22.7_all.deb
 
 RUN apt update
 RUN apt -qq -y --no-install-recommends install /deb/*.deb
-RUN dpkg-deb -X /uxp-identity-provider-rest-api_1.22.7_all.deb /
+RUN dpkg-deb -X /uxp-proxy_1.22.7_all.deb /
 
-COPY identity-provider-rest-api-logback.xml /etc/uxp/conf.d/identity-provider-rest-api-logback.xml
+COPY ocsp-cache-logback.xml /etc/uxp/conf.d/ocsp-cache-logback.xml
 
-USER uxp
-ENTRYPOINT ["/usr/share/uxp/bin/identity-provider-rest-api.sh"]
-#ENTRYPOINT ["top", "-b"]
+ENTRYPOINT ["top", "-b"]
+#USER uxp
+#ENTRYPOINT ["/usr/share/uxp/bin/ocsp-cache.sh"]

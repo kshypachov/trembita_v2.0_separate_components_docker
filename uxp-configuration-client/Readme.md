@@ -10,7 +10,7 @@ Listen port 5666
         Connection: keep-alive
         User-Agent: Apache-HttpClient/5.3.1 (Java/17.0.15)
 
-Files adn directories 
+Files adnd directories 
 
 /etc/uxp/services/confclient.conf - load durin startup 
 /etc/uxp/services/global.conf - load via confclient.conf
