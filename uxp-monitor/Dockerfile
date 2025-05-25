@@ -29,14 +29,11 @@ RUN apt-get -qq update && apt-get -qq --no-install-recommends -y install \
       ca-certificates gnupg supervisor net-tools iproute2 locales \
       rlwrap ca-certificates-java debconf-utils \
       crudini adduser expect curl rsyslog dpkg-dev \
-      python3-requests authbind \
+      python3-requests rsync \
     && echo "LC_ALL=en_US.UTF-8" >>/etc/environment \
     && locale-gen en_US.UTF-8 \
     && apt-get clean  \
     && rm -rf /var/lib/apt/lists/*
-
-RUN touch /etc/authbind/byport/80 && chmod 102 /etc/authbind/byport/80 && chown 102 /etc/authbind/byport/80
-RUN touch /etc/authbind/byport/443 && chmod 102 /etc/authbind/byport/443 && chown 102 /etc/authbind/byport/443
 
 ADD ["$REPO_KEY","/tmp/repokey.gpg"]
 RUN apt-key add '/tmp/repokey.gpg'
@@ -53,22 +50,19 @@ RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbi
 #RUN apt install -y uxp-confclient
 RUN mkdir "/deb"
 COPY ./deb/*.deb /deb/
-COPY uxp-proxy_1.22.7_all.deb uxp-proxy_1.22.7_all.deb
+COPY uxp-addon-monitor_1.22.7_all.deb uxp-addon-monitor_1.22.7_all.deb
 
 RUN apt update
-RUN apt install -qq -y --no-install-recommends rsync
 RUN apt -qq -y --no-install-recommends install /deb/*.deb
 
-RUN mkdir /tmp/proxy
-RUN dpkg-deb -X /uxp-proxy_1.22.7_all.deb /tmp/proxy/
+RUN mkdir /tmp/mon
+RUN dpkg-deb -X /uxp-addon-monitor_1.22.7_all.deb  /tmp/mon
 
-RUN rsync -a --ignore-existing /tmp/proxy/ /
+RUN rsync -a --ignore-existing /tmp/mon/ /
 
-COPY proxy-logback.xml /etc/uxp/conf.d/proxy-logback.xml
-COPY token_login /
-RUN chmod +x token_login
+COPY proxy-monitor-agent-logback.xml /etc/uxp/conf.d/proxy-monitor-agent-logback.xml
 #RUN mkdir /var/cache/uxp && chown uxp:uxp /var/cache/uxp && chmod 750 /var/cache/uxp
 
 USER uxp
 #ENTRYPOINT ["top", "-b"]
-ENTRYPOINT ["/usr/share/uxp/bin/proxy.sh"]
+ENTRYPOINT ["/usr/share/uxp/scripts/monitor.sh"]
