@@ -50,16 +50,15 @@ RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbi
 #RUN apt install -y uxp-confclient
 RUN mkdir "/deb"
 COPY ./deb/*.deb /deb/
-COPY uxp-proxy_1.22.7_all.deb uxp-proxy_1.22.7_all.deb
+COPY uxp-verifier_1.22.7_all.deb uxp-verifier_1.22.7_all.deb
 
 RUN apt update
 RUN apt -qq -y --no-install-recommends install /deb/*.deb
-RUN dpkg-deb -X /uxp-proxy_1.22.7_all.deb /
+RUN dpkg-deb -X /uxp-verifier_1.22.7_all.deb  /
 
-COPY ocsp-cache-logback.xml /etc/uxp/conf.d/ocsp-cache-logback.xml
-
-RUN mkdir /var/cache/uxp && chown uxp:uxp /var/cache/uxp && chmod 750 /var/cache/uxp
+COPY verifier-rest-api-logback.xml /etc/uxp/conf.d/verifier-rest-api-logback
+#RUN mkdir /var/cache/uxp && chown uxp:uxp /var/cache/uxp && chmod 750 /var/cache/uxp
 
 USER uxp
 #ENTRYPOINT ["top", "-b"]
-ENTRYPOINT ["/usr/share/uxp/bin/ocsp-cache.sh"]
+ENTRYPOINT ["/usr/share/uxp/bin/verifier-rest-api.sh"]
