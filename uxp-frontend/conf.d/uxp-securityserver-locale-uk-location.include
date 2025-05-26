@@ -1,0 +1,4 @@
+# Redirect from /docs/en/ to /docs/uk-en/
+location /docs/en/ {
+    rewrite ^/docs/en/(.*)$ /docs/uk-en/$1 permanent;
+}

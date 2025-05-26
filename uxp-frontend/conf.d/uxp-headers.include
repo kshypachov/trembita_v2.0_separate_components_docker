@@ -1,0 +1,33 @@
+# headers for sensitive UXP nginx endpoints
+
+# do not break out of frames, except sites within the same domain
+proxy_hide_header X-Frame-Options; # ignore what the proxyfied server sets
+add_header X-Frame-Options "SAMEORIGIN";
+
+# cross-site scripting
+proxy_hide_header X-XSS-Protection; # ignore what the proxyfied server sets
+add_header X-XSS-Protection "1; mode=block";
+
+# do not load the website using http
+proxy_hide_header Strict-Transport-Security; # ignore what the proxyfied server sets
+add_header Strict-Transport-Security "max-age=15768000; includeSubDomains";
+
+# anti-cache
+proxy_hide_header Expires; # ignore what the proxyfied server sets
+add_header Expires 0;
+
+proxy_hide_header Last-Modified; # ignore what the proxyfied server sets
+add_header Last-Modified $upstream_http_Date;
+
+proxy_hide_header Cache-Control; # ignore what the proxyfied server sets
+add_header Cache-Control "no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0";
+
+proxy_hide_header Pragma; # ignore what the proxyfied server sets
+add_header Pragma "no-cache";
+
+# content-type
+proxy_hide_header X-Content-Type-Options; # ignore what the proxyfied server sets
+add_header X-Content-Type-Options nosniff;
+
+# allow CORS
+add_header Access-Control-Allow-Origin "*" always;

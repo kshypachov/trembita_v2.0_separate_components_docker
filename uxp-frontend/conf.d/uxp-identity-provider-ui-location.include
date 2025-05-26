@@ -1,0 +1,5 @@
+# Identity Provider frontend location
+location /auth/login {
+    alias /usr/share/uxp/identity-provider-ui/html;
+    try_files $uri /index.html =404;
+}
