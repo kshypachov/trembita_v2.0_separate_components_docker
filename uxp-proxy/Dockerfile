@@ -1,4 +1,21 @@
-FROM ubuntu:24.04
+FROM ubuntu:24.04 as builder
+ENV DEBIAN_FRONTEND=noninteractive
+LABEL authors="Kirill Shypachov @kshypachov"
+
+RUN useradd -m uxpadmin -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/'
+
+
+RUN apt update &&  \
+    apt install -y cmake gcc
+
+
+RUN mkdir /token_login
+COPY token_login /token_login
+RUN cd /token_login/build && cmake .. && make
+
+RUN chmod 111 /token_login/build/token_login
+
+FROM ubuntu:24.04 as release
 ENV DEBIAN_FRONTEND=noninteractive
 
 LABEL authors="Kirill Shypachov @kshypachov"
@@ -66,9 +83,10 @@ RUN rsync -a --ignore-existing /tmp/proxy/ /
 
 COPY proxy-logback.xml /etc/uxp/conf.d/proxy-logback.xml
 COPY token_login /
-RUN chmod +x token_login
-#RUN mkdir /var/cache/uxp && chown uxp:uxp /var/cache/uxp && chmod 750 /var/cache/uxp
+
+COPY --from=builder /token_login/build/token_login /token_login
+#RUN chmod +x token_login
 
 USER uxp
-#ENTRYPOINT ["top", "-b"]
-ENTRYPOINT ["/usr/share/uxp/bin/proxy.sh"]
+ENTRYPOINT ["top", "-b"]
+#ENTRYPOINT ["/usr/share/uxp/bin/proxy.sh"]
