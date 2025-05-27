@@ -1,24 +1,28 @@
 FROM ubuntu:24.04 as builder
 ENV DEBIAN_FRONTEND=noninteractive
-LABEL authors="Kirill Shypachov @kshypachov"
 
-RUN useradd -m uxpadmin -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/'
-
+LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
+LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
 
 RUN apt update &&  \
     apt install -y cmake gcc
-
 
 RUN mkdir /token_login
 COPY token_login /token_login
 RUN cd /token_login/build && cmake .. && make
 
-RUN chmod 111 /token_login/build/token_login
+RUN chmod 111 /token_login/build/token_login # set rights only for execute
 
 FROM ubuntu:24.04 as release
 ENV DEBIAN_FRONTEND=noninteractive
 
-LABEL authors="Kirill Shypachov @kshypachov"
+LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
+LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
+LABEL org.opencontainers.image.title="trembita proxy"
+LABEL org.opencontainers.image.url="URI documentation"
+LABEL org.opencontainers.image.source=""
+LABEL org.opencontainers.image.version=""
+
 
 ARG REPO_KEY=http://192.168.99.247/key.gpg
 ARG REPO_URI="http://192.168.99.247/ testing-1.22.7 trembita2-1-22-7"
@@ -88,5 +92,5 @@ COPY --from=builder /token_login/build/token_login /token_login
 #RUN chmod +x token_login
 
 USER uxp
-ENTRYPOINT ["top", "-b"]
-#ENTRYPOINT ["/usr/share/uxp/bin/proxy.sh"]
+#ENTRYPOINT ["top", "-b"]
+ENTRYPOINT ["/usr/share/uxp/bin/proxy.sh"]
