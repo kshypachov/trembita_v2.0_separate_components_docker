@@ -50,23 +50,21 @@ RUN apt install /deb/libgoogle-perftools4_2.9.1-0ubuntu3_amd64.deb && rm -rf /de
 
 ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
 
+RUN mkdir -p /usr/share/uxp/lib/
+COPY libpasswordstore.so /usr/share/uxp/lib/
+
 RUN mkdir -p /usr/share/uxp/scripts/
 RUN cp /bin/true /bin/systemctl &&  chmod +x /bin/systemctl && \
     cp /bin/true /bin/timedatectl &&  chmod +x /bin/timedatectl && \
     cp /bin/true /usr/share/uxp/scripts/dummy-java-program.sh && chmod +x /usr/share/uxp/scripts/dummy-java-program.sh && \
     cp /bin/true /usr/share/uxp/scripts/get-job-status.sh && chmod +x /usr/share/uxp/scripts/get-job-status.sh && \
-    cp /bin/true /bin/bash && chmod +x /bin/bash && \
     cp /bin/true /bin/lsb_release && chmod +x /bin/lsb_release && \
-    cp /bin/true /bin/sudo && chmod +x /bin/sudo
-
-RUN mkdir -p /usr/share/uxp/lib/
-COPY libpasswordstore.so /usr/share/uxp/lib/
-
-RUN rm -rf /bin/bash && rm -rf /bin/sh
+    cp /bin/true /bin/sudo && chmod +x /bin/sudo && \
+    rm -rf /bin/bash && rm -rf /bin/sh && \
+    cp /bin/true /bin/bash && chmod +x /bin/bash && \
+    cp /bin/true /bin/sh && chmod +x /bin/sh
 
 USER uxp
-#ENTRYPOINT ["top", "-b"]
-
 #ENTRYPOINT ["java", \
 #            "-Xms50m", \
 #            "-Xmx256m", \
