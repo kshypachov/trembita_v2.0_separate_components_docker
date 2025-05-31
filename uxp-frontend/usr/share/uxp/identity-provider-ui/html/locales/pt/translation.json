@@ -1,0 +1,43 @@
+{
+  "auth": {
+    "button": {
+      "login": "Log In",
+      "save": "Save"
+    },
+    "label": {
+      "loading": "Loading",
+      "new_password": "New password",
+      "new_password_confirm": "Confirm new password",
+      "password": "Password",
+      "username": "Username"
+    },
+    "password_change_title": "Password Change Required",
+    "password_policy": "You are required to change your password upon your first login. Password must include at least 12 characters. Avoid using common words, names or personal information in your password. Do not reuse old passwords.",
+    "server": {
+      "code": "Server Code",
+      "owner": "Owner"
+    },
+    "title": "Security Server Administration"
+  },
+  "errors": {
+    "authentication": {
+      "invalid_credentials": "Authentication failed.",
+      "not_authorized": "Authentication failed.",
+      "user_blocked": "Your account is blocked. For further information, please contact your security server administrator."
+    },
+    "internal_error": "Something went wrong. If the problem persists, please contact support.",
+    "no_password": "No password entered.",
+    "no_username": "No username entered.",
+    "user": {
+      "credentials": {
+        "password": {
+          "exceeds_max_length": "Password cannot be longer than 255 characters.",
+          "missing": "No password entered.",
+          "no_match": "The passwords you entered do not match.",
+          "reuse": "New password cannot be the same as the current password.",
+          "too_short": "Password must be at least 12 characters long."
+        }
+      }
+    }
+  }
+}

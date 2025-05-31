@@ -1,0 +1,2142 @@
+{
+  "auth": {
+    "login": {
+      "login_button": "Log In",
+      "not_logged_in": "You are not logged in"
+    },
+    "no_roles": "You do not have any roles. Please contact the Server Administrator.",
+    "not_authorized": "You do not have permission to access this page.",
+    "session_expired": {
+      "message": "Your session has expired. Please log in again.",
+      "title": "Session Expired"
+    },
+    "session_expiring": {
+      "message": "Your session will expire in 3 minutes. Save your work and log in again to continue.",
+      "title": "Session Expiring"
+    }
+  },
+  "clients": {
+    "acl": {
+      "add": {
+        "choose_verb": "Choose verbs: ",
+        "intro": "Choose subsystems and groups that will get access to endpoint <strong>{{path}}</strong> of service <strong>{{serviceId}}</strong>.",
+        "intro_all": "Choose subsystems and groups that will get access to <strong>all endpoints</strong> of service <strong>{{serviceId}}</strong>.",
+        "intro_soap": "Choose subsystems and groups that will get access to service <strong>{{serviceId}}</strong>.",
+        "no_members": "No members to add.",
+        "subject": "Subsystem/Group",
+        "title": "Add Access",
+        "verb": "Verb"
+      },
+      "buttons": {
+        "add_access": "Add Access",
+        "remove_access": "Remove Access"
+      },
+      "empty": "No access added.",
+      "info_title": "Access Rights",
+      "intro": {
+        "general": "This service has multiple versions. Different versions of the same service share access rights.",
+        "rest": "Adding rights to access an endpoint in one version will give access to the same endpoint in other versions as well.",
+        "soap": "Adding rights to access one version of a service will give access to other versions as well."
+      },
+      "panel": {
+        "access_rights": "Access rights: ",
+        "versions": "Versions: "
+      },
+      "remove": {
+        "confirm_group": "Are you sure you want to remove access to service <strong>{{serviceCode}}</strong> from group <strong>{{displayValue}}</strong>?",
+        "confirm_sub": "Are you sure you want to remove access to service <strong>{{serviceCode}}</strong> from subsystem <strong>{{displayValue}}</strong>?",
+        "dialog_title": "Remove Access"
+      },
+      "table": {
+        "delete": "DELETE",
+        "empty": "No access rights granted",
+        "get": "GET",
+        "head": "HEAD",
+        "id": "ID",
+        "name_description": "Member/Group",
+        "patch": "PATCH",
+        "post": "POST",
+        "put": "PUT",
+        "rights_granted": "Access Rights Given",
+        "type": "Type"
+      },
+      "tooltips": {
+        "filtered_acl": "Showing filtered rows only",
+        "multiple_versions": "Service versions that have this endpoint",
+        "no_access_rights": "Add access rights first",
+        "no_versions": "Without version",
+        "remove_access": "Remove access",
+        "save_changes": "Save changes first"
+      },
+      "type": {
+        "globalgroup": "Global group",
+        "localgroup": "Local group",
+        "subsystem": "Subsystem"
+      }
+    },
+    "add_client": {
+      "add_unregistered_org_confirmation": "The organization <strong>{{memberId}}</strong> is not registered as a UXP member. You can add the client, but you must register the member in Governing Authority before you can start exchanging messages. Continue to add the client?",
+      "cannot_add_clients_limit_reached": "Can not add new clients because the client limit ({{maxClients}}) set by the license is reached.",
+      "cannot_add_clients_no_valid_license": "Can not add new clients because the security server has no valid license.",
+      "client_identifier": "ID",
+      "member_class": "Member Class",
+      "member_code": "Member Code",
+      "member_name": "Member Name",
+      "select": "Select Client From Global List",
+      "subsystem_code": "Subsystem Code",
+      "title": "Add Client"
+    },
+    "back_to_clients_button": "Back to clients",
+    "back_to_services_button": "Back to services",
+    "details": {
+      "deletion": {
+        "certs_and_keys_confirmation": "<strong>{{subsystemCode}}</strong> was the last client belonging to the member <strong>{{member}}</strong> in this server.<br>Do you want to delete the signing certificates and keys related to the member <strong>{{member}}</strong>?",
+        "confirmation": "Are you sure you want to delete the client <strong>{{client}}</strong> from the security server?",
+        "title": "Delete Client"
+      },
+      "instance": "Instance",
+      "member_class": "Class",
+      "member_code": "Code",
+      "member_name": "Member Name",
+      "no_signing_certs": "No Signing Certificates",
+      "registration": {
+        "client_registration_confirmation_client_in_gc": "Are you sure you want to register the subsystem <strong>{{subsystem}}</strong> in the security server?",
+        "client_registration_confirmation_client_not_in_gc": "Are you sure you want to register the subsystem <strong>{{subsystem}}</strong> in the security server? New subsystem <strong>{{subsystemCode}}</strong> will be submitted for registration for member <strong>{{member}}</strong>.",
+        "no_valid_auth_cert": "Can not register clients because the security server has no functioning authentication certificate. \n\nTo send the request, there must be at least one authentication certificate that is registered, with a good OCSP response, active and not expired.",
+        "no_valid_license": "Can not register clients because the security server has no valid license.",
+        "no_valid_sign_cert": "Can not register clients because the security server owner has no functioning signing certificate. \n\nTo send the request, the owner must have at least one signing certificate that is with a good OCSP response, active and not expired.",
+        "request_sent": "Request sent",
+        "success_paragraph_1": "You need to forward your security server ID <strong>{{serverId}}</strong> and the client ID <strong>{{clientId}}</strong> to the Governing Authority by other means as well to complete the client registration. If you have not already done this, follow the instructions of your Governing Authority for this process.",
+        "success_paragraph_2": "The client registration request will be confirmed by a person in the Governing Authority and might take a few days.",
+        "title": "Register Client"
+      },
+      "subsystem_code": "Subsystem",
+      "title": "Details",
+      "unregister_client_first": "Unregister client first",
+      "unregistration": {
+        "confirmation": "Are you sure you want to unregister the client <strong>{{client}}</strong> from the security server? Information systems related to this client will not be able to exchange messages any more.",
+        "deletion_confirmation": "Request sent. Do you want to delete the client <strong>{{client}}</strong>?",
+        "no_valid_auth_cert": "Can not unregister clients because the security server has no functioning authentication certificate. \n\nTo send the request, there must be at least one authentication certificate that is registered, with a good OCSP response, active and not expired.",
+        "no_valid_license": "Can not unregister clients because the security server has no valid license.",
+        "no_valid_sign_cert": "Can not unregister clients because the security server owner has no functioning signing certificate. \n\nTo send the request, the owner must have at least one signing certificate that is with a good OCSP response, active and not expired.",
+        "title": "Unregister Client"
+      }
+    },
+    "http_headers": {
+      "actions": {
+        "use_other": "Use client's",
+        "use_this": "Use this"
+      },
+      "add_title": "Add HTTP Header",
+      "confirm_delete": "Are you sure you want to delete the HTTP header <strong>{{key}}</strong>?",
+      "delete_title": "Delete HTTP header",
+      "edit_title": "Edit HTTP Header",
+      "no_headers": "No HTTP headers.",
+      "section_intro": "You can define HTTP headers that security server will then add to incoming request before forwarding the requests to the service.",
+      "section_title": "HTTP Headers",
+      "table": {
+        "duplicate": "On Duplicate Key",
+        "name": "Key",
+        "value": "Value"
+      },
+      "tooltips": {
+        "rest": "If the incoming request already contains a header listed here, this setting will determine which one will be forwarded to the service. Comparison is case-insensitive.",
+        "soap": "Security server does not forward client's headers for SOAP messages. The header here is always sent to the service."
+      }
+    },
+    "information_systems": {
+      "cert_details_dialog": {
+        "expiration": "Expires At",
+        "fingerprint": "Fingerprint",
+        "info": "Certificate Info",
+        "issued": "Issued At",
+        "issuer": "Issuer",
+        "sn": "Serial Number",
+        "subject": "Subject"
+      },
+      "cert_table": {
+        "expiration_date": "Expires",
+        "generation_date": "Generation Date",
+        "subject": "Subject"
+      },
+      "cert_tip": "Export the security server internal TLS certificate to the trusted certificates on the information system.",
+      "connection_type": "Connection type for service client information systems",
+      "connection_type_desc": "Connection type (http/https) for servers in service provider role is configured in the SOAP Services (<soapIcon/>) and REST APIs (<restIcon/>) tabs by editing the service or API settings.",
+      "connection_type_updated": "Client's connection type has been set to {{ newConnectionType }}.",
+      "delete_cert_confirmation": "Are you sure you want to delete the internal TLS certificate of client information system <strong>{{subject}}</strong>?",
+      "delete_cert_title": "Delete Client Internal TLS Certificate",
+      "information_systems_internal_tls_certs": "Information Systems Internal TLS Certificates",
+      "no_client_certs": "No internal TLS certificates.",
+      "no_server_certs": "No security server internal TLS certificates.",
+      "nossl_tooltip": "No encryption nor authentication. Insecure connection.",
+      "owner_https_only": "Information systems making requests on behalf of the security server owner must use authenticated <strong>HTTPS</strong> connections to avoid security issues.",
+      "security_server_internal_tls_certs": "Security Server Internal TLS Certificates",
+      "ssl_noauth_tooltip": "Encrypted connection, but security server does not authenticate the information system.",
+      "ssl_tooltip": "Information system and security server mutually authenticate each other. Secure encrypted connection.",
+      "title": "Information Systems",
+      "upload_cert_title": "Upload Client Internal TLS Certificate",
+      "upload_desc": "Upload the certificates of information systems (in the service client or service provider role) which identify as <strong>{{clientIdentifier}}</strong>",
+      "upload_desc_provider": "Upload the certificate of the information system that provides this service. The list contains certificates of all the information systems for subsystem <strong>{{clientIdentifier}}</strong>"
+    },
+    "labels": {
+      "owner": "Owner"
+    },
+    "local_groups": {
+      "add_group_button": "Add Group",
+      "add_group_dialog": {
+        "code": "Group Code",
+        "description": "Description",
+        "group_code": "Group code",
+        "title": "New Group"
+      },
+      "add_members": {
+        "identifier": "Identifier",
+        "name": "Name",
+        "show_group_members": "Show group members in search result",
+        "title": "Add Members to Local Group {{ groupCode }}"
+      },
+      "add_members_button": "Add Members",
+      "delete_confirmation_dialog": {
+        "content": "Are you sure you want to delete local group <strong>{{groupCode}}</strong>?",
+        "title": "Delete Local Group"
+      },
+      "dialog": {
+        "desc": "Description",
+        "desc_saved": "Local group description has been updated.",
+        "members": "Group Members ({{ memberCount }})",
+        "title": "Local Group {{ groupCode }}"
+      },
+      "member_table": {
+        "added": "Added",
+        "empty": "No group members.",
+        "id": "ID",
+        "name": "Name"
+      },
+      "no_groups": "No local groups.",
+      "remove_members": {
+        "remove_all": "Are you sure you want to remove all members from group <strong>{{groupCode}}</strong>?",
+        "remove_selected_one": "Are you sure you want to remove <strong>{{count}}</strong> member from group <strong>{{groupCode}}</strong>?",
+        "remove_selected_other": "Are you sure you want to remove <strong>{{count}}</strong> members from group <strong>{{groupCode}}</strong>?",
+        "title": "Remove Group Members"
+      },
+      "table": {
+        "code": "Code",
+        "desc": "Description",
+        "member_count": "Member Count",
+        "updated": "Updated"
+      },
+      "title": "Local Groups"
+    },
+    "member_keys": {
+      "no_signing_keys": "No signing keys.",
+      "title": "Member Keys"
+    },
+    "member_not_found": "Member not found in global configuration",
+    "rest": {
+      "title": "REST APIs"
+    },
+    "rest_apis": {
+      "add": {
+        "code": "Service Code",
+        "form": {
+          "base_url": "Base URL",
+          "description_url": "OpenAPI description URL"
+        },
+        "manual": "Manually using base URL",
+        "openapi": "From OpenAPI description URL",
+        "text": "Add REST API from:",
+        "title": "Add REST API",
+        "url": "URL",
+        "version": "Service Version"
+      },
+      "add_rest_api_button": "Add REST Api",
+      "delete": {
+        "confirmation": "Are you sure you want to delete the API <strong>{{restApiId}}</strong>? The API will become unavailable for service clients.",
+        "title": "Delete REST API"
+      },
+      "disable": {
+        "default_notice": "Out of order",
+        "notice_label": "Notice for clients making queries to REST API <strong>{{restApiId}}</strong> when it is disabled:",
+        "title": "Disable REST API"
+      },
+      "endpoint": {
+        "add": {
+          "description": "To indicate a path parameter, use curly brackets: <templatePath>/users/<templateVar>{id}</templateVar></templatePath><br>To allow any number of path parameters, prefix the parameter name with plus sign (+): <templatePath>/users/<templateVar>{+params}</templateVar></templatePath>",
+          "path": "Path",
+          "service_code": "Service Code",
+          "title": "Add Endpoint",
+          "url": "URL"
+        },
+        "delete": {
+          "confirmation": "Are you sure you want to delete the endpoint <strong>{{endpoint}}</strong> of service <strong>{{service}}</strong>? Once deleted, the service clients will not be able to access this endpoint.",
+          "title": "Delete REST API Endpoint"
+        }
+      },
+      "no_rest_apis": "No REST APIs",
+      "refresh": {
+        "added_base_urls": "Adding base URLs:",
+        "added_endpoints": "Adding endpoints:",
+        "content_note": "The OpenAPI description content will be updated.",
+        "open_api_refreshed": "OpenAPI successfully refreshed",
+        "removed_base_urls": "Deleting base URLs:",
+        "removed_endpoints": "Deleting endpoints:"
+      },
+      "table": {
+        "all_endpoints": "ALL ENDPOINTS",
+        "date_added_refreshed": "Added/Refreshed",
+        "service_code": "Service Code",
+        "url": "URL"
+      },
+      "tooltip": {
+        "add_endpoint": "Add Endpoint",
+        "date_added": "Date added: {{date}}",
+        "disabled": "This service is disabled",
+        "last_refreshed": "Last refreshed: {{date}}"
+      }
+    },
+    "service_manager_no_clients": "Before you can add services, Server Administrator must add the information systems as clients of this security server.",
+    "services": {
+      "settings": {
+        "form": {
+          "apply_all": "Apply All",
+          "apply_all_tooltip": "Applies the new value to all services in the same WSDL file.",
+          "base_url": "Base URL",
+          "connection_type": {
+            "label": "Connection type",
+            "nossl": "HTTP",
+            "sslauth": "HTTPS",
+            "sslnoauth": "HTTPS NOAUTH"
+          },
+          "connection_type_tooltip": {
+            "nossl": "No encryption nor authentication. Insecure connection.",
+            "sslauth": "Service and security server mutually authenticate each other. Secure encrypted connection.",
+            "sslnoauth": "Encrypted connection, but security server does not authenticate the service."
+          },
+          "description_url": "OpenAPI description URL",
+          "service_url": "Service URL",
+          "submit_success": "New service settings have been saved.",
+          "timeout": "Service timeout",
+          "timeout_tooltip": "A timeout value of zero (0) is interpreted as an infinite timeout.",
+          "timeout_unit": "seconds"
+        },
+        "title": "Service Settings"
+      },
+      "status": {
+        "disabled": "DISABLED",
+        "enabled": "ENABLED"
+      }
+    },
+    "sign_cert_checking": "checking...",
+    "sign_cert_good": "good",
+    "sign_cert_missing": "missing",
+    "sign_cert_unavailable": "unavailable",
+    "sign_cert_unknown": "unknown",
+    "soap": {
+      "title": "SOAP Services"
+    },
+    "soap_services": {
+      "add_wsdl": {
+        "confirmation": "Security server supports only SOAP services that have literal body and are SOAP over HTTP. Do you want to continue with adding the WSDL file?",
+        "form": {
+          "url": "WSDL file URL"
+        },
+        "import_locations": "Import locations:",
+        "inline_urls": "The WSDL file wants to import content from other sources. UXP must inline the imported content. Do you want to download and inline imported content?",
+        "title": "Add WSDL",
+        "unsupported_services": "WSDL contains unsupported services:",
+        "url": "URL"
+      },
+      "add_wsdl_button": "Add WSDL",
+      "delete_wsdl": {
+        "description": "Are you sure you want to delete the WSDL file located at <strong>{{url}}</strong>?<br/> All the services in the the WSDL file will become unavailable for the service clients.",
+        "title": "Delete WSDL"
+      },
+      "disable": {
+        "default_notice": "Out of order",
+        "notice_label": "Notice for clients making queries to services in this WSDL when it is disabled:",
+        "title": "Disable Services"
+      },
+      "edit_wsdl_url": {
+        "form": {
+          "url": "WSDL file URL"
+        },
+        "title": "Edit WSDL URL",
+        "url": "URL"
+      },
+      "no_results": "No SOAP services",
+      "no_services": "No services",
+      "refresh": {
+        "adding_services": "Adding services:",
+        "changes": "The refresh will cause the following changes:",
+        "deleting_services": "Deleting services:",
+        "title_openapi": "Refresh OpenAPI",
+        "title_wsdl": "Refresh WSDL",
+        "unsupported_services": "Unsupported services:",
+        "wsdl_refreshed": "WSDL successfully refreshed"
+      },
+      "table": {
+        "last_refreshed": "Last Refreshed",
+        "service_code": "Service Code",
+        "title": "Title"
+      },
+      "tooltip": {
+        "disabled": "Services in this WSDL are disabled"
+      }
+    },
+    "statuses": {
+      "deletion_in_progress": "Deletion in progress",
+      "global_error": "Global error",
+      "registered": "Registered",
+      "registration_in_progress": "Registration in progress",
+      "saved": "Saved",
+      "statuses": "Statuses"
+    },
+    "table": {
+      "columns": {
+        "id": "ID",
+        "name": "Name",
+        "services": "Services",
+        "sign_cert": "Sign Certificate",
+        "subsystem": "Subsystem"
+      }
+    },
+    "title": "Security Server Clients",
+    "tooltip": {
+      "can_sign": "This member can sign UXP messages.",
+      "cant_sign_missing": "This member can not sign UXP messages, add a valid signing certificate.",
+      "cant_sign_unavailable": "This member can not sign UXP messages - key is unavailable. Check token.",
+      "checking": "Security server is checking signing certificate information.",
+      "member_keys": "Member Keys",
+      "no_version": "No version",
+      "unknown": "Security server could not determine signing certificate information."
+    }
+  },
+  "devices": {
+    "add": {
+      "button": "Add Device",
+      "one_device_type": "Add a <strong>{{deviceType}}</strong> to security server.",
+      "success": "Device '{{deviceName}}' successfully added. See the device on <textLink>Signature Creation Devices</textLink> page.",
+      "title": "Add Signature Creation Device"
+    },
+    "delete": {
+      "confirmation": "Are you sure you want to delete the signature creation device <strong>{{deviceName}}</strong> from the security server? The device has no tokens in this security server.",
+      "title": "Delete Signature Creation Device",
+      "token_disclaimer": "To avoid deleting important keys by accident, you must delete all tokens and their content from security server before you can delete the device.",
+      "token_info_one": "The device <strong>{{deviceName}}</strong> has <strong>{{count}}</strong> token saved in this security server:",
+      "token_info_other": "The device <strong>{{deviceName}}</strong> has <strong>{{count}}</strong> tokens saved in this security server:"
+    },
+    "details": {
+      "description": "Description",
+      "id": "ID",
+      "info": "Device Info",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "name": "Name",
+      "status": "Status",
+      "title": "Signature Creation Device Details",
+      "tokens": "Tokens",
+      "type": "Type"
+    },
+    "edit": {
+      "intro": "<strong>{{deviceName}}</strong> is a <strong>{{deviceType}}</strong>.",
+      "title": "Edit Signature Creation Device"
+    },
+    "form": {
+      "advanced": {
+        "hide": "Hide Advanced Parameters",
+        "show": "Show Advanced Parameters"
+      },
+      "labels": {
+        "description": "Description",
+        "name": "Name",
+        "type": "Device type"
+      }
+    },
+    "profile": {
+      "ciplus": {
+        "name": "Qualified signature creation device (Ukraine)",
+        "settings": {
+          "device_model": {
+            "description": "Specifies a supported device model.",
+            "label": "Device model",
+            "options": {
+              "ALMAZ_SECURE_TOKEN": "IIT Almaz-1K",
+              "AVTOR_SECURE_TOKEN": "Avtor SecureToken-338",
+              "CIPHER_HSM": "Cipher-HSM",
+              "GRYADA_301": "IIT Gryada-301"
+            }
+          },
+          "session_pool_capacity": {
+            "description": "Indicates how many concurrent PKCS#11 sessions are kept in the session pool for this device. If session pool is exhausted, new non-pooled sessions are created.",
+            "label": "Session pool capacity"
+          },
+          "session_time_to_live_seconds": {
+            "description": "Indicates how many seconds a PKCS#11 session stays in the pool and can be reused. Session pooling is disabled when this value is set to 0.",
+            "label": "Session time to live (seconds)"
+          },
+          "token_operation_timeout_seconds": {
+            "description": "Indicates how many seconds to wait before timing out certain operations with tokens (if device driver does not respond).",
+            "label": "Token operation timeout"
+          }
+        }
+      },
+      "pkcs11": {
+        "name": "Signature creation device (PKCS#11)",
+        "settings": {
+          "library_path": {
+            "description": "The path to the PKCS #11 library of the device driver.",
+            "label": "Library path"
+          },
+          "max_signing_sessions": {
+            "description": "Indicates how many concurrent signing sessions are allowed to be created for this device.",
+            "label": "Maximum number of signing sessions"
+          },
+          "os_thread_creation_allowed": {
+            "description": "True if application threads which are executing calls to the PKCS #11 library may use native operating system calls to spawn new threads (in other words, the library’s code may create its own threads); false if they may not.",
+            "label": "Native threads allowed"
+          },
+          "os_thread_locking_allowed": {
+            "description": "True if the PKCS #11 library can use the native operation system threading model for locking; false otherwise.",
+            "label": "Native thread locking allowed"
+          },
+          "priv_key_attribute_decrypt": {
+            "description": "Indicates whether private key can be used for decryption.",
+            "label": "Private key decryption allowed",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "priv_key_attribute_derive": {
+            "description": "Indicates whether private key can be used for deriving other keys.",
+            "label": "Private key derivation allowed",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "priv_key_attribute_extractable": {
+            "description": "Indicates whether private key can be extracted from the device.",
+            "label": "Private key can be extracted from the device",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "priv_key_attribute_sensitive": {
+            "description": "Indicates whether private key is sensitive.",
+            "label": "Private key is sensitive",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "priv_key_attribute_sign_recover": {
+            "description": "Indicates whether private key can be used for signing with recovery.",
+            "label": "Private key signing with recovery allowed",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "priv_key_attribute_unwrap": {
+            "description": "Indicates whether private key can be used for unwrapping wrapped keys.",
+            "label": "Private key unwrapping allowed",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "priv_key_attribute_wrap_with_trusted": {
+            "description": "Indicates whether private key can only be wrapped with a wrapping key with the trusted attribute set to true.",
+            "label": "Private key wrapping requires trusted key",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "pub_key_attribute_derive": {
+            "description": "Indicates whether public key can be used for deriving other keys.",
+            "label": "Public key derivation allowed",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "pub_key_attribute_encrypt": {
+            "description": "Indicates whether public key can be used for encryption.",
+            "label": "Public key encryption allowed",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "pub_key_attribute_trusted": {
+            "description": "Indicates whether public key is trusted when wrapping other keys.",
+            "label": "Whether public key is trusted",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "pub_key_attribute_verify_recover": {
+            "description": "Indicates whether public key can be used for verification with recovery.",
+            "label": "Public key verification with recovery allowed",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "pub_key_attribute_wrap": {
+            "description": "Indicates whether public key can be used for wrapping other keys.",
+            "label": "Public key wrapping allowed",
+            "options": {
+              "false": "false",
+              "true": "true"
+            }
+          },
+          "rsa_sign_mechanism": {
+            "description": "Specifies the RSA signing mechanism. Should not be changed after generating RSA keys on device tokens.",
+            "label": "RSA signing mechanism"
+          },
+          "session_idle_timeout_seconds": {
+            "description": "Indicates how many seconds need to pass for an idle session to be removed from the pool.",
+            "label": "Signing session idle timeout (seconds)"
+          },
+          "token_identity_source": {
+            "description": "Specifies which token information should be used as part of the token alias. On certain devices the slot ID may change occasionally, in which case serial number may be a better choice.",
+            "label": "Token identity source"
+          },
+          "token_operation_timeout_seconds": {
+            "description": "Indicates how many seconds to wait before timing out certain operations with tokens (if device driver does not respond).",
+            "label": "Token operation timeout"
+          }
+        }
+      }
+    },
+    "status": {
+      "disabled": "disabled",
+      "error": "error",
+      "operational": "operational"
+    },
+    "table": {
+      "column": {
+        "description": "Description",
+        "info": "Info",
+        "name": "Name",
+        "status": "Status",
+        "tokens": "Tokens"
+      },
+      "no_devices": "No signature creation devices"
+    },
+    "title": "Signature Creation Devices",
+    "tooltip": {
+      "device_disabled": "Connection with the device is disabled. No signing is performed.",
+      "device_tokens_unavailable": "No token info available",
+      "device_unavailable": "No device info available",
+      "no_tokens": "No tokens detected",
+      "token_status": "{{operational}} out of {{available}} tokens are operational",
+      "tokens_not_operational": "Security server could not detect any functioning tokens from the device. Check the device connection and its parameters in security server.",
+      "tokens_operational": "Security server can successfully read token(s) information from the device."
+    }
+  },
+  "errors": {
+    "authentication": {
+      "login": {
+        "missing_authorization_code": "Failed to log in: Authorization code missing.",
+        "missing_authorization_state": "Failed to log in: Authorization state missing.",
+        "missing_verifier": "Failed to log in: Verification code missing.",
+        "no_token_in_request": "Failed to log in: Authorization token missing.",
+        "no_userinfo": "Failed to log in: Could not retrieve user information.",
+        "request_failed": "Failed to log in: Unable to connect to login server."
+      },
+      "no_roles": "You do not have the required permissions for this action.",
+      "not_authorized": "You do not have the required permissions for this action."
+    },
+    "authorization": {
+      "operation_not_allowed_for_member": "Failed to import certificate: You are not allowed to import certificate for member '{{ memberId }}'."
+    },
+    "client": {
+      "already_exists": "Client '{{clientId}}' already exists.",
+      "deletion": {
+        "invalid_status": "Cannot delete client '{{clientId}}' as it is registered or being registered."
+      },
+      "details": {
+        "clients_info_loading_failed": "Failed to load clients information."
+      },
+      "internal_certificate": {
+        "already_exists": "Certificate already exists.",
+        "processing_failed": "Could not read certificate. The file is corrupt or in an unexpected format.",
+        "rsa_not_allowed": "Importing RSA certificates is not allowed."
+      },
+      "local_group": {
+        "already_exists": "A group with code '{{groupCode}}' already exists.",
+        "description_is_blank": "'Description' is required."
+      },
+      "not_found": "Client '{{clientId}}' not found.",
+      "registration": {
+        "invalid_status": "Cannot register client '{{clientId}}', its status is not 'saved'."
+      },
+      "rest_api": {
+        "already_exists": "Service '{{service}}' already added for client '{{clientId}}'.",
+        "base_url_already_exists": "REST API with this base URL already exists.",
+        "endpoint": {
+          "already_exists": "An endpoint with path '{{path}}' already exists.",
+          "malformed_path": "Endpoint must not contain '?' and '&' characters. Security server controls access to endpoint only with path precision. Query parameters are ignored.",
+          "uri_template": {
+            "empty_expression": "Expression at {{0}} cannot be empty.",
+            "empty_variable": "Variable name at {{0}} cannot be empty.",
+            "prefix_nan": "Prefix value for variable '{{0}}' must be a positive integer.",
+            "unclosed_expression_at_end": "Expression was started at {{0}}, but never closed.",
+            "unclosed_expression_at_new": "Expression started at {{0}}, but one already started at {{1}} was never closed.",
+            "unopened_expression": "Expression closed at {{0}}, but was never opened.",
+            "varname_already_defined": "Variable '{{0}}' is already defined in template.",
+            "varname_invalid": "Variable '{{0}}' contains invalid characters. Allowed charset is [a-zA-Z0-9_.]."
+          }
+        },
+        "failed_add_prefix": "Failed to add REST API",
+        "failed_edit_prefix": "Failed to edit REST API",
+        "http_header": {
+          "invalid_name": "Cannot overwrite header '{{name}}'."
+        },
+        "http_service_tls_verification_not_allowed": "Cannot enable TLS verification for all services because WSDL contains some HTTP services. Change the URL of those services to HTTPS first.",
+        "malformed_base_url": "'{{baseUrl}}' is an invalid URL, examples of valid URL-s: 'http://www.example.com', 'https://www.example.com'",
+        "malformed_open_api_url": "OpenAPI description URL is malformed.",
+        "not_found": "REST API '{{service}}' not found for client '{{clientId}}'.",
+        "open_api_description_url_already_exists": "REST API with this OpenAPI description URL already exists.",
+        "open_api_download_failed": "Downloading the OpenAPI description failed. There was a problem with the connection or no response.",
+        "open_api_parsing_failed": "Downloading the OpenAPI description failed. Incorrect file structure. The URL must point to an OpenAPI description."
+      },
+      "soap_service": {
+        "already_exists": "Service '{{service}}' already added for client '{{clientId}}'.",
+        "http_header": {
+          "not_found": "HTTP header '{{headerName}}' for SOAP service '{{service}}' not found."
+        },
+        "malformed_url": "Provided service URL '{{url}}' is invalid.",
+        "not_found": "SOAP service '{{service}}' not found for client '{{clientId}}'."
+      },
+      "unregistration": {
+        "invalid_status": "Cannot unregister client '{{clientId}}' as it is not registered or being registered'."
+      },
+      "wsdl": {
+        "already_exists": "WSDL address already exists.",
+        "download_failed": "Downloading the WSDL file failed. There was a problem with the connection or no response.",
+        "empty": "The URL does not point to valid WSDL file or the WSDL file does not contain any services.",
+        "failed_add_prefix": "Failed to add WSDL",
+        "failed_edit_prefix": "Failed to edit WSDL",
+        "inline_import_limit_reached": "Schema import max level reached ({{importDepth}}).",
+        "inline_imports": "The WSDL contains imports. UXP requires imports to be inlined for compatibility reasons.",
+        "invalid": "Downloading the WSDL file failed. Incorrect file structure. The URL must point to a WSDL file.",
+        "malformed_url": "Malformed URL. The WSDL URL must point to a WSDL file.",
+        "not_found": "WSDL with id '{{wsdlId}}' not found for client '{{clientId}}'.",
+        "parsing_failed": "Unable to parse WSDL from '{{wsdlUrl}}'.",
+        "service_code_invalid": "Value of service code for service '{{serviceCode}}' contains invalid characters. Only letters, numbers, underscores (_) and hyphens (-) are allowed.",
+        "service_code_missing": "Service code is empty.",
+        "service_code_too_long": "Value of service code for service '{{serviceCode}}' exceeds 255 characters.",
+        "service_url_too_long": "Value of service URL for service '{{serviceCode}}' exceeds 255 characters.",
+        "service_version_invalid": "Value of service version for service '{{serviceCode}}' contains invalid characters. Only letters, numbers, underscores (_) and hyphens (-) are allowed.",
+        "service_version_too_long": "Value of service version for service '{{serviceCode}}' exceeds 255 characters."
+      }
+    },
+    "conf_anchor_invalid_instance": "Unexpected instance identifier found in anchor.",
+    "conf_anchor_malformed": "Configuration anchor is invalid.",
+    "device": {
+      "in_use": "Tokens from device {{deviceId}} are in use.",
+      "read_only": "Device {{deviceId} is read-only.",
+      "setting": {
+        "no_regexp_match": "Device setting '{{setting}}' contains invalid characters. Allowed charset is {{charset}}.",
+        "not_editable": "Device setting '{{setting}}' value is not editable.",
+        "not_unique": "There is already a {{deviceType}} with the same '{{setting}}'. Use the already existing device or enter a new '{{setting}}'."
+      },
+      "unavailable": "Device is not operational."
+    },
+    "global": {
+      "expired_certificate": "A server authentication certificate has expired on {{expiredAt}}.",
+      "expired_member_certificate": "A signing certificate of member {{memberId}} has expired on {{expiredAt}}.",
+      "expired_owner_certificate": "A server owner signing certificate has expired on {{expiredAt}}.",
+      "expiring_certificate": "A server authentication certificate will expire on {{expiresAt}} ({{daysUntil}} days).",
+      "expiring_member_certificate": "A signing certificate of member {{memberId}} will expire on {{expiresAt}} ({{daysUntil}} days).",
+      "expiring_owner_certificate": "A server owner signing certificate will expire on {{expiresAt}} ({{daysUntil}} days).",
+      "globalconf_invalid": "Message exchange is disabled because global configuration is expired. The server has no up-to-date information about the UXP instance.",
+      "license_expiration": "The license will expire in {{daysRemaining}} days ({{expirationDate}}).",
+      "license_invalid": "Message exchange is disabled because no valid license was found.",
+      "license_violated": "Message exchange is disabled because system state violates the license.",
+      "proxy_port_mismatch": "The security server actual listening port ({{currentPort}}) is different from the port in global configuration ({{registeredPort}}). This can cause services provided by this security server to fail. See <textLink>User Guide</textLink> to solve this issue.",
+      "softtoken_not_logged_in": "Please <textLink>log in</textLink> to software token 0.",
+      "unsecure_client_connections": "System configuration is unsafe: some clients are not using HTTPS protocol. See <textLink>Security Server Clients</textLink>."
+    },
+    "globalconf": {
+      "anchor": {
+        "invalid_instance": "Configuration anchor upload failed: instance of the anchor '{{instance}}' does not match the instance of the server.",
+        "malformed": "Configuration anchor import failed: invalid anchor file.",
+        "verification": {
+          "missing_private_params": "Configuration anchor import failed: invalid anchor file.",
+          "outdated": "Configuration from source is out of date.",
+          "unreachable": "Configuration source cannot be reached, check source URL in uploaded anchor file."
+        }
+      },
+      "malformed": "Global configuration is missing or malformed",
+      "outdated": "Global configuration is expired."
+    },
+    "internal_error": "Something went wrong. If the problem persists, please contact support.",
+    "invalid_input": "Invalid input",
+    "invalid_input_property": "Invalid {{property}}: {{error}}.",
+    "license": {
+      "anchor_instance_invalid": "Configuration anchor upload failed: instance of the anchor '{{instance}}' is not allowed by the current license.",
+      "certificate_violation": "License is not issued for any of the instances supported by its signing key.",
+      "expired": "License has expired on {{0}}.",
+      "invalid_anchor_upload": "Configuration anchor upload failed: security server has no valid license.",
+      "invalid_cert_signature": "License signature is invalid.",
+      "invalid_client_reg": "Cannot register clients when no valid license is present.",
+      "invalid_client_unreg": "Cannot unregister clients when no valid license is present.",
+      "invalid_owner": "The security server owner {{0}} is not licensed to be the owner of this security server.",
+      "invalid_product": "License is not suitable for this product.",
+      "license_limit_exceeded": "The maximum number of clients has been exceeded.",
+      "license_not_found": "Reading and checking the license failed.",
+      "license_processing_failed": "Could not parse the license file.",
+      "malformed_file": "Could not parse the license file.",
+      "malformed_request": "Could not parse the license file.",
+      "no_licensed_instances": "No licensed instances.",
+      "saving_failed": "Failed to save license file."
+    },
+    "license_processing_failed": "Could not parse the license file.",
+    "multipart_invalid": "Attachment is not valid.",
+    "no_password": "No password entered.",
+    "no_username": "No username entered.",
+    "not_authorized": "Username or password not valid.",
+    "page_not_found": "Page you requested was not found",
+    "server": {
+      "bad_gateway": "Server unreachable. Make sure if server is running or try again later.",
+      "code_missing": "Security server code is missing.",
+      "gateway_timeout": "Server did not respond in time. Check the server logs or contact the administrator.",
+      "internal_error": "Something went wrong. If the problem persists, please contact support.",
+      "management_request_failed": "Sending management request failed.",
+      "owner_missing": "Security server owner is missing.",
+      "owner_not_set": "Could not set owner.",
+      "unknown_error": "Something went wrong. If the problem persists, please contact support."
+    },
+    "server-error": "Error, please check your input.",
+    "signature": {
+      "archived": "Signed message is archived and archive is not accessible",
+      "archived_data_missing": "{{ type }} for transaction '{{ transactionId }}' is archived, but data is missing in archive",
+      "container": {
+        "deserialization_failed": "Signature container deserialization failed",
+        "malformed": "Unable to read signature container",
+        "serialization_failed": "Signature container serialization failed"
+      },
+      "data_missing": "{{ type }} for transaction '{{ transactionId }}' is missing message data",
+      "error_prefix": "Failed to verify the signature",
+      "info_building_failed": "Signature info building failed: {{ error }}",
+      "message_parsing_failed": "Signature signed message parsing failed",
+      "not_found": "{{ type }} for transaction '{{ transactionId }}' not found",
+      "parsing_failed": "Signature parsing failed",
+      "timestamp_data_missing": "{{ type }} for transaction '{{ transactionId }}' is timestamped, but timestamp data is missing",
+      "timestamp_missing": "{{ type }} for transaction '{{ transactionId }}' is missing a timestamp",
+      "timestamp_parsing_failed": "Signature timestamp parsing failed"
+    },
+    "sys_params": {
+      "services": {
+        "none_selected": "Select a timestamping service."
+      }
+    },
+    "timestamping_service": {
+      "already_exists": "Timestamping service already exists."
+    },
+    "timestamping_service_already_exists": "Timestamping service already exists.",
+    "token": {
+      "already_active": "Token is already activated.",
+      "already_exists": "Failed to add token: The token '{{alias}}' is already added.",
+      "already_initialized": "Token '{{alias}}' is already initialized.",
+      "deletion": {
+        "invalid_state": "Cannot delete token '{{tokenId}}' as it has configured keys."
+      },
+      "initialization_failed": "Token initialization failed.",
+      "initialization_not_supported": "Only software token initialization supported.",
+      "key": {
+        "already_added": "Key with alias '{{alias}}' already added on token '{{tokenAlias}}'.",
+        "certificate": {
+          "already_exists": "Failed to import certificate: Certificate is already imported under key '{{keyIdOrName}}'.",
+          "already_exists_int_tls": "Certificate already exists in the list of security server internal TLS certificates.",
+          "cannot_auth": "Failed to import certificate: Certificate cannot be used for authentication.",
+          "cannot_encr": "Failed to import certificate: Certificate cannot be used for encryption.",
+          "cannot_sign": "Failed to import certificate: Certificate cannot be used for signing.",
+          "chain_not_trusted": "Failed to import certificate: Certificate chain is not trusted. Possibly due to the certification service provider not being approved or a certificate in the chain being expired.",
+          "conversion_failed": "Failed to convert certificate to PEM.",
+          "deletion": {
+            "failed": "Failed to delete certificate '{{certId}}' from physical device of token '{{tokenId}}'.",
+            "invalid_state": "Cannot delete certificate '{{certId}}'. Unregister the certificate first."
+          },
+          "generation": {
+            "selfsign_not_supported": "Self-signed certificates not supported for usage '{{usage}}'."
+          },
+          "invalid_usage": "Invalid certificate key usage '{{keyUsage}}'.",
+          "member_processing_failed": "Failed to import certificate: Cannot read member identifier from signing certificate.",
+          "missing_create_params": "Failed to create certificate: Missing create parameters.",
+          "missing_key": "Failed to import certificate: Could not find key corresponding to the certificate.",
+          "not_available": "Certificate '{{alias}}' not available on token '{{tokenId}}' for key '{{keyId}}'.",
+          "not_found": "Certificate '{{certId}}' not found.",
+          "not_qualified": "Failed to import certificate: Certificate is not qualified. Security server accepts only qualified certificates.",
+          "not_valid": "Failed to import certificate: Certificate is expired or not valid yet.",
+          "processing_failed": "Could not read certificate. The file is corrupt or in an unexpected format.",
+          "registration": {
+            "invalid_address": "Failed to register certificate: Server address is malformed. Make sure that there are no spaces, no protocol part and no forbidden characters.",
+            "invalid_state": "Cannot register certificate '{{certId}}', its status is not 'saved'.",
+            "missing_address": "Server address is required for authentication certificates."
+          },
+          "unknown_certification_authority": "Failed to import certificate: Certificate is not issued by approved certification service provider.",
+          "unknown_member": "Failed to import certificate: Certificate is issued to an unknown member '{{memberId}}'.",
+          "unregistration": {
+            "invalid_state": "Cannot unregister certificate '{{certId}}', its status is not 'registered' or 'registration in progress'."
+          },
+          "usage_processing_failed": "Failed to import certificate: Cannot extract key usage from certificate."
+        },
+        "csr": {
+          "generation": {
+            "failed": "Certificate signing request generation failed.",
+            "missing_member": "Signing certificate request needs owner identifier to be specified.",
+            "save_failed": "Failed to save generated signing certificate request.",
+            "unknown_member": "No clients found for member '{{memberId}}'."
+          }
+        },
+        "deletion": {
+          "failed": "Failed to delete key '{{keyId}}' from physical device of token '{{tokenId}}'.",
+          "invalid_state": "Cannot delete key '{{keyId}}', it has certificates that are registered or being registered."
+        },
+        "generation": {
+          "failed": "Failed to generate key."
+        },
+        "missing_create_params": "Failed to create key: Missing create parameters.",
+        "not_available": "Key '{{alias}}' not available on token '{{tokenId}}'.",
+        "not_found": "Key not found.",
+        "pkcs12": {
+          "import_missing_entry": "No keystore entry for '{{alias}}'.",
+          "import_no_alias": "Multiple keys in keystore ({{aliases}}) but no alias provided.",
+          "incorrect_password": "Incorrect password.",
+          "malformed_request": "Malformed PKCS#12 request.",
+          "processing_failed": "Invalid keystore."
+        },
+        "rsa_not_allowed": "Generating and importing RSA keys is not allowed.",
+        "usage_mismatch": "Existing key usage '{{usage}}' did not match provided usage '{{provided}}'.",
+        "usage_not_supported": "Key usage '{{usage}}' not supported on this token."
+      },
+      "login_failed_prefix": "Failed to log in",
+      "logout_failed_prefix": "Failed to log out",
+      "no_supported_algorithm_for_usage": "The token has no supported '{{usage}}' algorithms.",
+      "no_supported_ca_for_usage": "Can not generate key and CSR because Governing Authority has not approved any certification services for {{usage}} keys.",
+      "not_active": "Token is not logged in.",
+      "not_found": "Could not find the token '{{tokenId}}'.",
+      "not_initialized": "Token is not yet initialized.",
+      "not_operational": "Token '{{tokenId}}' is unavailable.",
+      "not_selected": "Select a token.",
+      "signer_failed": "Something went wrong. If the problem persists, please contact support.",
+      "unable_to_load_content": "Could not load token content",
+      "unknown_alias": "Failed to add token: Could not find the token '{{alias}}'. The token might have become unavailable on the device or the device was disabled.",
+      "unknown_member": "Failed to add token: The member '{{ memberId }}' is not in the security server.",
+      "unrecognized_device": "Failed to add token: Could not find the device '{{ deviceId }}'. The device might have been removed."
+    },
+    "ui": {
+      "client": {
+        "access_rights": {
+          "no_subject": "Please choose at least one subsystem or group.",
+          "no_verb": "Please choose at least one verb."
+        },
+        "http_header": {
+          "already_added": "Header '{{input}}' already exists.",
+          "key_pattern": "Header '{{input}}' contains invalid characters. Allowed charset is {{charset}}."
+        },
+        "information_system": {
+          "nossl_alert": "With HTTP / HTTPS NOAUTH connection, security server does not verify the source of incoming requests. Make sure you use this setting only in a controlled environment."
+        },
+        "local_group": {
+          "no_members": "No group members to remove.",
+          "select_group_members": "Select group members."
+        },
+        "unknown_client": "Client <strong>{{clientId}}</strong> was not found."
+      },
+      "conf_anchor": {
+        "parse_failed": "Configuration anchor import failed: invalid anchor file."
+      },
+      "init": {
+        "not_authorized": "Server is not initialized yet and you have no permissions to do it. Log in with a Server Administrator account or contact the administrator.",
+        "token": {
+          "pin_no_match": "The PINs do not match."
+        }
+      },
+      "invalid_param": "Parameter '{{param}}' is invalid at component {{component}}.",
+      "license": {
+        "no_file": "Please select a license."
+      },
+      "no_file": "Please select a file.",
+      "service": {
+        "unknown_service": "Service <strong>{{serviceId}}</strong> was not found"
+      },
+      "timestamping_service": {
+        "adding_failed": "Failed to add timestamping service: {{reason}}."
+      },
+      "token": {
+        "key": {
+          "certificate": {
+            "import": {
+              "no_cert": "Select a certificate."
+            },
+            "no_file": "Select a certificate.",
+            "registration": {
+              "exceeds_255": "Failed to register certificate: Server address exceeds 255 characters.",
+              "is_required": "Failed to register certificate: Server address is required.",
+              "no_valid_auth_cert": "Cannot register certificate: Valid authentication certificate is not found.",
+              "no_valid_sign_cert": "Cannot register certificate: Valid signing certificate is not found.",
+              "not_valid_address": "Failed to register certificate: Server address is malformed. Make sure that there are no spaces, no protocol part and no forbidden characters."
+            }
+          },
+          "pkcs12": {
+            "no_file": "No keystore selected."
+          }
+        },
+        "login": {
+          "not_initialized": "Token '{{tokenId}}' is not initialized.",
+          "unknown": "Token '{{tokenId}}' is unavailable.",
+          "user_pin_count_low": "PIN incorrect. Few login attempts left.",
+          "user_pin_expired": "PIN has expired.",
+          "user_pin_final_try": "PIN incorrect. 1 login attempt left.",
+          "user_pin_incorrect": "PIN incorrect.",
+          "user_pin_invalid": "PIN invalid.",
+          "user_pin_locked": "PIN incorrect. Token is locked."
+        }
+      },
+      "user": {
+        "member": {
+          "non_selected": "Please select a member."
+        },
+        "role": {
+          "non_selected": "Please select role(s)."
+        }
+      },
+      "validation": {
+        "charset": "Invalid Identifier: '{{input}}', allowed charset is {{charset}}.",
+        "endpoint": "Endpoint must not contain '?' and '&' characters. Security server controls access to endpoint only with path precision. Query parameters are ignored.",
+        "exceeds_255": "{{label}} exceeds 255 characters.",
+        "exceeds_64": "{{label}} exceeds 64 characters.",
+        "file_too_large": "File too large. Limit is 5 MB.",
+        "is_invalid": "{{label}} is malformed.",
+        "is_required": "{{label}} is required.",
+        "min_password_length": "Password must be at least 12 characters long.",
+        "nan": "{{label}} is not a number.",
+        "negative": "{{label}} value must be a positive integer.",
+        "password_no_match": "The passwords do not match.",
+        "pin_no_match": "The PINs do not match.",
+        "role_not_selected": "Please select at least one role."
+      },
+      "verifier": {
+        "refresh_notice": "Messages are not updated in real-time. To get the latest messages, refresh the page.",
+        "unknown_message": "Message <strong>{{ id }}</strong> was not found.",
+        "unknown_save_error": "Error occurred while saving file."
+      }
+    },
+    "undefined": "Something went wrong. If the problem persists, please contact support.",
+    "user": {
+      "credentials": {
+        "password": {
+          "exceeds_max_length": "Password can not be longer than 255 characters.",
+          "no_match": "The current password you entered is incorrect.",
+          "reuse": "New password cannot be the same as the current password."
+        },
+        "username": {
+          "already_exists": "User with username '{{ username }}' already exists."
+        }
+      },
+      "roles": {
+        "admin": {
+          "last_admin": "Can not remove the last server administrator."
+        }
+      }
+    },
+    "verifier": {
+      "ocsp_response_is_missing": "Something went wrong: OCSP response of signing certificate is missing"
+    }
+  },
+  "form": {
+    "perpetual": "Perpetual"
+  },
+  "general": {
+    "account_dialog": {
+      "content_header": "MEMBERS AND ROLES",
+      "roles": {
+        "all_members": "All Members",
+        "key_manager": "Key Manager",
+        "server_admin": "Server Administrator",
+        "service_manager": "Service Manager",
+        "transaction_auditor": "Transaction Auditor"
+      },
+      "table": {
+        "member": "Member",
+        "no_roles": "You do not have any roles. Please contact the Server Administrator.",
+        "role": "Role"
+      },
+      "title": "My Account"
+    },
+    "added": "Added",
+    "certificate_formats": "Expected formats are PEM and DER.",
+    "disable_notice": "Disable notice",
+    "error": {
+      "code": "CODE: {{code}}",
+      "recent_restart_subtitle": "If you recently installed, upgraded or restarted the server, \n it might take a couple of minutes to respond.",
+      "refresh": "Refresh",
+      "something_went_wrong": "Something went wrong"
+    },
+    "false": "false",
+    "form": {
+      "optional": "(optional)"
+    },
+    "format": {
+      "date": "YYYY-MM-DD",
+      "time": "hh:mm:ss"
+    },
+    "language": {
+      "cimode": "DEBUG",
+      "en": "English (en)",
+      "pt": "Português (pt)",
+      "uk": "Українська (uk)"
+    },
+    "menu": {
+      "account": "My Account",
+      "change_password": "Change Password",
+      "time_tooltip": "Your time zone",
+      "timezone": "{{zone}} (UTC{{offset}})"
+    },
+    "name_unavailable": "Name Unavailable",
+    "not_available": "N/A",
+    "pagination": {
+      "of": "of",
+      "per_page": "Per page",
+      "refresh": "Refresh"
+    },
+    "search": {
+      "no_results": "No search results",
+      "title": "Search"
+    },
+    "table": {
+      "loader": {
+        "checking": "checking..."
+      },
+      "no_results": {
+        "clients": "No clients",
+        "default": "No data",
+        "devices": "No signature creation devices",
+        "local_groups": "No local groups",
+        "members": "No members",
+        "rest_apis": "No REST APIs",
+        "signed_messages": "No messages"
+      }
+    },
+    "tooltip": {
+      "access_rights": "Access Rights",
+      "activate": "Click to activate",
+      "allowed_charset": "Allowed charset is {{charset}}",
+      "collapse": "Collapse",
+      "deactivate": "Click to deactivate",
+      "delete": "Delete",
+      "details": "Details",
+      "disable": "Disable",
+      "disable_action": "Click to disable",
+      "edit": "Edit",
+      "enable": "Enable",
+      "enable_action": "Click to enable",
+      "expand": "Expand",
+      "help": "Click to go to user guide",
+      "more_info": "Click for More Information",
+      "no_value_assigned": "No value assigned",
+      "not_available": "Not available",
+      "refresh": "Refresh",
+      "remove": "Remove",
+      "services": {
+        "http": "HTTP - insecure connection between security server and service",
+        "https": "HTTPS - encrypted with mutual authentication",
+        "https_no_auth": "HTTPS NOAUTH - encrypted without authenticating the service provider"
+      }
+    },
+    "true": "true",
+    "unknown": "unknown",
+    "validation": {
+      "charset": "Invalid identifier: '{{input}}', allowed charset is {{charset}}.",
+      "exceeds_255": "{{label}} exceeds 255 characters.",
+      "is_required": "{{label}} is required."
+    },
+    "version": "v{{version}}"
+  },
+  "init": {
+    "code": {
+      "intro": "Enter a code that helps identify this security server from other security servers belonging to the same owner.",
+      "next_disabled": "Enter server code first"
+    },
+    "conflicts": {
+      "no_instance": "Instance is not configured. Make sure that a valid configuration anchor has been uploaded."
+    },
+    "details": {
+      "title": {
+        "security_server": "Security Server",
+        "security_server_owner": "Security Server Owner",
+        "software_token": "Software Token"
+      }
+    },
+    "generate_csr": {
+      "button": "Generate",
+      "download_tooltip": "Download CSR",
+      "hsm_enabled": "Security server detected an addon for signature creation devices installed on this server. If you need to store the server owner signing key on an external device, skip this step and finish configuring certificates in the administration view where you can first connect the signature device to the server.",
+      "intro": "Security server has two important certificates: <strong>signing</strong> and <strong>authentication certificate</strong>. Both are needed for message exchange and to register a security server with the Governing Authority.",
+      "intro_cert_header": "Configure these two certificates as follows:",
+      "intro_option_1": "Generate a key and a CSR for both certificates.",
+      "intro_option_2": "Forward CSRs to your certification service provider to request certificates.",
+      "labels": {
+        "authentication": "Authentication key and CSR",
+        "signing": "Signing key and CSR"
+      },
+      "success": "Generated",
+      "tooltip": "Generate required keys and CSRs"
+    },
+    "import_certificates": {
+      "button": "Import",
+      "intro": "After your certification service provider has processed your CSRs and sent you the certificates, import the certificates to this security server.\n(You can redownload <signCsrLink>signing CSR</signCsrLink> or <authCsrLink>authentication CSR</authCsrLink> generated in the last step.)",
+      "labels": {
+        "authentication": "Authentication certificate",
+        "authentication_csr": "Authentication CSR",
+        "signing": "Signing certificate",
+        "signing_csr": "Signing CSR"
+      },
+      "success": "Imported",
+      "tooltip": "Import all certificates first"
+    },
+    "labels": {
+      "instance_code": "Instance Code",
+      "member_class": "Member Class",
+      "member_code": "Member Code",
+      "member_name": "Member Name",
+      "pin": "PIN",
+      "repeat_pin": "Confirm PIN",
+      "security_server_code": "Security Server Code",
+      "securityserver": {
+        "address": "Security server public DNS name or IP address",
+        "listening_port": "Listening port"
+      },
+      "subsystem_code": "Subsystem Code",
+      "timestamping_service": "Timestamping service",
+      "timestamping_services": "Select a timestamping service:"
+    },
+    "owner": {
+      "confirm_title": "Member Not Registered",
+      "instance": "Set by global configuration",
+      "intro_1": "Enter the UXP identifier of the organization who will own this security server.",
+      "intro_2": "You can continue by entering the planned member ID, but the registration must be completed at your Governing Authority before you can use the server to exchange messages.",
+      "member_name_not_found": "Member not found in global configuration",
+      "member_name_tooltip": "Member name is assigned during member registration in Governing Authority",
+      "next_disabled": "Enter owner first",
+      "select_owner": "Select Owner From Global List",
+      "unregistered_owner": "The organization <strong>{{memberId}}</strong> is not registered as a UXP member. You can still continue with the server initialization, but the owner must become a member before the server can be used. You can not change the owner later so make sure the identifier is correct."
+    },
+    "progress": {
+      "code": "Server code",
+      "generate_csr": "Server CSRs",
+      "global_conf": "Global configuration",
+      "import_certificates": "Server certificates",
+      "init_token": "Software token",
+      "license": "License",
+      "owner": "Server owner",
+      "registration": "Registration",
+      "timestamping_service": "Timestamping service"
+    },
+    "registration": {
+      "dialog_title": "Register Certificate",
+      "intro": "Authentication certificate must be registered with the Governing Authority before it can be used. The value for the listening port is taken from the configuration file.",
+      "next_disabled": "Enter address first",
+      "paragraph_1": "<strong>You need to send the certificate to the Governing Authority by other means as well to complete the registration</strong>. If you have not already done this, follow the instructions of your Governing Authority for this process.",
+      "paragraph_2": "The certificate registration request will be confirmed by a person in the Governing Authority and might take a few days.",
+      "request_sent": "Request sent"
+    },
+    "skip": {
+      "anchor": "Skip for now",
+      "paragraph": "Your security server cannot exchange messages until you have configured the authentication certificate and the signing certificate.\n\nIf you skip configuring server certificates now, you can complete it later in the security server UI on the <strong>Server Certificates</strong> page. For more information, see the Security Server User Guide section <skipLink>Security Server Registration</skipLink>.",
+      "title": "Warning"
+    },
+    "timestamping": {
+      "intro": "Security server uses timestamping to preserve the evidential value of messages exchanged over UXP. Timestamping is provided by an external service and each security server must have at least one timestamping service approved by the Governing Authority.",
+      "no_services": "There are currently no timestamping services approved by the Governing Authority. You can continue with the configuration and add the service later.",
+      "placeholder": "Select service",
+      "tooltip": "Select timestamping service"
+    },
+    "title": {
+      "code": "Set Security Server code",
+      "generate_csr": "Generate Server Certificate Signing Requests",
+      "global_conf": "Upload global configuration anchor",
+      "import_certificates": "Import Server Certificates",
+      "init_token": "Initialize software token",
+      "license": "Upload UXP Security Server license",
+      "main": "Initial Configuration",
+      "owner": "Set Security Server owner",
+      "registration": "Register Server Certificate",
+      "timestamping_service": "Select Timestamping Service"
+    },
+    "token": {
+      "intro": "Security server uses cryptographic keys and stores them on a software token. The keys on the token are protected by a PIN. Set a PIN for the token and store it in a safe place. The keys may become unusable once the PIN is forgotten.",
+      "next_disabled": "Enter PIN first"
+    }
+  },
+  "keys": {
+    "buttons": {
+      "add_file_token": "Add file token",
+      "set_key_name": "<set key name>"
+    },
+    "certificate": "Certificate",
+    "certificates": {
+      "details": {
+        "cert": {
+          "expires_at": "Expires At",
+          "fingerprint": "Fingerprint",
+          "header": "CERTIFICATE INFO",
+          "is_chain_trusted": "Is Chain Trusted",
+          "is_for_signing": "Is For Signing",
+          "is_qualified": "Is Qualified",
+          "issued_at": "Issued At",
+          "issuer": "Issuer",
+          "serial_number": "Serial Number",
+          "subject": "Subject",
+          "uxp_member": "UXP Member"
+        },
+        "key": {
+          "algorithm": "Algorithm",
+          "alias": "Alias",
+          "header": "KEY INFO",
+          "name": "Key Name"
+        }
+      },
+      "device": {
+        "certificate_table": {
+          "empty": "No certificates to import",
+          "expires": "Expires",
+          "imported": "Imported",
+          "key_name": "Key Name",
+          "subject": "Subject"
+        },
+        "intro": "Choose a certificate to import from token <strong>{{ tokenName }}</strong> on device <strong>{{ deviceName }}</strong>.",
+        "keys_without_cert_table": {
+          "configured": "Configured",
+          "empty": "No keys without certificates",
+          "hide_btn_text": "Hide keys without certificate",
+          "key_alias": "Key Alias",
+          "show_btn_text": "Show keys without certificate",
+          "tooltip": "These are keys that do not have a certificate on the device, including keys that were generated in the security server and whose certificate is stored only in the security server."
+        }
+      },
+      "export": {
+        "DER": "DER (Binary)",
+        "PEM": "PEM (Base64)",
+        "section": "Download and distribute the security server TLS certificate to all client information systems to set up secure HTTPS connection.",
+        "title": "Export Certificate",
+        "type": "File type"
+      },
+      "import": {
+        "device_button": "Import from device",
+        "device_intro": "If the key and certificate are on the signature creation device, import the certificate from the device to the security server.",
+        "device_state": {
+          "LOGGED_OUT": "Token is logged out. Log in to token first.",
+          "NOT_INITIALIZED": "Token must be initialized using tools other than the UXP software before it can be used.",
+          "UNKNOWN": "Security server can not access the token."
+        },
+        "file_button": "Import file",
+        "file_intro": "If you received a <strong>certificate file</strong>, import the file to the security server.",
+        "from_device_title": "Import Certificate from Device",
+        "title": "Import Certificate"
+      },
+      "not_found": "No certificates found",
+      "profiles": {
+        "labels": {
+          "business_category": "Business Category",
+          "common_name": "Common Name",
+          "country_name": "Country",
+          "given_name": "First Name",
+          "instance_identifier": "Instance Identifier (C)",
+          "locality_name": "Locality",
+          "mail": "Email Address",
+          "member_class": "Member Class (O)",
+          "member_code": "Member Code (CN)",
+          "organization_identifier": "Organization Identifier",
+          "organization_name": "Organization",
+          "organizational_unit_name": "Organizational Unit",
+          "postal_code": "Postal Code",
+          "serial_number": "Serial Number",
+          "server_code": "Server Code (CN)",
+          "state_or_province_name": "State or Province",
+          "street_address": "Street Address",
+          "sur_name": "Last Name",
+          "telephone_number": "Telephone Number",
+          "title": "Title"
+        }
+      },
+      "signing_certs_not_found": "No signing certificates",
+      "status": {
+        "active": "active",
+        "inactive": "inactive",
+        "unusable_expired": "unusable (expired)",
+        "unusable_not_trusted": "unusable (not trusted)"
+      },
+      "use_new_internal_tls_cert": "Use New Internal TLS Certificate",
+      "use_new_internal_tls_cert_section": "Make sure all information systems connecting to this security server have started using the new certificate. If not, the connection between the information system and security server will fail. The old certificate will not be deleted, you can start using it again later if needed.",
+      "use_new_internal_tls_cert_title": "Start using new security server internal TLS certificate?"
+    },
+    "csr": "CSR",
+    "csr_long": "Certificate Signing Request",
+    "delete": {
+      "cert_only_title": "Delete Certificate",
+      "cert_title": "Delete Key and Certificate",
+      "continue": "Continue with just deleting the {{type}}?",
+      "csr_only_title": "Delete CSR",
+      "csr_title": "Delete Key and CSR",
+      "hsm": {
+        "device_delete_failed": "Deleting the key from the signature creation device failed.\n\nContinue with just deleting the key and the {{type}} from this security server?",
+        "from_server": "Delete from server",
+        "key_not_available": " Can not delete the key of this {{type}} from the signature creation device because security server can not access the key. \n\nThe key may be already deleted from the device.\n\nContinue with just deleting the key and the {{type}} from this security server?",
+        "key_only_device_delete_failed": "Deleting the key <strong>{{keyName}}</strong> from the signature creation device failed.\n\nContinue with just deleting the key from this security server?",
+        "key_only_token_not_active": "Can not delete the key {{keyName}} from the signature creation device because the status of the token <strong>{{tokenName}}</strong> is <strong>{{tokenStatus}}</strong>.\n\n You can either make sure that the token is logged in and delete again or delete the key only from the security server.\n\n Continue with just deleting the key from this security server?",
+        "key_only_token_unavailable": "Can not delete the key {{keyName}} from the signature creation device because security server can not access the key.\n\nThe key may be already deleted from the device\n\nContinue with just deleting the key from this security server?",
+        "token_not_active": "Can not delete the key of this {{type}} from the signature creation device because the status of the token <strong>{{tokenName}}</strong> is <strong>{{tokenStatus}}</strong>.\n\n You can either make sure that the token is logged in and delete again or delete the key only from the security server.\n\n Continue with just deleting the key and the {{type}} from this security server?"
+      },
+      "key_only": "Are you sure you want to delete the key <strong>{{keyName}}</strong>? The key will be deleted from the signature creation device as well.",
+      "key_only_no_name": "Are you sure you want to delete the key? The key will be deleted from the signature creation device as well.",
+      "key_only_title": "Delete Key",
+      "multiple_cert_csr": "Can not delete the key of this {{type}} because the key <strong>{{keyName}}</strong> has other certificates or CSRs.",
+      "single_cert": "Are you sure you want to delete the key <strong>{{keyName}}</strong> and {{type}}?",
+      "single_cert_key_on_sscd": "Are you sure you want to delete the key <strong>{{keyName}}</strong> and {{type}}? The key will be deleted from the signature creation device as well."
+    },
+    "details": {
+      "cert": {
+        "expires_at": "Expires At",
+        "fingerprint": "Fingerprint",
+        "id": "Certificate ID",
+        "info": "Certificate Info",
+        "is_chain_trusted": "Is Chain Trusted",
+        "is_qualified": "Is Qualified",
+        "issued_at": "Issued At",
+        "issuer": "Issuer",
+        "serial_number": "Serial Number",
+        "subject": "Subject",
+        "title": "Certificate Details"
+      },
+      "csr": {
+        "id": "CSR ID",
+        "info": "Certificate Signing Request Info",
+        "member_id": "Member Identifier",
+        "subject": "Subject",
+        "title": "CSR Details"
+      },
+      "key": {
+        "algorithm": "Algorithm",
+        "id": "Key ID",
+        "info": "Key Info",
+        "is_available": "Is Available",
+        "key_name": "Key name",
+        "name": "Key Name",
+        "title": "Key Details",
+        "usage": "Key Usage"
+      }
+    },
+    "dialog": {
+      "choose_ca": "Choose certification service",
+      "choose_format": "Choose format for downloading CSR",
+      "choose_key_type": "Choose key type",
+      "choose_key_type_help": "If you are unsure which key type to use, see the <textLink>User Guide</textLink>",
+      "choose_key_usage": "Choose key usage",
+      "choose_member": "Choose member for the CSR",
+      "csr_generated": "CSR successfully generated",
+      "csr_preview": "This CSR is for the following subject distinguished name",
+      "delete_cert_only": "Delete Certificate",
+      "delete_internal_cert": "Are you sure you want to delete the security server internal TLS key and certificate?",
+      "delete_internal_cert_only": "Can not delete the key of this certificate because the key has more certificates. Continue with just deleting the certificate?",
+      "delete_internal_cert_title": "Delete Certificate and Key",
+      "enter_key_name": "Enter key name for displaying in the user interface",
+      "generate_int_sert_title": "Generate Key and Certificate",
+      "generate_key_csr_title": "Generate Key and CSR",
+      "instance": "Instance identifier (C)",
+      "internal_key_self_signed_notice": "Note that the internal TLS certificate for this key is generated automatically and self-signed.",
+      "key_name": "{{member}} {{usage}} certificate",
+      "key_on_token": "{{usage}} key will be generated on token <strong>{{tokenName}}</strong>.",
+      "member_class": "Member class (O)",
+      "member_code": "Member code (CN)",
+      "no_ca": "Can not generate key and CSR because Governing Authority has not approved any certification services."
+    },
+    "ocsp": {
+      "good": "good",
+      "not_checked": "not checked",
+      "outdated": "outdated",
+      "revoked": "revoked",
+      "suspended": "suspended",
+      "unknown": "unknown"
+    },
+    "registration": {
+      "address": "Security server public DNS name or IP address",
+      "address_format_examples": "Format examples: security-server.example.com <i>or</i> 8.8.8.8",
+      "address_input": "Security server address",
+      "deletion_in_progress": "deletion in progress",
+      "dialog_title": "Register Certificate",
+      "global_error": "global error",
+      "listening_port": "The value for the listening port is taken from the configuration file.",
+      "listening_port_input": "Listening port",
+      "no_valid_sign_cert": "Can not register certificates because the security server owner has no functioning signing certificate.\n\nTo send the request, the owner must have at least one signing certificate that is with a good OCSP response, active and not expired.",
+      "register": "This certificate must be registered with the governing authority before it can be used.",
+      "registered": "registered",
+      "registration_in_progress": "registration in progress",
+      "request_sent": "Request sent",
+      "saved": "saved",
+      "success_paragraph_1": "You need to send the certificate to the Governing Authority by other means as well to complete the registration. If you have not already done this, follow the instructions of your Governing Authority for this process.",
+      "success_paragraph_2": "The certificate registration request will be confirmed by a person in the Governing Authority and might take a few days."
+    },
+    "table": {
+      "actions": {
+        "in_use": "In use",
+        "register": "Register",
+        "unregister": "Unregister",
+        "use_this": "Use this"
+      },
+      "columns": {
+        "activation": "Activation",
+        "expires": "Expires",
+        "gen_date": "Generation Date",
+        "label": "Key Name",
+        "member": "Member",
+        "ocsp_response": "OCSP Response",
+        "registration": "Registration",
+        "subject": "Subject"
+      },
+      "help": {
+        "authentication": "Used by security servers to establish secure connection with other security servers.",
+        "internal_authentication": "Used by security server to establish secure connection with the information systems connected to it.",
+        "signing": "Used by security server to sign UXP messages on behalf of the UXP members."
+      },
+      "no_name": "Unnamed key",
+      "no_results": {
+        "authentication": "No authentication certificates or CSRs. Security server must have an authentication certificate to exchange messages.",
+        "certs_only_authentication": "No authentication certificates.",
+        "certs_only_signing": "No signing certificates.",
+        "encryption": "No encryption certificates or CSRs.",
+        "internal_tls": "No security server internal TLS certificates.",
+        "signing": "No signing certificates or CSRs."
+      },
+      "not_available": "Unavailable",
+      "type": {
+        "authentication": "Authentication certificates",
+        "encryption": "Encryption certificates",
+        "internal_authentication": "Internal TLS certificates",
+        "signing": "Signing certificates"
+      }
+    },
+    "title": "Keys and Certificates",
+    "tooltip": {
+      "cert_table_icon": "This is a key and certificate pair.",
+      "csr_table_icon": "This is a key with a CSR (certificate signing request). Forward the CSR to the CA to receive a certificate.",
+      "delete_cert": "Delete key and certificate",
+      "delete_cert_in_use": "Cannot delete certificate in use",
+      "delete_csr": "Delete key and CSR",
+      "delete_key": "Delete key",
+      "export": "Export certificate",
+      "gen_token_logged_out": "Log into token first",
+      "generate_csr": "Generate CSR for key",
+      "import": "Import certificate",
+      "in_use_additional": "with information systems",
+      "in_use_main": "This certificate is used for TLS",
+      "key_table_icon": "This key does not have a certificate or CSR thus security server can not use it. You can delete this key. Security server will then try to delete it from the device as well.",
+      "register": "Register certificate with Governing Authority",
+      "unreg_first": "Unregister certificate first",
+      "unregister": "Unregister certificate from Governing Authority",
+      "use_this": "Switch to this certificate"
+    },
+    "unknown": "unknown",
+    "unregistration": {
+      "confirm": "Are you sure you want to unregister the certificate from the Governing Authority?",
+      "dialog_title": "Unregister Certificate",
+      "error_prefix": "Failed to unregister certificate",
+      "no_valid_auth_cert": "Can not unregister certificates because the security server has no functioning authentication certificate. \n\n To send the request, there must be at least one authentication certificate that is registered, with a good OCSP response, active and not expired. \n\n Continue with certificate deletion anyway?",
+      "no_valid_license": "Can not unregister certificates because the security server has no valid license. Continue with certificate deletion anyway?",
+      "no_valid_sign_cert": "Can not unregister certificates because the security server owner has no functioning signing certificate. \n\n To send the request, the owner must have at least one signing certificate that is with a good OCSP response, active and not expired. \n\n Continue with certificate deletion anyway?",
+      "request_failed": "Failed to send certificate deletion request. Continue with certificate deletion?",
+      "request_sent": "Request sent to Governing Authority to unregister the certificate."
+    },
+    "usage": {
+      "authentication": "Authentication",
+      "encryption": "Encryption",
+      "internal_authentication": "Internal TLS",
+      "signing": "Signing"
+    },
+    "validation_labels": {
+      "ca": "Certification service",
+      "keyName": "Key name",
+      "keyType": "Key type",
+      "keyUsage": "Key usage",
+      "member": "Member"
+    }
+  },
+  "license": {
+    "common": {
+      "cloud_offers": {
+        "one": "Cloud Offer",
+        "other": "Cloud Offers"
+      },
+      "cloud_provider": "Cloud Provider",
+      "license_holder": "License Holder",
+      "license_not_found": "License not found",
+      "license_number": "License Number",
+      "perpetual": "Perpetual",
+      "product": "Product",
+      "select": "Select license file",
+      "select_anchor": "Select configuration anchor file",
+      "valid_until": "Valid Until"
+    },
+    "details": "License Details",
+    "exists": "System already contains a valid license",
+    "field": "Field",
+    "invalid": "System contains an invalid license. Please upload a new license",
+    "missing": "No license. Please upload a license file",
+    "missing_short": "No license",
+    "perpetual": "Perpetual",
+    "preview": "License Preview",
+    "products": {
+      "security_server": {
+        "client_values": "Current clients: {{current}}, limit: {{allowed}}",
+        "exceeded_by": " (exceeded by {{exceededBy}})",
+        "free_slots": " ({{clientsRemaining}} free)",
+        "instances": {
+          "one": "Instance",
+          "other": "Instances"
+        },
+        "licensed_owners": {
+          "one": "Licensed Owner",
+          "other": "Licensed Owners"
+        },
+        "max_clients": "Maximum Clients Allowed",
+        "member_class": "Class",
+        "member_code": "Code",
+        "name": "UXP Security Server",
+        "total_clients": "Client limits"
+      }
+    },
+    "save_license": "Save License",
+    "saved": "License saved",
+    "title": "License",
+    "unlimited": "Unlimited",
+    "upload_button": "Upload License",
+    "upload_license_title": "Upload License",
+    "uploaded": "Valid license successfully uploaded",
+    "value": "Value"
+  },
+  "shared": {
+    "buttons": {
+      "activate": "Activate",
+      "add": "Add",
+      "add_all": "Add All",
+      "add_client": "Add client",
+      "add_selected": "Add Selected",
+      "back": "Back",
+      "browse": "Browse",
+      "cancel": "Cancel",
+      "change_language": "Language ({{ language }})",
+      "change_password": "Change Password",
+      "clear_all": "Clear All",
+      "close": "Close",
+      "confirm": "Confirm",
+      "continue": "Continue",
+      "delete": "Delete",
+      "details": "Details",
+      "disable": "Disable",
+      "download": "Download",
+      "edit": "Edit",
+      "enable": "Enable",
+      "export": "Export",
+      "finish": "Finish",
+      "generate": "Generate",
+      "import": "Import",
+      "information_systems": "Information Systems",
+      "local_groups": "Local Groups",
+      "logout": "Log Out",
+      "next": "Next",
+      "ok": "OK",
+      "refresh": "Refresh",
+      "register": "Register",
+      "remove": "Remove",
+      "remove_all": "Remove All",
+      "remove_selected": "Remove Selected",
+      "rest_apis": "REST APIs",
+      "save": "Save",
+      "skip": "Skip",
+      "soap_services": "SOAP Services",
+      "submit": "Submit",
+      "unregister": "Unregister",
+      "upload": "Upload"
+    },
+    "labels": {
+      "en": "English (en)",
+      "et": "Estonian (et)",
+      "loading": "Loading...",
+      "search": "Search"
+    },
+    "modal": {
+      "change_language": "Change Language",
+      "confirmation": "Confirmation Required",
+      "error": "Error",
+      "upload": "Upload File",
+      "upload_conf_anchor": "Upload Configuration Anchor",
+      "warning": "Warning"
+    },
+    "tooltips": {
+      "no_ssl_certificate": "Security server does not authenticate the source of incoming requests from this subsystem. Turn on HTTPS to secure the connection."
+    }
+  },
+  "sidebar": {
+    "help": {
+      "ha_user_guide": "High Availability Guide",
+      "pma_user_guide": "Monitoring Guide",
+      "service_manager_guide": "Service Manager Guide",
+      "sskey_manager_guide": "Key Manager Guide",
+      "system_status": "System Status",
+      "title": "Help",
+      "transaction_auditor_guide": "Transaction Auditor Guide",
+      "user_guide": "User Guide",
+      "version": "Version"
+    },
+    "instance": "Instance",
+    "management": {
+      "keys_and_certificates": "Keys and Certificates",
+      "license": "License",
+      "signature_creation_devices": "Signature Creation Devices",
+      "system_parameters": "System Parameters",
+      "title": "Management",
+      "users": "User Accounts"
+    },
+    "security_server": "Security Server",
+    "server_code": "Security Server Code",
+    "services": {
+      "clients": "Security Server Clients",
+      "messages": "Messages",
+      "title": "Services"
+    },
+    "uxp_by": "UXP by"
+  },
+  "sys_params": {
+    "certificates": {
+      "title": "Server Certificates"
+    },
+    "conf_anchor": {
+      "confirmation": {
+        "details": "Configuration anchor details:",
+        "title": "Configuration Anchor Preview"
+      },
+      "generated": "Generated",
+      "hash": "Hash (SHA-224)",
+      "instance": "Instance Identifier",
+      "title": "Configuration Anchor"
+    },
+    "listening_port": "Security Server Listening Port",
+    "services": {
+      "add": "Add Timestamping Service",
+      "confirmation": "Are you sure you want to delete the timestamping service <strong>{{serviceName}}</strong>?",
+      "dialog_title": "Delete Timestamping Service",
+      "no_approved_services": "No approved timestamping services. Please contact the Governing Authority.",
+      "no_services": "No timestamping services. Security server must have at least one timestamping service to function properly.",
+      "service": "Timestamping Service",
+      "title": "Timestamping Services",
+      "url": "Service URL"
+    },
+    "title": "System Parameters",
+    "tsp": {
+      "tooltip": {
+        "global_conf_not_found": "The security server cannot use the timestamping service because there is no up-to-date global configuration.",
+        "not_in_global_conf": "The security server cannot use this timestamping service because it has either been temporarily or permanently disapproved by the governing authority. Please ensure that you have selected an alternative service."
+      }
+    }
+  },
+  "tokens": {
+    "add": {
+      "add_new_device": "Did not find a device you are looking for? <openDialog>Add a new device</openDialog>.",
+      "alt_title": "No Tokens",
+      "button": "Add Token",
+      "detected_tokens": "Security server detected the following tokens on the device <strong>{{deviceName}}</strong>. To use a token as a storage for cryptographic keys, you must add it to the security server. You can skip this action for now.",
+      "device_disabled": "Device is disabled. Enable device to see tokens.",
+      "edit_device": "Edit Device",
+      "intro": "Choose a token for storing cryptographic keys that security server will use for signing.",
+      "labels": {
+        "device": "Device",
+        "label": "Label",
+        "member": "Member",
+        "slot": "Slot",
+        "token_id": "Token ID",
+        "token_name": "Token name"
+      },
+      "no_devices": "No signature creation devices, <openDialog>add a device</openDialog> first.",
+      "no_tokens_on_device": "No tokens detected. Check the information you entered about the device and make sure the connection between the security server and the device is configured according to the manufacturers instructions. Check logs for more details.",
+      "row_no_tokens": "No tokens detected on the device.",
+      "selected_token_intro": {
+        "hardware": "Choose a UXP member who will be using the slot <strong>{{ slotId }}</strong> from <strong>{{ deviceName }}</strong>.",
+        "software": "Choose a UXP member who will be using the new <strong>software token.</strong>"
+      },
+      "title": "Add Token",
+      "tokens_not_operational": "Security server could not detect any functioning tokens from the device. Check the device connection and its parameters in security server."
+    },
+    "algorithms": {
+      "ec_p256": "NIST P-256",
+      "ec_p384": "NIST P-384",
+      "ec_p521": "NIST P-521",
+      "rsa_2048": "RSA (2048)",
+      "rsa_3072": "RSA (3072)",
+      "rsa_4096": "RSA (4096)"
+    },
+    "buttons": {
+      "gen_key_cert": "Generate Key and Certificate",
+      "gen_key_csr": "Generate Key and CSR",
+      "import_cert": "Import Certificate",
+      "import_keystore": "Import Keystore",
+      "login": "Log In",
+      "logout": "Log Out",
+      "set_pin": "Set PIN"
+    },
+    "choice": {
+      "hardware_token": {
+        "btn": "HARDWARE TOKEN",
+        "title": "If the signing key must be on an <strong>external signature creation device</strong>, add a hardware token."
+      },
+      "software_token": {
+        "btn": "SOFTWARE TOKEN",
+        "title": "If the signing key does not have to be on a signature creation device, you can add a software token."
+      }
+    },
+    "delete": {
+      "disclaimer": "To avoid deleting important keys by accident, you must delete the keys and certificates from the security server before you can delete the token.",
+      "hardware_token": {
+        "confirmation": "Are you sure you want to delete the token and all its content from the security server?",
+        "disclaimer": "Security server will not delete the key(s) from the physical device, but restoring the key(s) is possible only if the certificate is on the device as well."
+      },
+      "has_keys_one": "The token <strong>{{tokenName}}</strong> has <strong>{{count}}</strong> key saved in this security server.",
+      "has_keys_other": "The token <strong>{{tokenName}}</strong> has <strong>{{count}}</strong> keys saved in this security server.",
+      "no_keys": {
+        "primary": "Are you sure you want to delete the token <strong>{{tokenName}}</strong> from the security server?",
+        "secondary": "The token has no keys in this security server."
+      },
+      "software_token": {
+        "disclaimer": "It will not be possible to restore the key(s) once the token is deleted."
+      },
+      "title": "Delete Token"
+    },
+    "details": {
+      "device": "Device",
+      "id": "ID",
+      "info": "Token info",
+      "name": "Token name",
+      "owner": "Owner",
+      "read_only": "Read-only",
+      "status": "Status",
+      "supported_algorithms": {
+        "auth": "Supported authentication algorithms",
+        "encr": "Supported encryption algorithms",
+        "sign": "Supported signing algorithms"
+      },
+      "title": "Token Details",
+      "token_name": "Token name",
+      "type": {
+        "hardware_token": "hardware token",
+        "keyvault_token": "Azure Key Vault",
+        "label": "Type",
+        "soft_token": "software token"
+      }
+    },
+    "dialog": {
+      "final_attempt": "1 attempt left. Entering an incorrect PIN will lock the token.",
+      "init_pin_intro": "Set a PIN to protect the keys on the token <strong>{{tokenName}}</strong>.",
+      "init_pin_title": "Set Token PIN",
+      "login_title": "Log Into Token",
+      "logout_confirm": "Are you sure you want to log out of the token <strong>{{tokenName}}</strong>?",
+      "logout_confirm_consequence_one": "The token has <strong>{{count}}</strong> key and certificate pair that will become unavailable and this may stop the message exchange.",
+      "logout_confirm_consequence_other": "The token has <strong>{{count}}</strong> key and certificate pairs that will become unavailable and this may stop the message exchange.",
+      "logout_title": "Log Out of Token",
+      "token_pin": "Token PIN"
+    },
+    "import": {
+      "alias_tooltip": "Identify a key if keystore has multiple keys",
+      "browse": "Browse for the PKCS#12 keystore that contains the certificate and key you want to import.",
+      "keystore": "Keystore",
+      "pkcs12_alias": "Alias",
+      "pkcs12_password": "Password",
+      "title": "Import Keystore (PKCS#12)"
+    },
+    "labels": {
+      "confirm_pin": "Confirm PIN",
+      "pin": "PIN",
+      "token_pin": "Token PIN",
+      "view_only": "View-only"
+    },
+    "status": {
+      "logged_in": "logged in",
+      "logged_out": "logged out",
+      "not_initialized": "not initialized",
+      "not_initialized_not_key_manager": "not initialized",
+      "ok": "OK",
+      "tooltip": {
+        "logged_in": "Log into token",
+        "logged_out": "Keys on token can not be used before the key manager logs in the token.",
+        "not_initialized": "Token must be initialized using tools other than the UXP software before it can be used.",
+        "not_initialized_not_key_manager": "The key manager must set the token PIN before using the token.",
+        "unknown": "Security server can not access the token.",
+        "user_pin_count_low": "An incorrect PIN has been entered at least once. Entering an incorrect PIN may lock the token.",
+        "user_pin_final_try": "Entering an incorrect PIN will lock the token.",
+        "user_pin_locked": "Token must be unlocked or reset using tools other than the UXP software before it can be used."
+      },
+      "unknown": "unavailable",
+      "user_pin_count_low": "logged out (few login attempts left)",
+      "user_pin_expired": "user pin expired",
+      "user_pin_final_try": "logged out (1 login attempt left)",
+      "user_pin_incorrect": "user pin incorrect",
+      "user_pin_invalid": "user pin invalid",
+      "user_pin_locked": "locked"
+    },
+    "token": "TOKEN:",
+    "tooltip": {
+      "login": "Log into token",
+      "logout": "Log out of token",
+      "owner_prefix": "Token owner",
+      "set_pin": "Set token PIN",
+      "view_only": "You do not have Key Manager privileges for the owner of this token."
+    }
+  },
+  "users": {
+    "alerts": {
+      "add": "User '{{ username }}' successfully added.",
+      "block": "User '{{ username }}' successfully blocked.",
+      "delete": "User '{{ username }}' successfully deleted.",
+      "pw_change": "The password for '{{ username }}' has been changed successfully.",
+      "unblock": "User '{{ username }}' successfully unblocked."
+    },
+    "api_is_down": "Identity provider server is down.",
+    "buttons": {
+      "add_member": "Add Member",
+      "add_user": "Add user",
+      "block": "Block",
+      "delete": "Delete",
+      "edit": "Edit",
+      "reset_pw": "Change password",
+      "unblock": "Unblock"
+    },
+    "dialogs": {
+      "add_dialog_title": "Add New User",
+      "block_dialog_title": "Block User",
+      "block_warning": "Are you sure you want to block the user <strong>{{ username }}</strong>?",
+      "change_password_relogin": "Please log in to your account again.",
+      "change_password_success": "Your password has been changed successfully.",
+      "change_password_success_title": "Password Change Successful",
+      "change_password_title": "Change Password",
+      "dangerous_action": "This action cannot be undone.",
+      "delete_dialog_title": "Delete User",
+      "delete_warning": "Are you sure you want to delete the user <strong>{{ username }}</strong>?",
+      "no_role_confirm": "Are you sure you want to proceed?",
+      "no_role_title": "Add User",
+      "no_role_warning": "You are trying to add a user with no roles. You can edit roles later.",
+      "unblock_dialog_title": "Unblock User",
+      "unblock_warning": "Are you sure you want to unblock the user <strong>{{ username }}</strong>?"
+    },
+    "group_by": {
+      "label": "Group by",
+      "member": "Member",
+      "user": "User"
+    },
+    "helpers": {
+      "password_requirements": "Password must include at least 12 characters. Avoid using common words, names or personal information in your password. Do not reuse old passwords."
+    },
+    "labels": {
+      "credentials": "Credentials",
+      "current_password": "Current password",
+      "member": "Member",
+      "new_password": "New password",
+      "new_password_confirm": "Confirm new password",
+      "password": "Password",
+      "password_confirm": "Confirm password",
+      "roles": "Roles",
+      "username": "Username"
+    },
+    "link": {
+      "dialog_title": "Add Member to User",
+      "intro": "Choose member and role(s) for <strong>{{username}}</strong>."
+    },
+    "members": {
+      "label": "Member",
+      "owner": "Owner",
+      "unknown": "Name Unknown"
+    },
+    "members_table": {
+      "all_members": "ALL MEMBERS",
+      "column": {
+        "user_status": "User Status",
+        "username": "Username"
+      },
+      "role_for_all_members_tooltip": "User has this role for all members.",
+      "users_without_members": "USERS WITHOUT MEMBERS"
+    },
+    "page_title": "User Accounts",
+    "roles": {
+      "all_members": "All Members",
+      "auditor": "Transaction Auditor",
+      "key_manager": "Key Manager",
+      "server_admin": "Server Administrator",
+      "service_manager": "Service Manager"
+    },
+    "status": {
+      "active": "Active",
+      "blocked": "Blocked",
+      "inactive": "Not activated",
+      "locked": "Locked"
+    },
+    "table": {
+      "column": {
+        "member_id": "Member ID",
+        "member_name": "Member Name"
+      },
+      "no_roles": "The user has no roles"
+    },
+    "tooltips": {
+      "admin_always_key_manager": "Server Administrator is always the Key Manager of the server owner.",
+      "own_account_block": "You cannot block your own account",
+      "own_account_deletion": "You cannot delete your own account",
+      "own_account_unblock": "You cannot unblock your own account",
+      "select_member": "Select member first"
+    }
+  },
+  "verifier": {
+    "api_is_down": "Messages server is down.",
+    "back_to_messages_button": "BACK TO MESSAGES",
+    "details": {
+      "certs": {
+        "expires_at": "Expires At",
+        "fingerprint": "Fingerprint",
+        "issued_at": "Issued At",
+        "issuer": "Issuer",
+        "serial_number": "Serial Number",
+        "subject": "Subject"
+      },
+      "check": {
+        "could_not_verify": "COULD NOT VERIFY",
+        "invalid": "INVALID",
+        "not_qualified": "NOT QUALIFIED",
+        "qualified": "QUALIFIED",
+        "valid": "VALID"
+      },
+      "message": {
+        "message_type": "Message Type",
+        "processed_at": "Processed At",
+        "protocol_version": "Protocol Version",
+        "query_id": "Query ID",
+        "service_client": "Service Client",
+        "service_code": "Service Code",
+        "service_provider": "Service Provider",
+        "service_version": "Service Version",
+        "transaction_id": "Transaction ID",
+        "user_id": "User ID"
+      },
+      "ocsp": {
+        "produced_at": "Produced At",
+        "responder_cert": "OCSP RESPONDER CERTIFICATE",
+        "response_status": "OCSP Response"
+      },
+      "signature": {
+        "signed_hash": "Signed Hash",
+        "signing_cert": "SIGNING CERTIFICATE",
+        "signing_time": "Signing Time"
+      },
+      "status": "Status",
+      "timestamp": {
+        "tsa_cert": "TSA CERTIFICATE",
+        "value": "Value"
+      }
+    },
+    "details_page": {
+      "message_details": "MESSAGE DETAILS",
+      "ocsp_signing_cert_response": "OCSP RESPONSE OF SIGNING CERTIFICATE",
+      "signature": "SIGNATURE",
+      "status": {
+        "archived": "ARCHIVED",
+        "data_missing": "DATA MISSING",
+        "new": "WAITING FOR TIMESTAMP",
+        "timestamped": "TIMESTAMPED"
+      },
+      "timestamp": "TIMESTAMP",
+      "title": "{{ messageType }} {{ transactionId }}",
+      "title_loading": "Loading message details...",
+      "unable_to_display_message": "Unable to display message",
+      "verification": {
+        "data_missing": "Can not verify the signature because the signature data is missing.",
+        "new": "Can not verify the signature before the signature is timestamped. Try again later."
+      }
+    },
+    "download": {
+      "button": "Download",
+      "cert": {
+        "failed": "Failed to download certificate",
+        "tooltip": "Download certificate"
+      },
+      "container": {
+        "failed": "Failed to download signature container",
+        "tooltip": {
+          "data_missing": "Downloading the signature container is not possible because the signature data is missing.",
+          "download": "Download signature container",
+          "new": "Downloading the signature container is not possible before the signature is timestamped. Try again later."
+        }
+      }
+    },
+    "general": {
+      "request": "Request",
+      "response": "Response"
+    },
+    "search": {
+      "advanced": "Advanced Search",
+      "basic": "Basic Search",
+      "clear": "Clear Filter",
+      "client": "Client",
+      "client_name": "Name",
+      "instance": "Instance",
+      "member_class": "Class",
+      "member_code": "Code",
+      "message_type": "Message Type",
+      "no_options": "No options available.",
+      "no_results": "No results found. You must select from the available options.",
+      "period": {
+        "from": "From",
+        "period": "Period",
+        "to": "To"
+      },
+      "provider": "Provider",
+      "query_id": "Query ID",
+      "request": "Request",
+      "response": "Response",
+      "search": "Search",
+      "service": "Service",
+      "service_code": "Code",
+      "service_version": "Version",
+      "subsystem_code": "Subsystem",
+      "transaction_id": "Transaction ID",
+      "user_id": "User ID"
+    },
+    "table": {
+      "columns": {
+        "id": "ID",
+        "participants": "Participants",
+        "processed_at": "Processed At",
+        "service": "Service",
+        "service_client": "Service Client",
+        "service_provider": "Service Provider",
+        "type": "Type"
+      },
+      "row": {
+        "client": "Client:",
+        "provider": "Provider:"
+      },
+      "tooltip": {
+        "details": "Details",
+        "query_id": "Query ID",
+        "request": "Request",
+        "response": "Response",
+        "transaction_id": "Transaction ID"
+      }
+    },
+    "title": "Messages"
+  }
+}

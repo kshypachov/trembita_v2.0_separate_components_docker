@@ -13,6 +13,12 @@ RUN cd /token_login/build && cmake .. && make
 
 RUN chmod 111 /token_login/build/token_login # set rights only for execute
 
+RUN mkdir /tmp/uxp-seg_rest-api/
+COPY uxp-securityserver-rest-api_1.22.7_all.deb /uxp-securityserver-rest-api_1.22.7_all.deb
+RUN dpkg-deb -X /uxp-securityserver-rest-api_1.22.7_all.deb /tmp/uxp-seg_rest-api/
+
+
+
 FROM ubuntu:24.04 as release
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -88,7 +94,10 @@ RUN rsync -a --ignore-existing /tmp/proxy/ /
 COPY proxy-logback.xml /etc/uxp/conf.d/proxy-logback.xml
 COPY token_login /
 
+RUN mkdir -p /usr/share/uxp/lib/
 COPY --from=builder /token_login/build/token_login /token_login
+COPY --from=builder /tmp/uxp-seg_rest-api/usr/share/uxp/lib/ /usr/share/uxp/lib/
+
 #RUN chmod +x token_login
 
 USER uxp

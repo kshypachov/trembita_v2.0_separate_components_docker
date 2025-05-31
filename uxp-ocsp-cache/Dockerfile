@@ -60,6 +60,6 @@ COPY ocsp-cache-logback.xml /etc/uxp/conf.d/ocsp-cache-logback.xml
 
 RUN mkdir /var/cache/uxp && chown uxp:uxp /var/cache/uxp && chmod 750 /var/cache/uxp
 
-USER uxp
+#USER uxp
 #ENTRYPOINT ["top", "-b"]
 ENTRYPOINT ["/usr/share/uxp/bin/ocsp-cache.sh"]
