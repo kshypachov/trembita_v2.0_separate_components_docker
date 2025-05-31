@@ -1,0 +1,126 @@
+; This is the configuration file of the proxy monitor agent.
+
+; Zabbix monitoring stations are configured as follows:
+
+; Section of one Zabbix monitoring station, where the section name has the
+; required prefix "zabbix" and the suffix must be some unique string within
+; other sections for Zabbix (if added).
+[zabbix-1]
+
+; Zabbix host or IP address (required).
+address = 192.168.99.204
+
+; Zabbix trapper port (optional, default: 10051).
+port = 10051
+
+; This option enables/disables automatic configuration of Zabbix monitoring
+; station (optional, default: true). If value is set to 'false', Zabbix
+; auto-discovery and host configuration are expected.
+enable_configurator = false
+
+; Technical host name type used for creating a host by Zabbix discovery rule.
+; Possible values are 'DNS' - DNS name and 'IP' - IP address
+; (optional, default: 'DNS').
+technical_host_name_type = DNS
+
+; In case automatic configuration of Zabbix is enabled and configured Zabbix
+; server is used by UXP Monitoring Server also, enable coexist mode to avoid
+; configuration collisions (optional, default: false). If coexist mode is
+; enabled, configured host name in Zabbix gets suffix " (local)".
+;enable_coexist_mode = false
+
+; Zabbix configuration API path (optional if enable_configurator = true,
+; default: /api_jsonrpc.php).
+;conf_api_path = /api_jsonrpc.php
+
+; Zabbix configuration API port. (optional if enable_configurator = true,
+; default: 8080).
+; conf_api_port = 8080
+
+; Zabbix configuration username (required if enable_configurator = true).
+;username =
+
+; Zabbix configuration user password (required if enable_configurator = true).
+;password =
+
+; Zabbix host group for security servers (required if
+; enable_configurator = true).
+;host_group = my-security-servers-group
+
+; Additional nodes for Zabbix native HA cluster.
+;cluster-nodes = node-2-for-zabbix-1, node-3-for-zabbix-1
+
+;[node-2-for-zabbix-1]
+;address =
+;port = 10051
+
+;[node-3-for-zabbix-1]
+;address =
+;port = 10051
+
+
+; Elasticsearch search engine for operational data is configured as follows:
+;
+; Section of Elasticsearch search engine, where the section name is
+; "elasticsearch".
+[elasticsearch]
+
+; Elasticsearch host or IP address.
+address = 192.168.99.204
+
+; Elasticsearch port (optional, default: 9200).
+port = 9200
+
+; Elasticsearch HTTP client connection scheme. Possible values are 'http' and
+; 'https' (optional, default: http).
+scheme = https
+
+; Elasticsearch credentials (username and password) for basic authentication
+; (optional).
+username = uxp_pma
+password = uxppma88
+
+; The file name (absolute path) of the Elasticsearch CA certificate (in PEM or
+; DER format). Mandatory in case 'https' scheme is used.
+ca-cert-file = /etc/uxp/ssl/http_ca.crt
+
+; Whether the Elasticsearch HTTP client should verify the server's hostname in
+; case 'https' scheme is used (optional, default: false).
+;verify-hostname = false
+
+; Document index name (optional, default: uxp-request).
+;
+; Optionally, may contain a date pattern to partition operational data into
+; separate indices. Patterns are based on a simple sequence of letters and
+; symbols enclosed with curly braces which are preceded by percentage mark
+; (%{DATE_PATTERN}). For example uxp-request-%{yyyy.MM.dd},
+; uxp-request-%{M.y}-opdata, where 'y' represents year, 'M' represents month,
+; and 'd' represents day of month. For more detailed information about date
+; pattern syntax read from the web page
+; https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html
+;
+index = uxp-request
+
+; The Elasticsearch bulk API allows one to index several documents in a single
+; request. This parameter determines max monitoring records (documents) for a
+; bulk request (optional, default: 1000).
+;max_batch_records = 1000
+
+; The monitoring record timestamp (the Unix epoch seconds or ISO 8601 such as
+; '2018-01-01T00:00:00Z'.) from which the collection of records starts
+; (optional, default: 1970-01-01T00:00:00Z).
+;collection_start_timestamp = 1970-01-01T00:00:00Z
+
+; The sending interval in seconds (optional, default: 600).
+;send_interval_seconds = 600
+
+; Additional Elasticsearch cluster nodes.
+;cluster-nodes = elasticsearch-node-2, elasticsearch-node-3
+
+;[elasticsearch-node-2]
+;address =
+;port = 9200
+
+;[elasticsearch-node-3]
+;address =
+;port = 9200

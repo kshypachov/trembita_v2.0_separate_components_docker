@@ -21,7 +21,9 @@ Files adnd directories
 
 Needed mount paths 
     /etc/uxp - for load configs (anchor, app configs) For storing global config
-    /usr/share/uxp/ - for load configs 
+    /usr/share/uxp/ - for load configs
+    /var/tmp/uxp - maybe for temperary storing configuration anchor in first start in unconfigured state, allocated 2 MB in RAM FS
+
 
 Result of work start script 
 
@@ -90,3 +92,8 @@ For start application in kubernetes, used this construction
 
 If you start this container in kubernetes, need only /etc/uxp/ for store globalconf
 Container run without shell.
+Container works on read only FS, except mounted storages:
+/etc/uxp/ - for storing downloaded globalconf
+/var/tmp/uxp/ - do not known
+/tmp/java/ - for unpacking java classes
+

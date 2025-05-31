@@ -1,68 +1,84 @@
-FROM ubuntu:24.04
+FROM ubuntu:24.04 as builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-LABEL authors="Kirill Shypachov @kshypachov"
+RUN groupadd -g 104 uxp && \
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
 
-ARG REPO_KEY=http://192.168.99.247/key.gpg
-ARG REPO_URI="http://192.168.99.247/ testing-1.22.7 trembita2-1-22-7"
+RUN mkdir "/deb"
+COPY ./deb/ /deb/
 
-RUN echo "uxp-proxy uxp-common/username string uxpadmin" | debconf-set-selections
-#RUN echo "uxp-identity-provider-rest-api  uxp-identity-provider/password  password uxpadminp" | debconf-set-selections
-#RUN useradd -m uxpadmin -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/'
+RUN dpkg-deb -X /deb/uxp-addon-monitor_1.22.7_all.deb      /tmp/mon
+RUN dpkg-deb -X /deb/uxp-addon-trembita-crypto_1.22.7_all.deb  /tmp/crypto
+
+#ENTRYPOINT ["top", "-b"]
+
+FROM eclipse-temurin:17-jdk-jammy
+
+LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
+LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
+LABEL org.opencontainers.image.vendor="eGA Kyiv"
+LABEL org.opencontainers.image.title="trembita monitor agent"
+LABEL org.opencontainers.image.url="URI documentation"
+LABEL org.opencontainers.image.source=""
+LABEL org.opencontainers.image.version=""
 
 RUN groupadd -g 104 uxp && \
-    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/' uxp
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
 
-RUN apt-get update  \
-    && apt-get install -y equivs  \
-    && equivs-control fake-systemd \
-    && sed -i 's/^Package:.*/Package: systemd/' fake-systemd \
-    && echo 'Version: 255.0\nArchitecture: all\nDescription: dummy systemd for containers' >> fake-systemd \
-    && equivs-build fake-systemd \
-    && dpkg -i systemd_255.0_all.deb
+RUN mkdir -p /app/jlib/addon/proxy/ciplus-jce/
+RUN mkdir -p /deb/
 
-#RUN apt-get update
-#RUN apt-get install -y nano
+COPY monitor-agent.ini /app/
 
-RUN apt-get -qq update && apt-get -qq --no-install-recommends -y install \
-      locales ca-certificates perl bzip2 libc6-dev lsb-release gnupg2 \
-      ca-certificates gnupg supervisor net-tools iproute2 locales \
-      rlwrap ca-certificates-java debconf-utils \
-      crudini adduser expect curl rsyslog dpkg-dev \
-      python3-requests rsync \
-    && echo "LC_ALL=en_US.UTF-8" >>/etc/environment \
-    && locale-gen en_US.UTF-8 \
-    && apt-get clean  \
-    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /tmp/mon/usr/share/uxp/jlib/                                              /app/jlib/
+COPY --from=builder /tmp/mon/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar             /app/jlib/addon/proxy/
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/signature-xades.jar                        /app/jlib/
 
-ADD ["$REPO_KEY","/tmp/repokey.gpg"]
-RUN apt-key add '/tmp/repokey.gpg'
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/ciplus-jce/                    /app/jlib/addon/proxy/ciplus-jce/
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar /app/jlib/addon/proxy/
 
-RUN sed -i 's/^[A-Za-z0-9]/#&/' /etc/apt/sources.list \
-#    && rm -rf /etc/apt/sources.list.d/* \
-    && echo "deb $REPO_URI" | tee -a /etc/apt/sources.list
 
-RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d \
-    && printf  '#!/bin/sh\nexit 0\n' > /usr/sbin/service && chmod +x /usr/sbin/service \
-    && printf '#!/bin/sh\nexit 0\n' > /bin/systemctl && chmod +x /bin/systemctl
+COPY proxy-monitor-agent-logback.xml                                    /app/
+COPY deb/libgoogle-perftools4_2.9.1-0ubuntu3_amd64.deb                  /deb/
+COPY deb/libtcmalloc-minimal4_2.9.1-0ubuntu3_amd64.deb                  /deb/
+COPY deb/libunwind8_1.3.2-2build2.1_amd64.deb                           /deb/
+COPY deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb                       /deb/
 
-#RUN apt update
-#RUN apt install -y uxp-confclient
-RUN mkdir "/deb"
-COPY ./deb/*.deb /deb/
-COPY uxp-addon-monitor_1.22.7_all.deb uxp-addon-monitor_1.22.7_all.deb
+RUN apt install /deb/libunwind8_1.3.2-2build2.1_amd64.deb
+RUN apt install /deb/libtcmalloc-minimal4_2.9.1-0ubuntu3_amd64.deb
+RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb
+RUN apt install /deb/libgoogle-perftools4_2.9.1-0ubuntu3_amd64.deb && rm -rf /deb
 
-RUN apt update
-RUN apt -qq -y --no-install-recommends install /deb/*.deb
+ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
 
-RUN mkdir /tmp/mon
-RUN dpkg-deb -X /uxp-addon-monitor_1.22.7_all.deb  /tmp/mon
 
-RUN rsync -a --ignore-existing /tmp/mon/ /
-
-COPY proxy-monitor-agent-logback.xml /etc/uxp/conf.d/proxy-monitor-agent-logback.xml
-#RUN mkdir /var/cache/uxp && chown uxp:uxp /var/cache/uxp && chmod 750 /var/cache/uxp
+#RUN rm -rf /bin/bash && rm -rf /bin/sh
 
 USER uxp
 #ENTRYPOINT ["top", "-b"]
-ENTRYPOINT ["/usr/share/uxp/scripts/monitor.sh"]
+
+ENTRYPOINT ["java", \
+            "-Xmx50m", \
+            "-Xmx256m", \
+            "-XX:MaxMetaspaceSize=128m", \
+            "-XX:+UseG1GC", \
+            "-Xshare:on", \
+            "-Dfile.encoding=UTF-8", \
+            "-Djava.library.path=/usr/share/uxp/lib/", \
+            "-Duxp.common.temp-files-path=/tmp/java/", \
+            "-Duxp.center.allowed-certificate-profiles=ee.cyber.uxp.common.certificateprofile.ua.UaCertificateProfileInfoProvider", \
+            "-Duxp.common.license-file=/etc/uxp/license.lic" ,\
+            "-Dlogback.configurationFile=/app/proxy-monitor-agent-logback.xml", \
+            "-cp", "/app/jlib/monitoring-proxy-agent.jar:/app/jlib/signature-xades.jar:/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/app/jlib/addon/proxy/ciplus-jce/*", \
+            "-Dorg.bytedeco.javacpp.noPointerGC=true", \
+            "-Dorg.bytedeco.javacpp.maxBytes=0", \
+            "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
+            "-Duxp.proxy-monitoring-agent.monitor-agent-conf-file=/app/monitor-agent.ini", \
+            "-Duser.country=UA", \
+            #admin port for connecting to monitor agent port = port + 1.
+            "-Duxp.proxy-monitoring-agent.admin-port=5588", \
+            # port for recieve statistics from uxp - proxy port = port + 1
+             "-Duxp.status-service.listen-port=2082", \
+             #Readed from /etc/uxp/conf.d/local.ini must be the same in all component configs
+#            "-Duxp.identity-provider.security-server-client-secret=2DmVrz_VUQUhn3ePNgWm8Ur-TwMK0la_", \
+            "ee.cyber.uxp.proxymonitoragent.ProxyMonitorAgentMain"]

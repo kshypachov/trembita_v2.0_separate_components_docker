@@ -2,7 +2,7 @@ FROM ubuntu:24.04 as builder
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN groupadd -g 104 uxp && \
-    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/' uxp
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
 
 RUN mkdir "/deb"
 COPY ./deb/ /deb/
@@ -36,9 +36,10 @@ COPY deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb /deb/
 
 RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb && rm -rf /deb
 
-RUN rm /bin/bash && rm /bin/sh
-
-USER uxp
+ENTRYPOINT ["top"]
+#RUN rm /bin/bash && rm /bin/sh
+TODO add /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
+#USER uxp
 #ENTRYPOINT ["java", \
 #            "-Xmx50m", \
 #            "-XX:MaxMetaspaceSize=70m", \

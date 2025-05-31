@@ -75,7 +75,7 @@ RUN pg_ctlcluster 16 main start \
 
 ## delete useless config
 RUN rm -rf /etc/uxp/conf.d/configuration-client.ini
-
+RUN rm -rf /etc/uxp/monitor-agent.ini
 #CMD ["/root/entrypoint.sh"]
 
 #VOLUME ["/etc/uxp", "/var/lib/uxp", "/var/lib/postgresql/16/main/", "/var/log/"]
