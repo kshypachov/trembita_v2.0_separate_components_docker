@@ -10,8 +10,6 @@ COPY ./deb/ /deb/
 RUN dpkg-deb -X /deb/uxp-proxy_1.22.7_all.deb                  /tmp/proxy
 RUN dpkg-deb -X /deb/uxp-addon-trembita-crypto_1.22.7_all.deb  /tmp/crypto
 
-#ENTRYPOINT ["top", "-b"]
-
 FROM eclipse-temurin:17-jdk-jammy
 
 LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
