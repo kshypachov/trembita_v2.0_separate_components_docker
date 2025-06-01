@@ -77,6 +77,7 @@ RUN pg_ctlcluster 16 main start \
 RUN rm -rf /etc/uxp/conf.d/configuration-client.ini
 RUN rm -rf /etc/uxp/monitor-agent.ini
 RUN rm -rf /etc/uxp/conf.d/ocsp-cache.ini
+RUN rm -rf /etc/uxp/conf.d/identity-provider.ini
 
 #CMD ["/root/entrypoint.sh"]
 
