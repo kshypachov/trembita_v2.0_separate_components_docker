@@ -1,0 +1,31 @@
+; Security server OCSP cache configuration file. These are default values,
+; users should override these parameters in the local.ini file.
+; =============================================================================
+
+; Configuration parameters for OCSP cache.
+[ocsp-cache]
+
+; OCSP cache update time interval as a Cron expression.
+update-interval=0 0 0/6 1/1 * ? *
+
+; OCSP client (HTTP) connect timeout in milliseconds, '10000' by default
+; (value 0 means infinite timeout).
+client-connect-timeout=10000
+
+; OCSP client (HTTP) read timeout in milliseconds, '5000' by default
+; (value 0 means infinite timeout).
+client-read-timeout=5000
+
+; HTTP port on which the OCSP cache OCSP responder listens for OCSP requests.
+ocsp-responder-listen-port=5577
+
+; Host address on which the OCSP cache OCSP responder is listening.
+ocsp-responder-listen-address=127.0.0.1
+
+; HTTP port on which the OCSP cache is listening for administrative commands.
+admin-port=5766
+
+; Value by which the instance's 'ocspFreshnessSeconds' setting value will be
+; divided by to calculate the periodic full cache update interval.
+; (0 or less means periodic full OCSP cache update is disabled)
+full-update-freshness-divisor=10
