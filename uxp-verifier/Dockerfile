@@ -40,7 +40,7 @@ RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb
 COPY verifier-rest-api-logback.xml                                                            /app/
 
 #COPY test/db.properties                                                                       /etc/uxp/db.properties
-#ENV SPRING_CONFIG_DEBUG=true
+
 RUN mkdir -p /var/lib/uxp/messagelog/archive
 
 USER uxp
