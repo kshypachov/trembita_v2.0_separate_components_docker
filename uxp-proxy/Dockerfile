@@ -68,20 +68,20 @@ RUN touch /etc/authbind/byport/443 && chmod 102 /etc/authbind/byport/443 && chow
 USER uxp
 ##RUN mkdir -p /etc/uxp/signer/0/
 ##COPY configs/db.properties      /etc/uxp/
-ENTRYPOINT ["authbind", "java", \
-            "-Xms150m", \
-            "-Xmx512m", \
-            "-Xshare:on", \
-            "-XX:MaxMetaspaceSize=256m", \
-            "-XX:+UseG1GC", \
-            "-Dfile.encoding=UTF-8", \
-            "-Dorg.bytedeco.javacpp.noPointerGC=true", \
-            "-Dorg.bytedeco.javacpp.maxBytes=0", \
-            "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
-            "-Djava.library.path=/usr/share/uxp/lib/", \
-            "-Dlogback.configurationFile=/app/proxy-logback.xml", \
-            "-Duxp.proxy.clientHandlers=ee.cyber.uxp.proxy.clientproxy.MetadataHandler", \
-            "-Duxp.proxy.serverServiceHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl", \
-            "-Duxp.proxy.serverRestApiHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl", \
-            "-cp", "/app/proxy.jar:/app/jlib/signature-xades.jar:/app/jlib/addon/certprofile-trembita.jar:/app/jlib/addon/proxy/metaservice-1.22.7.jar:/app/jlib/addon/proxy/monitoring-1.22.7.jar:/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/app/jlib/addon/proxy/ciplus-jce/*", \
-            "ee.cyber.uxp.proxy.ProxyMain"]
+#ENTRYPOINT ["authbind", "java", \
+#            "-Xms150m", \
+#            "-Xmx512m", \
+#            "-Xshare:on", \
+#            "-XX:MaxMetaspaceSize=256m", \
+#            "-XX:+UseG1GC", \
+#            "-Dfile.encoding=UTF-8", \
+#            "-Dorg.bytedeco.javacpp.noPointerGC=true", \
+#            "-Dorg.bytedeco.javacpp.maxBytes=0", \
+#            "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
+#            "-Djava.library.path=/usr/share/uxp/lib/", \
+#            "-Dlogback.configurationFile=/app/proxy-logback.xml", \
+#            "-Duxp.proxy.clientHandlers=ee.cyber.uxp.proxy.clientproxy.MetadataHandler", \
+#            "-Duxp.proxy.serverServiceHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl", \
+#            "-Duxp.proxy.serverRestApiHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl", \
+#            "-cp", "/app/proxy.jar:/app/jlib/signature-xades.jar:/app/jlib/addon/certprofile-trembita.jar:/app/jlib/addon/proxy/metaservice-1.22.7.jar:/app/jlib/addon/proxy/monitoring-1.22.7.jar:/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/app/jlib/addon/proxy/ciplus-jce/*", \
+#            "ee.cyber.uxp.proxy.ProxyMain"]
