@@ -1,6 +1,6 @@
 UXP-OCSP-cache (part of uxp-proxy)
 Listen port 5766 - admin port
- GET /execute push up executing process without scheduler
+ GET /execute push up executing process update oscp without scheduler
 Listen port 5577 - ocsp responder
 
 
@@ -13,8 +13,10 @@ Files and directories
 /etc/uxp/services/local.conf  - load configs via csp-cache.conf
 /usr/share/uxp/jlib/addon/ocsp-cache/*.conf - load configs via ocsp-cache.conf
 /usr/share/uxp/bin/ocsp-cache.sh - startup script
+/var/cache/uxp - dir for store cached ocsp answers
     Config file 
     /etc/uxp/conf.d/ocsp-cache.ini
+
 
 CP="/usr/share/uxp/jlib/ocsp-cache.jar:/usr/share/uxp/jlib/signature-xades.jar"
 
