@@ -231,8 +231,3 @@ java.class.version=61.0
 uxp.proxy.max-retained-soap-attachment-size-bytes=5242880
 uxp.proxy.digest-algorithm-id=SHA-512
 uxp.op-monitor.keep-records-for-days=7
-
-
-
-
-

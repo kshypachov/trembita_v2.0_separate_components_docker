@@ -1,8 +1,6 @@
-FROM ubuntu:24.04 as builder
+FROM ubuntu:24.04 as token_login_builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
-LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
 
 RUN apt update &&  \
     apt install -y cmake gcc
@@ -13,93 +11,77 @@ RUN cd /token_login/build && cmake .. && make
 
 RUN chmod 111 /token_login/build/token_login # set rights only for execute
 
-RUN mkdir /tmp/uxp-seg_rest-api/
-COPY uxp-securityserver-rest-api_1.22.7_all.deb /uxp-securityserver-rest-api_1.22.7_all.deb
-RUN dpkg-deb -X /uxp-securityserver-rest-api_1.22.7_all.deb /tmp/uxp-seg_rest-api/
 
-
-
-FROM ubuntu:24.04 as release
+FROM ubuntu:24.04 as builder
 ENV DEBIAN_FRONTEND=noninteractive
+
+RUN groupadd -g 104 uxp && \
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
+
+RUN mkdir "/deb"
+COPY ./deb/ /deb/
+
+RUN dpkg-deb -X /deb/uxp-proxy_1.22.7_all.deb                  /tmp/proxy
+RUN dpkg-deb -X /deb/uxp-addon-trembita-crypto_1.22.7_all.deb  /tmp/crypto
+RUN dpkg-deb -X /deb/uxp-addon-trembita-profile_1.22.7_all.deb /tmp/profile
+RUN dpkg-deb -X /deb/uxp-addon-monitor_1.22.7_all.deb          /tmp/monitor
+RUN dpkg-deb -X /deb/uxp-addon-metaservices_1.22.7_all.deb     /tmp/meta
+
+FROM eclipse-temurin:17-jdk-jammy
 
 LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
 LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
+LABEL org.opencontainers.image.vendor="eGA Kyiv"
 LABEL org.opencontainers.image.title="trembita proxy"
 LABEL org.opencontainers.image.url="URI documentation"
 LABEL org.opencontainers.image.source=""
 LABEL org.opencontainers.image.version=""
 
-
-ARG REPO_KEY=http://192.168.99.247/key.gpg
-ARG REPO_URI="http://192.168.99.247/ testing-1.22.7 trembita2-1-22-7"
-
-RUN echo "uxp-proxy uxp-common/username string uxpadmin" | debconf-set-selections
-#RUN echo "uxp-identity-provider-rest-api  uxp-identity-provider/password  password uxpadminp" | debconf-set-selections
-#RUN useradd -m uxpadmin -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/'
-
 RUN groupadd -g 104 uxp && \
-    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/' uxp
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
 
-RUN apt-get update  \
-    && apt-get install -y equivs  \
-    && equivs-control fake-systemd \
-    && sed -i 's/^Package:.*/Package: systemd/' fake-systemd \
-    && echo 'Version: 255.0\nArchitecture: all\nDescription: dummy systemd for containers' >> fake-systemd \
-    && equivs-build fake-systemd \
-    && dpkg -i systemd_255.0_all.deb
+RUN mkdir -p /app/jlib/addon/proxy/ciplus-jce/
+RUN mkdir -p /deb/
 
-#RUN apt-get update
-#RUN apt-get install -y nano
+COPY --from=builder /tmp/proxy/usr/share/uxp/jlib/proxy*                                      /app/
 
-RUN apt-get -qq update && apt-get -qq --no-install-recommends -y install \
-      locales ca-certificates perl bzip2 libc6-dev lsb-release gnupg2 \
-      ca-certificates gnupg supervisor net-tools iproute2 locales \
-      rlwrap ca-certificates-java debconf-utils \
-      crudini adduser expect curl rsyslog dpkg-dev \
-      python3-requests authbind \
-    && echo "LC_ALL=en_US.UTF-8" >>/etc/environment \
-    && locale-gen en_US.UTF-8 \
-    && apt-get clean  \
-    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /tmp/monitor/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar         /app/jlib/addon/proxy/
+COPY --from=builder /tmp/meta/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar           /app/jlib/addon/proxy/
+
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/signature-xades.jar                        /app/jlib/
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/ciplus-jce/                    /app/jlib/addon/proxy/ciplus-jce/
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar /app/jlib/addon/proxy/
+
+COPY --from=builder /tmp/profile/usr/share/uxp/jlib/addon/certprofile-trembita.jar            /app/jlib/addon/
+
+COPY proxy-logback.xml                                                                        /app/
+COPY configs/proxy.ini                                                                        /etc/uxp/conf.d/
+
+COPY deb/authbind_2.1.3build1_amd64.deb                                                       /deb/
+RUN apt install -y /deb/authbind_2.1.3build1_amd64.deb
 
 RUN touch /etc/authbind/byport/80 && chmod 102 /etc/authbind/byport/80 && chown 102 /etc/authbind/byport/80
 RUN touch /etc/authbind/byport/443 && chmod 102 /etc/authbind/byport/443 && chown 102 /etc/authbind/byport/443
 
-ADD ["$REPO_KEY","/tmp/repokey.gpg"]
-RUN apt-key add '/tmp/repokey.gpg'
-
-RUN sed -i 's/^[A-Za-z0-9]/#&/' /etc/apt/sources.list \
-#    && rm -rf /etc/apt/sources.list.d/* \
-    && echo "deb $REPO_URI" | tee -a /etc/apt/sources.list
-
-RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d \
-    && printf  '#!/bin/sh\nexit 0\n' > /usr/sbin/service && chmod +x /usr/sbin/service \
-    && printf '#!/bin/sh\nexit 0\n' > /bin/systemctl && chmod +x /bin/systemctl
-
-#RUN apt update
-#RUN apt install -y uxp-confclient
-RUN mkdir "/deb"
-COPY ./deb/*.deb /deb/
-COPY uxp-proxy_1.22.7_all.deb uxp-proxy_1.22.7_all.deb
-
-RUN apt update
-RUN apt install -qq -y --no-install-recommends rsync
-RUN apt -qq -y --no-install-recommends install /deb/*.deb
-
-RUN mkdir /tmp/proxy
-RUN dpkg-deb -X /uxp-proxy_1.22.7_all.deb /tmp/proxy/
-
-RUN rsync -a --ignore-existing /tmp/proxy/ /
-
-COPY proxy-logback.xml /etc/uxp/conf.d/proxy-logback.xml
-COPY token_login /
-
-RUN mkdir -p /usr/share/uxp/lib/
-COPY --from=builder /token_login/build/token_login /token_login
-COPY --from=builder /tmp/uxp-seg_rest-api/usr/share/uxp/lib/ /usr/share/uxp/lib/
-
-#RUN chmod +x token_login
-
-USER uxp
+#USER uxp
 #ENTRYPOINT ["top", "-b"]
-ENTRYPOINT ["/usr/share/uxp/bin/proxy.sh"]
+
+RUN mkdir -p /etc/uxp/signer/0/
+COPY configs/db.properties      /etc/uxp/
+ENTRYPOINT ["authbind", "java", \
+            "-Xms150m", \
+            "-Xmx512m", \
+            "-Xshare:on", \
+            "-XX:MaxMetaspaceSize=256m", \
+            "-XX:+UseG1GC", \
+            "-Dfile.encoding=UTF-8", \
+            "-Dorg.bytedeco.javacpp.noPointerGC=true", \
+            "-Dorg.bytedeco.javacpp.maxBytes=0", \
+            "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
+            "-Djava.library.path=/usr/share/uxp/lib/", \
+            "-Dlogback.configurationFile=/app/proxy-logback.xml", \
+            "-Duxp.proxy.clientHandlers=ee.cyber.uxp.proxy.clientproxy.MetadataHandler", \
+            "-Duxp.proxy.serverServiceHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl", \
+            "-Duxp.proxy.serverRestApiHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl", \
+            "-cp", "/app/proxy.jar:/app/jlib/signature-xades.jar:/app/jlib/addon/certprofile-trembita.jar:/app/jlib/addon/proxy/metaservice-1.22.7.jar:/app/jlib/addon/proxy/monitoring-1.22.7.jar:/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/app/jlib/addon/proxy/ciplus-jce/*", \
+            "ee.cyber.uxp.proxy.ProxyMain"]
