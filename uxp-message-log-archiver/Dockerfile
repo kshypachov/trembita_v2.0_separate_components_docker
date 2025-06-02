@@ -1,63 +1,93 @@
-FROM ubuntu:24.04
+FROM ubuntu:24.04 as builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-LABEL authors="Kirill Shypachov @kshypachov"
+RUN groupadd -g 104 uxp && \
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
 
-ARG REPO_KEY=http://192.168.99.247/key.gpg
-ARG REPO_URI="http://192.168.99.247/ testing-1.22.7 trembita2-1-22-7"
+RUN mkdir "/deb"
+COPY ./deb/ /deb/
 
-RUN echo "uxp-proxy uxp-common/username string uxpadmin" | debconf-set-selections
-#RUN echo "uxp-identity-provider-rest-api  uxp-identity-provider/password  password uxpadminp" | debconf-set-selections
-#RUN useradd -m uxpadmin -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/'
+RUN dpkg-deb -X /deb/uxp-proxy_1.22.7_all.deb                  /tmp/proxy
+RUN dpkg-deb -X /deb/uxp-addon-trembita-crypto_1.22.7_all.deb  /tmp/crypto
+
+FROM eclipse-temurin:17-jdk-jammy
+
+LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
+LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
+LABEL org.opencontainers.image.vendor="eGA Kyiv"
+LABEL org.opencontainers.image.title="trembita message log archiver"
+LABEL org.opencontainers.image.url="URI documentation"
+LABEL org.opencontainers.image.source=""
+LABEL org.opencontainers.image.version=""
 
 RUN groupadd -g 104 uxp && \
-    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/' uxp
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
 
-RUN apt-get update  \
-    && apt-get install -y equivs  \
-    && equivs-control fake-systemd \
-    && sed -i 's/^Package:.*/Package: systemd/' fake-systemd \
-    && echo 'Version: 255.0\nArchitecture: all\nDescription: dummy systemd for containers' >> fake-systemd \
-    && equivs-build fake-systemd \
-    && dpkg -i systemd_255.0_all.deb
+RUN mkdir -p /app/jlib/addon/proxy/ciplus-jce/
+RUN mkdir -p /deb/
 
-#RUN apt-get update
-#RUN apt-get install -y nano
+COPY --from=builder /tmp/proxy/usr/share/uxp/jlib/messagelog*                                   /app/
 
-RUN apt-get -qq update && apt-get -qq --no-install-recommends -y install \
-      locales ca-certificates perl bzip2 libc6-dev lsb-release gnupg2 \
-      ca-certificates gnupg supervisor net-tools iproute2 locales \
-      rlwrap ca-certificates-java debconf-utils \
-      crudini adduser expect curl rsyslog dpkg-dev \
-      python3-requests \
-    && echo "LC_ALL=en_US.UTF-8" >>/etc/environment \
-    && locale-gen en_US.UTF-8 \
-    && apt-get clean  \
-    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/signature-xades.jar                          /app/jlib/
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/ciplus-jce/                      /app/jlib/addon/proxy/ciplus-jce/
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar   /app/jlib/addon/proxy/
 
-ADD ["$REPO_KEY","/tmp/repokey.gpg"]
-RUN apt-key add '/tmp/repokey.gpg'
+COPY messagelog-archiver-logback.xml                                    /app/
 
-RUN sed -i 's/^[A-Za-z0-9]/#&/' /etc/apt/sources.list \
-#    && rm -rf /etc/apt/sources.list.d/* \
-    && echo "deb $REPO_URI" | tee -a /etc/apt/sources.list
+COPY deb/libgoogle-perftools4_2.9.1-0ubuntu3_amd64.deb                  /deb/
+COPY deb/libtcmalloc-minimal4_2.9.1-0ubuntu3_amd64.deb                  /deb/
+COPY deb/libunwind8_1.3.2-2build2.1_amd64.deb                           /deb/
+COPY deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb                       /deb/
 
-RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d \
-    && printf  '#!/bin/sh\nexit 0\n' > /usr/sbin/service && chmod +x /usr/sbin/service \
-    && printf '#!/bin/sh\nexit 0\n' > /bin/systemctl && chmod +x /bin/systemctl
+RUN apt install /deb/libunwind8_1.3.2-2build2.1_amd64.deb
+RUN apt install /deb/libtcmalloc-minimal4_2.9.1-0ubuntu3_amd64.deb
+RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb
+RUN apt install /deb/libgoogle-perftools4_2.9.1-0ubuntu3_amd64.deb && rm -rf /deb
 
-#RUN apt update
-#RUN apt install -y uxp-confclient
-RUN mkdir "/deb"
-COPY ./deb/*.deb /deb/
-COPY uxp-proxy_1.22.7_all.deb uxp-proxy_1.22.7_all.deb
+ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
 
-RUN apt update
-RUN apt -qq -y --no-install-recommends install /deb/*.deb
-RUN dpkg-deb -X /uxp-proxy_1.22.7_all.deb /
+#COPY test/db.properties                                                 /etc/uxp/
 
-#COPY messagelog-archiver-logback.xml /etc/uxp/conf.d/messagelog-archiver-logback.xml
-
-#ENTRYPOINT ["top", "-b"]
-USER uxp
-ENTRYPOINT ["/usr/share/uxp/bin/messagelog-archiver.sh"]
+#ENTRYPOINT ["java", \
+#            "-Xmx256m", \
+#            "-Xshare:on", \
+#            "-XX:MaxMetaspaceSize=128m", \
+#            "-XX:+UseG1GC", \
+#            "-Dfile.encoding=UTF-8", \
+#            "-Djava.library.path=/usr/share/uxp/lib/", \
+#            "-Dorg.bytedeco.javacpp.noPointerGC=true", \
+#            "-Dorg.bytedeco.javacpp.maxBytes=0", \
+#            "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
+#            "-Dlogback.configurationFile=/app/messagelog-archiver-logback.xml", \
+#            "-cp", "/app/messagelog-archiver.jar:/app/jlib/signature-xades.jar:/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/app/jlib/addon/proxy/ciplus-jce/*", \
+#            "-Duxp.message-log.archiver-admin-port=5765", \
+#            "-Duxp.message-log.metadata-persistence-unit=messagelog-metadata", \
+#            "-Duxp.message-log.metadata-record-lifetime-minutes=1576800", \
+#            "-Duxp.message-log.metadata-record-cleanup-operation=DELETE", \
+#            "-Duxp.message-log.metadata-cleaner-batch-size=1000", \
+#            "-Duxp.message-log.metadata-cleanup-interval=0 0 0 * * ? *", \
+#            "-Duxp.message-log.hash-algo-id=SHA-512", \
+#            "-Duxp.message-log.timestamper-client-connect-timeout=10000", \
+#            "-Duxp.message-log.timestamper-batch-size=10000", \
+#            "-Duxp.message-log.timestamper-client-read-timeout=5000", \
+#            "-Duxp.message-log.acceptable-timestamp-failure-period=14400", \
+#            "-Duxp.message-log.timestamp-certificate-chain-request=true", \
+#            "-Duxp.message-log.timestamp-provider-round-robin=true", \
+#            "-Duxp.message-log.timestamp-immediately=true", \
+#            "-Duxp.message-log.metadata-record-extract-path=/var/lib/uxp/messagelog/old-metadata", \
+#            "-Duxp.message-log.storage-path=/var/lib/uxp/messagelog", \
+#            "-Duxp.message-log.archive-path=/var/lib/uxp/messagelog/archive", \
+#            "-Duxp.message-log.temp-files-path=/var/lib/uxp/messagelog/tmp", \
+#            "-Duxp.message-log.archive-interval=0 0 0/1 1/1 * ? *", \
+#            "-Duxp.message-log.archiver-batch-size=100", \
+#            "-Duxp.message-log.archive-transfer-command=''", \
+#            "-Duxp.message-log.archive-storage-type=fs", \
+#            "-Duxp.message-log-s3.trusted-certificate=''", \
+#            "-Duxp.message-log-s3.region=us-west-1", \
+#            "-Duxp.message-log-s3.bucket-name=''", \
+#            "-Duxp.message-log-s3.storage-class=''", \
+#            "-Duxp.message-log-s3.access-key=''", \
+#            "-Duxp.message-log-s3.secret-key=''", \
+#            "-Duxp.message-log-s3.request-timeout=0", \
+#            "-Duxp.message-log-s3.address=''", \
+#            "ee.cyber.uxp.messagelog.archiving.MessageLogArchiverMain"]
