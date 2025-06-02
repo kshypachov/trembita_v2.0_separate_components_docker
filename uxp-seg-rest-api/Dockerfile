@@ -1,67 +1,73 @@
-FROM ubuntu:24.04
+FROM ubuntu:24.04 as builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-LABEL authors="Kirill Shypachov @kshypachov"
-
-ARG REPO_KEY=http://192.168.99.247/key.gpg
-ARG REPO_URI="http://192.168.99.247/ testing-1.22.7 trembita2-1-22-7"
-
-RUN echo "uxp-proxy uxp-common/username string uxpadmin" | debconf-set-selections
-#RUN echo "uxp-identity-provider-rest-api  uxp-identity-provider/password  password uxpadminp" | debconf-set-selections
-#RUN useradd -m uxpadmin -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/'
-
 RUN groupadd -g 104 uxp && \
-    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '$6$7rx.CcTn$lkhsqW3zu6BrKbnQbOMaIFsZWv.DgH5LxtsXuxDftj8yF2e/KgxTOUQFozkYfcf1H.HSyxEtECMF8P7vy4M1b/' uxp
-
-RUN apt-get update  \
-    && apt-get install -y equivs  \
-    && equivs-control fake-systemd \
-    && sed -i 's/^Package:.*/Package: systemd/' fake-systemd \
-    && echo 'Version: 255.0\nArchitecture: all\nDescription: dummy systemd for containers' >> fake-systemd \
-    && equivs-build fake-systemd \
-    && dpkg -i systemd_255.0_all.deb
-
-#RUN apt-get update
-#RUN apt-get install -y nano
-
-RUN apt-get -qq update && apt-get -qq --no-install-recommends -y install \
-      locales ca-certificates perl bzip2 libc6-dev lsb-release gnupg2 \
-      ca-certificates gnupg supervisor net-tools iproute2 locales \
-      rlwrap ca-certificates-java debconf-utils \
-      crudini adduser expect curl rsyslog dpkg-dev \
-      python3-requests \
-    && echo "LC_ALL=en_US.UTF-8" >>/etc/environment \
-    && locale-gen en_US.UTF-8 \
-    && apt-get clean  \
-    && rm -rf /var/lib/apt/lists/*
-
-ADD ["$REPO_KEY","/tmp/repokey.gpg"]
-RUN apt-key add '/tmp/repokey.gpg'
-
-RUN sed -i 's/^[A-Za-z0-9]/#&/' /etc/apt/sources.list \
-#    && rm -rf /etc/apt/sources.list.d/* \
-    && echo "deb $REPO_URI" | tee -a /etc/apt/sources.list
-
-RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d \
-    && printf  '#!/bin/sh\nexit 0\n' > /usr/sbin/service && chmod +x /usr/sbin/service \
-    && printf '#!/bin/sh\nexit 0\n' > /bin/systemctl && chmod +x /bin/systemctl
-
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
 
 RUN mkdir "/deb"
-COPY ./deb/*.deb /deb/
-COPY uxp-securityserver-rest-api_1.22.7_all.deb uxp-securityserver-rest-api_1.22.7_all.deb
-#
-RUN apt update
-RUN apt install -qq -y --no-install-recommends rsync
-RUN apt -qq -y --no-install-recommends install /deb/*.deb
+COPY ./deb/ /deb/
 
-RUN mkdir /home/ubuntu/uxp-rest
-#RUN mkdir /home/ubuntu/uxp-crypto
-RUN dpkg-deb -X uxp-securityserver-rest-api_1.22.7_all.deb /home/ubuntu/uxp-rest/
-#RUN dpkg-deb -X uxp-securityserver-rest-api_1.22.7_all.deb /home/ubuntu/uxp-crypto/
-RUN rsync -a --ignore-existing /home/ubuntu/uxp-rest/ /
-#RUN cp /home/ubuntu/uxp-crypto/
+RUN dpkg-deb -X /deb/uxp-securityserver-rest-api_1.22.7_all.deb    /tmp/seg-api
+RUN dpkg-deb -X /deb/uxp-addon-trembita-crypto_1.22.7_all.deb      /tmp/crypto
+RUN dpkg-deb -X /deb/uxp-addon-trembita-profile_1.22.7_all.deb     /tmp/profile
+
+FROM eclipse-temurin:17-jdk-jammy
+
+LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
+LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
+LABEL org.opencontainers.image.vendor="eGA Kyiv"
+LABEL org.opencontainers.image.title="trembita SEG REST API service"
+LABEL org.opencontainers.image.url="URI documentation"
+LABEL org.opencontainers.image.source=""
+LABEL org.opencontainers.image.version=""
+
+RUN groupadd -g 104 uxp && \
+    useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
+
+RUN mkdir -p /app/jlib/addon/proxy/ciplus-jce/
+RUN mkdir -p /deb/
+
+
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/signature-xades.jar                        /app/jlib/
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/ciplus-jce/                    /app/jlib/addon/proxy/ciplus-jce/
+COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar /app/jlib/addon/proxy/
+COPY --from=builder /tmp/seg-api/usr/share/uxp/jlib/securityserver*                           /app/
+COPY --from=builder /tmp/profile/usr/share/uxp/jlib/addon/certprofile-trembita.jar            /app/jlib/addon/
+
+COPY securityserver-rest-api-logback.xml                                                      /app/
+COPY libpasswordstore.so                                                                      /usr/share/uxp/lib/
+
+COPY deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb                                             /deb/
+RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb && rm -rf /deb
+
+#only for test need valid db.properties, in prod, this file mounted as secret or config map or another way
+#COPY test/db.properties                                                                       /etc/uxp/db.properties
+#need only for test. in production it s shared volume between SEG and REST API pod
+#RUN mkdir -p /etc/uxp/signer/0/
+
 
 USER uxp
-#ENTRYPOINT ["top", "-b"]
-ENTRYPOINT ["/usr/share/uxp/bin/securityserver-rest-api.sh"]
+
+#ENTRYPOINT ["java", \
+#            "-Xmx128m", \
+#            "-Xshare:on", \
+#            "-XX:MaxMetaspaceSize=256m", \
+#            "-XX:+UseG1GC", \
+#            "-Dlogging.config=/app/securityserver-rest-api-logback.xml",\
+#            "-Dfile.encoding=UTF-8", \
+#            "-Dorg.bytedeco.javacpp.noPointerGC=true", \
+#            "-Dorg.bytedeco.javacpp.maxBytes=0", \
+#            "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
+#            "-Djava.library.path=/usr/share/uxp/lib/", \
+#            "-Dloader.path=/app/jlib/signature-xades.jar,/app/jlib/addon/certprofile-trembita.jar,/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar,/app/jlib/addon/proxy/ciplus-jce/*", \
+#            "-cp", "/app/securityserver-rest-api.jar", \
+#            "-Duxp.common.configuration-anchor-file=/etc/uxp/configuration-anchor.xml", \
+#            "-Duxp.common.global-conf-path=/etc/uxp/globalconf/", \
+#            "-Duxp.proxy.software-token-key-dir=/etc/uxp/signer/", \
+#            "-Duxp.proxy.server-port=5500", \
+#            "-Dserver.port=8085", \
+#            "-Duxp.identity-provider.security-server-client-id=pvoqbggvvzpon1r4v55b7z8cu0de18cj", \
+#            "-Duxp.identity-provider.security-server-client-secret=2DmVrz_VUQUhn3ePNgWm8Ur-TwMK0la_", \
+#            "-Duxp.proxy.database-properties=/etc/uxp/db.properties", \
+#            "-Duxp.identity-provider.database-properties=/etc/uxp/db.properties", \
+#            "org.springframework.boot.loader.PropertiesLauncher"]

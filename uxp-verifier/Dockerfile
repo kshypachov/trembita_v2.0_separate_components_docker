@@ -35,7 +35,7 @@ COPY --from=builder /tmp/verifier/usr/share/uxp/jlib/verifier*                  
 COPY --from=builder /tmp/profile/usr/share/uxp/jlib/addon/certprofile-trembita.jar            /app/jlib/addon/
 
 COPY deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb                                             /deb/
-RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb
+RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb && rm -rf /deb
 
 COPY verifier-rest-api-logback.xml                                                            /app/
 
