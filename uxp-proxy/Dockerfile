@@ -53,7 +53,9 @@ COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/ciplus-jce/      
 COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar /app/jlib/addon/proxy/
 
 COPY --from=builder /tmp/profile/usr/share/uxp/jlib/addon/certprofile-trembita.jar            /app/jlib/addon/
+COPY --from=token_login_builder /token_login/build/token_login                                /app/
 
+COPY libpasswordstore.so                                                                      /usr/share/uxp/lib/libpasswordstore.so
 COPY proxy-logback.xml                                                                        /app/
 COPY configs/proxy.ini                                                                        /etc/uxp/conf.d/
 
@@ -63,11 +65,9 @@ RUN apt install -y /deb/authbind_2.1.3build1_amd64.deb
 RUN touch /etc/authbind/byport/80 && chmod 102 /etc/authbind/byport/80 && chown 102 /etc/authbind/byport/80
 RUN touch /etc/authbind/byport/443 && chmod 102 /etc/authbind/byport/443 && chown 102 /etc/authbind/byport/443
 
-#USER uxp
-#ENTRYPOINT ["top", "-b"]
-
-RUN mkdir -p /etc/uxp/signer/0/
-COPY configs/db.properties      /etc/uxp/
+USER uxp
+##RUN mkdir -p /etc/uxp/signer/0/
+##COPY configs/db.properties      /etc/uxp/
 ENTRYPOINT ["authbind", "java", \
             "-Xms150m", \
             "-Xmx512m", \
