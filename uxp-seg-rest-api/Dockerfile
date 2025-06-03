@@ -40,6 +40,19 @@ COPY libpasswordstore.so                                                        
 COPY deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb                                             /deb/
 RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb && rm -rf /deb
 
+COPY deb_secure_dev/*                                                                         /deb/
+RUN apt install -y --allow-downgrades /deb/*.deb && rm -rf /deb
+
+#Add driver for Шифр-HSM
+COPY lib_secure_dev/libcihsm.so                                                               /usr/share/uxp/lib/
+RUN chown root:root /usr/share/uxp/lib/libcihsm.so && chmod 644 /usr/share/uxp/lib/libcihsm.so
+# Add env PKCS11_PROXY_SOCKET="tcp://<proxy-address>:<proxy-port>" with HSM address and port
+
+#Add driver for ІІТ Гряда-301
+COPY lib_secure_dev/NCMGryada301PKCS11Libs-Linux/64/*.so                                      /usr/share/uxp/lib/
+RUN chown root:root /usr/share/uxp/lib/*.so && chmod 644 /usr/share/uxp/lib/*.so
+# Additionaly need to create /usr/share/uxp/lib/osplm.ini with info about HSM
+
 #only for test need valid db.properties, in prod, this file mounted as secret or config map or another way
 #COPY test/db.properties                                                                       /etc/uxp/db.properties
 #need only for test. in production it s shared volume between SEG and REST API pod
