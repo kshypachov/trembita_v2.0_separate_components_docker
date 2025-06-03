@@ -55,15 +55,33 @@ COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/cipher-jce-provid
 COPY --from=builder /tmp/profile/usr/share/uxp/jlib/addon/certprofile-trembita.jar            /app/jlib/addon/
 COPY --from=token_login_builder /token_login/build/token_login                                /app/
 
-COPY libpasswordstore.so                                                                      /usr/share/uxp/lib/libpasswordstore.so
+COPY libpasswordstore.so                                                                      /usr/share/uxp/lib/
 COPY proxy-logback.xml                                                                        /app/
 COPY configs/proxy.ini                                                                        /etc/uxp/conf.d/
+COPY configs/common.ini                                                                       /etc/uxp/conf.d/
+COPY configs/trembita.ini                                                                     /etc/uxp/conf.d/addons/
 
 COPY deb/authbind_2.1.3build1_amd64.deb                                                       /deb/
 RUN apt install -y /deb/authbind_2.1.3build1_amd64.deb
-
 RUN touch /etc/authbind/byport/80 && chmod 102 /etc/authbind/byport/80 && chown 102 /etc/authbind/byport/80
 RUN touch /etc/authbind/byport/443 && chmod 102 /etc/authbind/byport/443 && chown 102 /etc/authbind/byport/443
+
+COPY deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb                                             /deb/
+RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb && rm -rf /deb
+
+COPY deb_secure_dev/*                                                                         /deb/
+RUN apt install -y --allow-downgrades /deb/*.deb && rm -rf /deb
+
+#Add driver for Шифр-HSM
+COPY lib_secure_dev/libcihsm.so                                                               /usr/share/uxp/lib/
+RUN chown root:root /usr/share/uxp/lib/libcihsm.so && chmod 644 /usr/share/uxp/lib/libcihsm.so
+# Add env PKCS11_PROXY_SOCKET="tcp://<proxy-address>:<proxy-port>" with HSM address and port
+
+#Add driver for ІІТ Гряда-301
+COPY lib_secure_dev/NCMGryada301PKCS11Libs-Linux/64/*.so                                      /usr/share/uxp/lib/
+RUN chown root:root /usr/share/uxp/lib/*.so && chmod 644 /usr/share/uxp/lib/*.so
+# Additionaly need to create /usr/share/uxp/lib/osplm.ini with info about HSM
+
 
 USER uxp
 ##RUN mkdir -p /etc/uxp/signer/0/
