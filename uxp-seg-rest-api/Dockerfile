@@ -21,6 +21,8 @@ LABEL org.opencontainers.image.url="URI documentation"
 LABEL org.opencontainers.image.source=""
 LABEL org.opencontainers.image.version=""
 
+ENV LD_LIBRARY_PATH=:/usr/share/uxp/lib
+
 RUN groupadd -g 104 uxp && \
     useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
 
@@ -57,7 +59,6 @@ RUN chown root:root /usr/share/uxp/lib/*.so && chmod 644 /usr/share/uxp/lib/*.so
 #COPY test/db.properties                                                                       /etc/uxp/db.properties
 #need only for test. in production it s shared volume between SEG and REST API pod
 #RUN mkdir -p /etc/uxp/signer/0/
-
 
 USER uxp
 

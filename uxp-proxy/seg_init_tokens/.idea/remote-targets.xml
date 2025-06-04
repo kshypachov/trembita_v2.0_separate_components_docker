@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <option name="projectDefaultTargetUuid" value="b0d12318-55af-4640-bf27-0c19be9ef769" />
+    <targets>
+      <target name="secadmin@192.168.99.203:22" type="ssh/sftp" uuid="b0d12318-55af-4640-bf27-0c19be9ef769">
+        <config>
+          <option name="projectRootOnTarget" value="/home/secadmin/seg_init_tokens" />
+          <option name="serverName" value="secadmin@192.168.99.203:22 password" />
+        </config>
+        <ContributedStateBase type="GoLanguageRuntime">
+          <config>
+            <option name="goPath" value="/home/secadmin/go" />
+            <option name="goRoot" value="/usr/bin/go" />
+          </config>
+        </ContributedStateBase>
+      </target>
+    </targets>
+  </component>
+</project>

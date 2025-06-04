@@ -1,6 +1,28 @@
+# Этап сборки
+FROM golang:1.24 AS token_initializer_builder
+
+# Устанавливаем рабочую директорию
+WORKDIR /seg_init_tokens
+
+# Копируем исходники
+COPY seg_init_tokens/* .
+
+# Компилируем бинарник
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o token-initializer
+RUN chmod 111 token-initializer
+
+WORKDIR /trembita_healthcheck
+
+COPY trembita_healthcheck/ .
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=vendor -o  trembita-healthcheck
+
+RUN chmod 111 trembita-healthcheck
+
+#ENTRYPOINT ["top"]
+
 FROM ubuntu:24.04 as token_login_builder
 ENV DEBIAN_FRONTEND=noninteractive
-
 
 RUN apt update &&  \
     apt install -y cmake gcc
@@ -29,6 +51,8 @@ RUN dpkg-deb -X /deb/uxp-addon-metaservices_1.22.7_all.deb     /tmp/meta
 
 FROM eclipse-temurin:17-jdk-jammy
 
+ENV LD_LIBRARY_PATH=:/usr/share/uxp/lib
+
 LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
 LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
 LABEL org.opencontainers.image.vendor="eGA Kyiv"
@@ -53,7 +77,10 @@ COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/ciplus-jce/      
 COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar /app/jlib/addon/proxy/
 
 COPY --from=builder /tmp/profile/usr/share/uxp/jlib/addon/certprofile-trembita.jar            /app/jlib/addon/
-COPY --from=token_login_builder /token_login/build/token_login                                /app/
+
+COPY --from=token_login_builder         /token_login/build/token_login                        /bin/
+COPY --from=token_initializer_builder   /seg_init_tokens/token-initializer                    /bin/
+COPY --from=token_initializer_builder   /trembita_healthcheck/trembita-healthcheck            /bin/
 
 COPY libpasswordstore.so                                                                      /usr/share/uxp/lib/
 COPY proxy-logback.xml                                                                        /app/
