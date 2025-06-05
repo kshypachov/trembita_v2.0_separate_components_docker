@@ -48,23 +48,23 @@ ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
 
 #ENTRYPOINT ["top", "-b"]
 USER uxp
-ENTRYPOINT ["java", \
-           "-Xmx128m", \
-           "-Xshare:on", \
-           "-XX:MaxMetaspaceSize=100m", \
-           "-XX:+UseG1GC", \
-           "-Dlogback.configurationFile=/app/ocsp-cache-logback.xml", \
-           "-Dfile.encoding=UTF-8", \
-           "-Djava.library.path=/usr/share/uxp/lib/", \
-           "-Dorg.bytedeco.javacpp.noPointerGC=true", \
-           "-Dorg.bytedeco.javacpp.maxBytes=0", \
-           "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
-           "-cp", "/app/jlib/ocsp-cache.jar:/app/jlib/signature-xades.jar:/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/app/jlib/addon/proxy/ciplus-jce/*" ,\
-           "-Dorg.bytedeco.javacpp.cachedir=/tmp/bc_java/", \
-           "-Duxp.ocsp-cache.admin-port=5766", \
-           "-Duxp.ocsp-cache.ocsp-responder-listen-port=5577", \
-           "-Duxp.ocsp-cache.update-interval=0 0 0/6 1/1 * ? *", \
-           "-Duxp.ocsp-cache.ocsp-responder-listen-address=0.0.0.0", \
-           "-Duxp.ocsp-cache.full-update-freshness-divisor=10", \
-           "-Duxp.ocsp-cache.client-connect-timeout=10000", \
-           "ee.cyber.uxp.ocsp.OcspCacheMain"]
+#ENTRYPOINT ["java", \
+#           "-Xmx128m", \
+#           "-Xshare:on", \
+#           "-XX:MaxMetaspaceSize=100m", \
+#           "-XX:+UseG1GC", \
+#           "-Dlogback.configurationFile=/app/ocsp-cache-logback.xml", \
+#           "-Dfile.encoding=UTF-8", \
+#           "-Djava.library.path=/usr/share/uxp/lib/", \
+#           "-Dorg.bytedeco.javacpp.noPointerGC=true", \
+#           "-Dorg.bytedeco.javacpp.maxBytes=0", \
+#           "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
+#           "-cp", "/app/jlib/ocsp-cache.jar:/app/jlib/signature-xades.jar:/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/app/jlib/addon/proxy/ciplus-jce/*" ,\
+#           "-Dorg.bytedeco.javacpp.cachedir=/tmp/bc_java/", \
+#           "-Duxp.ocsp-cache.admin-port=5766", \
+#           "-Duxp.ocsp-cache.ocsp-responder-listen-port=5577", \
+#           "-Duxp.ocsp-cache.update-interval=0 0 0/6 1/1 * ? *", \
+#           "-Duxp.ocsp-cache.ocsp-responder-listen-address=0.0.0.0", \
+#           "-Duxp.ocsp-cache.full-update-freshness-divisor=10", \
+#           "-Duxp.ocsp-cache.client-connect-timeout=10000", \
+#           "ee.cyber.uxp.ocsp.OcspCacheMain"]
