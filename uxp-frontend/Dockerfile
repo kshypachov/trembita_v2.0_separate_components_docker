@@ -25,8 +25,8 @@ COPY usr/share/uxp/ /usr/share/uxp/
 RUN mkdir -p /var/lib/uxp/public/
 COPY public/ /var/lib/uxp/public/
 
-RUN mkdir -p /tmp/nginx/temp && \
-    chown -R nginx:nginx /tmp/nginx
+RUN mkdir -p /tmp/nginx/ && \
+    chown -R nginx:nginx /tmp/nginx/
 
 RUN touch /etc/authbind/byport/80 && chmod 112 /etc/authbind/byport/80 && chown 112 /etc/authbind/byport/80
 
