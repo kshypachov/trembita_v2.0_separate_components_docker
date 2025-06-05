@@ -1,6 +1,12 @@
+
 FROM ubuntu:22.04
+
+RUN groupadd -g 114 nginx && \
+    useradd -m -u 112 -g 114 -d /var/www -s /usr/sbin/nologin -p '' nginx
+
+
 RUN apt update &&  \
-    apt install -qq --no-install-recommends -y nginx && \
+    apt install -qq --no-install-recommends -y nginx authbind && \
     rm -rf /var/lib/apt/lists/* &&  \
     apt clean && rm /etc/nginx/sites-enabled/default
 
@@ -16,6 +22,14 @@ COPY conf.d/* /etc/nginx/conf.d/
 RUN mkdir -p /usr/share/uxp/
 COPY usr/share/uxp/ /usr/share/uxp/
 
+RUN mkdir -p /var/lib/uxp/public/
+COPY public/ /var/lib/uxp/public/
+
+RUN mkdir -p /tmp/nginx/temp && \
+    chown -R nginx:nginx /tmp/nginx
+
+RUN touch /etc/authbind/byport/80 && chmod 112 /etc/authbind/byport/80 && chown 112 /etc/authbind/byport/80
+
 RUN rm /bin/sh && rm /bin/bash
-#ENTRYPOINT ["top", "-b"]
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+USER nginx
+ENTRYPOINT ["authbind", "nginx", "-g", "daemon off;"]
