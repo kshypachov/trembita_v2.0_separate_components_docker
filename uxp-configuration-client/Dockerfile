@@ -21,6 +21,7 @@ LABEL org.opencontainers.image.url="URI documentation"
 LABEL org.opencontainers.image.source=""
 LABEL org.opencontainers.image.version=""
 
+ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
 
 RUN groupadd -g 104 uxp && \
     useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
@@ -31,15 +32,23 @@ RUN mkdir -p /deb/
 COPY --from=builder /tmp/conf/usr/share/uxp/jlib/configuration-client.jar                     /app
 COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/ciplus-jce/                    /app/jlib/addon/proxy/ciplus-jce/
 COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar /app/jlib/addon/proxy/
+
 COPY confclient-logback.xml /app/
-COPY deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb /deb/
+COPY deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb                                             /deb/
+COPY deb/libgoogle-perftools4_2.9.1-0ubuntu3_amd64.deb                                        /deb/
+COPY deb/libtcmalloc-minimal4_2.9.1-0ubuntu3_amd64.deb                                        /deb/
+COPY deb/libunwind8_1.3.2-2build2.1_amd64.deb                                                 /deb/
 
-RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb && rm -rf /deb
+RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb && \
+    apt install /deb/libunwind8_1.3.2-2build2.1_amd64.deb && \
+    apt install /deb/libtcmalloc-minimal4_2.9.1-0ubuntu3_amd64.deb && \
+    apt install /deb/libgoogle-perftools4_2.9.1-0ubuntu3_amd64.deb && \
+    rm -rf /deb
 
-ENTRYPOINT ["top"]
-#RUN rm /bin/bash && rm /bin/sh
-TODO add /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
-#USER uxp
+
+RUN rm /bin/bash && rm /bin/sh
+
+USER uxp
 #ENTRYPOINT ["java", \
 #            "-Xmx50m", \
 #            "-XX:MaxMetaspaceSize=70m", \
