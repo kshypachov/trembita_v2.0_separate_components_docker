@@ -10,7 +10,7 @@ The goal is to provide clean, reproducible, and Kubernetes-friendly images for e
 ### 1. `uxp-proxy`
 The **core component** responsible for:
 
-- Secure message routing between X-Road members
+- Secure message routing between Trembita 2.0 members
 - All cryptographic operations:
   - Digital signature
   - Signature validation
@@ -26,7 +26,7 @@ Responsible for:
 
 - Downloading **global configuration** from sources defined in the anchor file
 - Validating digital signatures of configuration files
-- Saving the config files to directories used by other Trembita components
+- Saving the config files to directories used by other Trembita 2.0 components
 
 ---
 
