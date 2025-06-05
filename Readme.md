@@ -70,7 +70,7 @@ Supports:
 Component for:
 
 - Receiving **transaction logs** from `uxp-proxy`
-- Forwarding logs to an **ELK stack** (e.g. Elasticsearch + Logstash)
+- Forwarding logs to an **ELK stack** (e.g. Elasticsearch + Kibana)
 - Performing **health monitoring** of the Secure Exchange Gateway
 
 > ⚠️ In Kubernetes deployments, **only the health monitoring feature is not supported**.  
@@ -111,6 +111,7 @@ Each subdirectory contains:
 - `Dockerfile` for the component
 - Optional configuration templates
 - Notes or scripts specific to that service
+- Readme file
 
 ---
 
