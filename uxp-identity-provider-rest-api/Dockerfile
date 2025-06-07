@@ -29,6 +29,8 @@ RUN mkdir -p /app/jlib/
 COPY identity-provider-rest-api-logback.xml                                                          /app/
 COPY --from=builder /tmp/identity/usr/share/uxp/jlib/identity*                                       /app/jlib/
 
+RUN rm /bin/bash && rm /bin/sh
+
 USER uxp
 #ENTRYPOINT ["java", \
 #            "-Xmx128m", \

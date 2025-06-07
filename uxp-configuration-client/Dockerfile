@@ -45,7 +45,6 @@ RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb && \
     apt install /deb/libgoogle-perftools4_2.9.1-0ubuntu3_amd64.deb && \
     rm -rf /deb
 
-
 RUN rm /bin/bash && rm /bin/sh
 
 USER uxp
