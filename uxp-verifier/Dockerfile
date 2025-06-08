@@ -27,7 +27,6 @@ RUN groupadd -g 104 uxp && \
 RUN mkdir -p /app/jlib/addon/proxy/ciplus-jce/
 RUN mkdir -p /deb/
 
-
 COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/signature-xades.jar                        /app/jlib/
 COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/ciplus-jce/                    /app/jlib/addon/proxy/ciplus-jce/
 COPY --from=builder /tmp/crypto/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar /app/jlib/addon/proxy/
@@ -39,12 +38,15 @@ RUN apt install /deb/libgomp1_12.3.0-1ubuntu1~22.04_amd64.deb && rm -rf /deb
 
 COPY verifier-rest-api-logback.xml                                                            /app/
 
+#For testing standalone
 #COPY test/db.properties                                                                       /etc/uxp/db.properties
 
 RUN mkdir -p /var/lib/uxp/messagelog/archive
 
+RUN rm /bin/bash && rm /bin/sh
+
 USER uxp
-#ENTRYPOINT ["top", "-b"]
+
 #ENTRYPOINT ["java", \
 #            "-Xmx128m", \
 #            "-XX:MaxMetaspaceSize=128m", \

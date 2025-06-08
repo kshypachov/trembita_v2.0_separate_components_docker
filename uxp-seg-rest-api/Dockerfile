@@ -59,6 +59,7 @@ RUN chown root:root /usr/share/uxp/lib/*.so && chmod 644 /usr/share/uxp/lib/*.so
 #COPY test/db.properties                                                                       /etc/uxp/db.properties
 #need only for test. in production it s shared volume between SEG and REST API pod
 #RUN mkdir -p /etc/uxp/signer/0/
+RUN rm /bin/bash && rm /bin/sh
 
 USER uxp
 

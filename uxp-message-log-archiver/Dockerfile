@@ -47,6 +47,8 @@ RUN apt install /deb/libgoogle-perftools4_2.9.1-0ubuntu3_amd64.deb && rm -rf /de
 ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
 
 #COPY test/db.properties                                                 /etc/uxp/
+RUN rm /bin/bash && rm /bin/sh
+
 USER uxp
 #ENTRYPOINT ["java", \
 #            "-Xmx256m", \

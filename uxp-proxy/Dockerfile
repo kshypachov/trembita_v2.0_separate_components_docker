@@ -109,6 +109,7 @@ COPY lib_secure_dev/NCMGryada301PKCS11Libs-Linux/64/*.so                        
 RUN chown root:root /usr/share/uxp/lib/*.so && chmod 644 /usr/share/uxp/lib/*.so
 # Additionaly need to create /usr/share/uxp/lib/osplm.ini with info about HSM
 
+RUN rm /bin/bash && rm /bin/sh
 
 USER uxp
 ##RUN mkdir -p /etc/uxp/signer/0/

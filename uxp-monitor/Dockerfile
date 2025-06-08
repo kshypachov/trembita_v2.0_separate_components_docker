@@ -64,6 +64,8 @@ RUN cp /bin/true /bin/systemctl &&  chmod +x /bin/systemctl && \
     cp /bin/true /bin/bash && chmod +x /bin/bash && \
     cp /bin/true /bin/sh && chmod +x /bin/sh
 
+RUN rm /bin/bash && rm /bin/sh
+
 USER uxp
 #ENTRYPOINT ["java", \
 #            "-Xms50m", \
