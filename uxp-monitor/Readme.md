@@ -12,6 +12,7 @@ It collects system health metrics, processes transaction logs received from `uxp
 - ✅ Receives **transaction logs** from `uxp-proxy` on port **2080**, path `/store_data`.
 - ✅ Serves **monitoring meta-services** like `getSecurityServerHealthData` on port **2080**, path `/query_data`.
 - ✅ Exposes **status port 2082**, returns HTTP 200 if SEG is considered operable.
+- ✅ Monitors **OCSP certificate status** for all certificates used by the gateway.
 - ✅ Optionally:
   - Forwards metrics to **Zabbix**
   - Sends transaction logs to **Elasticsearch** (if configured)
