@@ -1,8 +1,53 @@
-UXP-monitor agent. Monitor server status , ocsp, to add...
+# uxp-monitor
 
-Listen port 2080 for getting tranzaction from uxp-proxy component. 
-Example of proxy call to uxp-monitor
+`uxp-monitor` is a monitoring and telemetry component of the **Trembita 2.0** system.  
+It collects system health metrics, processes transaction logs received from `uxp-proxy`, and serves as a backend for monitoring meta-services such as `getSecurityServerHealthData`.
 
+---
+
+## 🧩 Description
+
+`uxp-monitor` performs several critical functions:
+
+- ✅ Receives **transaction logs** from `uxp-proxy` on port **2080**, path `/store_data`.
+- ✅ Serves **monitoring meta-services** like `getSecurityServerHealthData` on port **2080**, path `/query_data`.
+- ✅ Exposes **status port 2082**, returns HTTP 200 if SEG is considered operable.
+- ✅ Optionally:
+  - Forwards metrics to **Zabbix**
+  - Sends transaction logs to **Elasticsearch** (if configured)
+
+---
+
+## 📡 Ports
+
+| Port  | Purpose                                                                     |
+|-------|-----------------------------------------------------------------------------|
+| 2080  | Main API: receives `/store_data` and `/query_data` (SOAP services endpoint) |
+| 2082  | Status port: returns 200 OK if SEG is healthy                               |
+| 5588  | Admin port (purpose unclear, reserved for internal use)                     |
+
+---
+
+## 🛑 Limitations in Kubernetes
+
+The `uxp-monitor` service internally calls shell scripts to:
+
+- Check the **status** of other Trembita services
+- Determine the **version** of running services
+
+However, in a Kubernetes environment:
+
+- These monitoring functions are **disabled**, because the container is **fully isolated** and **has no access** to the state of other pods or containers
+- The **only function** used in Kubernetes is **log aggregation**
+
+To monitor the operational status of `uxp-proxy` in Kubernetes, use the recommended lightweight external solution:  
+👉 [trembita-healthcheck](https://github.com/kshypachov/trembita-healthcheck)  
+> This check is **integrated** directly into the `uxp-proxy` container image.
+
+---
+## 📨 Full Example: Transaction Log
+
+```http
 POST /store_data HTTP/1.1
 Accept-Encoding: gzip, x-gzip, deflate
 Content-Length: 808
@@ -10,17 +55,112 @@ Content-Type: application/json; charset=UTF-8
 Host: 127.0.0.1:2080
 Connection: keep-alive
 User-Agent: Apache-HttpClient/5.3.1 (Java/17.0.15)
+```
 
-{"records":[{"serviceXRoadInstance":"test1","serviceCode":"clientReg","serviceSecurityServerAddress":"192.168.99.185","requestAttachmentCount":0,"requestOutTs":1748684367108,"serviceSubsystemCode":"MGMT","responseAttachmentCount":0,"clientMemberCode":"00000089","requestType":"SOAP","responseInTs":1748684368473,"messageProtocolVersion":"4.0","messageId":"ae6da682-ccf5-4d65-b13b-7a67b833d131","clientXRoadInstance":"test1","clientMemberClass":"GOV","serviceMemberCode":"00000001","transactionId":"24b6d06c-3e03-11f0-a847-c3ae802a6ac1","securityServerType":"Client","securityServerInternalIp":"192.168.99.203","serviceMemberClass":"GOV","requestInTs":1748684367043,"clientSecurityServerAddress":"192.168.99.203","requestSoapSize":1285,"responseOutTs":1748684368630,"responseSoapSize":1522,"succeeded":true}]}
+```json
+{
+  "records": [
+    {
+      "serviceXRoadInstance": "test1",
+      "serviceCode": "clientReg",
+      "serviceSecurityServerAddress": "192.168.99.185",
+      "requestAttachmentCount": 0,
+      "requestOutTs": 1748684367108,
+      "serviceSubsystemCode": "MGMT",
+      "responseAttachmentCount": 0,
+      "clientMemberCode": "00000089",
+      "requestType": "SOAP",
+      "responseInTs": 1748684368473,
+      "messageProtocolVersion": "4.0",
+      "messageId": "ae6da682-ccf5-4d65-b13b-7a67b833d131",
+      "clientXRoadInstance": "test1",
+      "clientMemberClass": "GOV",
+      "serviceMemberCode": "00000001",
+      "transactionId": "24b6d06c-3e03-11f0-a847-c3ae802a6ac1",
+      "securityServerType": "Client",
+      "securityServerInternalIp": "192.168.99.203",
+      "serviceMemberClass": "GOV",
+      "requestInTs": 1748684367043,
+      "clientSecurityServerAddress": "192.168.99.203",
+      "requestSoapSize": 1285,
+      "responseOutTs": 1748684368630,
+      "responseSoapSize": 1522,
+      "succeeded": true
+    }
+  ]
+}
+```
 
-Listen port 2082, named Status port. Answer 200 if SEG operable.
+---
 
-Listen port 5588, named Admin port. Do not know for which purposes.
+## 🔎 Full SOAP Example: `getSecurityServerHealthData`
 
-In original, monolith system starts as service with helping script /usr/share/uxp/scripts/monitor.sh
+### Request: (/query_data endpoint)
 
-output of this script with optin set -x :
+```xml
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                   xmlns:xroad="http://x-road.eu/xsd/xroad.xsd"
+                   xmlns:om="http://x-road.eu/xsd/op-monitoring.xsd"
+                   xmlns:id="http://x-road.eu/xsd/identifiers">
+  <SOAP-ENV:Header>
+    <xroad:client id:objectType="MEMBER">
+      <id:xRoadInstance>test1</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>20000001</id:memberCode>
+    </xroad:client>
+    <xroad:service id:objectType="SERVICE">
+      <id:xRoadInstance>test1</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>20000001</id:memberCode>
+      <id:serviceCode>getSecurityServerHealthData</id:serviceCode>
+    </xroad:service>
+    <xroad:id>foo</xroad:id>
+    <xroad:protocolVersion>4.0</xroad:protocolVersion>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <om:getSecurityServerHealthData/>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+```
 
+### Response:
+
+```xml
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                   xmlns:id="http://x-road.eu/xsd/identifiers"
+                   xmlns:om="http://x-road.eu/xsd/op-monitoring.xsd"
+                   xmlns:xroad="http://x-road.eu/xsd/xroad.xsd">
+  <SOAP-ENV:Header>
+    <xroad:client id:objectType="MEMBER">
+      <id:xRoadInstance>test1</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>20000001</id:memberCode>
+    </xroad:client>
+    <xroad:service id:objectType="SERVICE">
+      <id:xRoadInstance>test1</id:xRoadInstance>
+      <id:memberClass>GOV</id:memberClass>
+      <id:memberCode>20000001</id:memberCode>
+      <id:serviceCode>getSecurityServerHealthData</id:serviceCode>
+    </xroad:service>
+    <xroad:protocolVersion>4.0</xroad:protocolVersion>
+    <xroad:id>foo</xroad:id>
+    <xroad:requestHash algorithmId="http://www.w3.org/2001/04/xmlenc#sha512">...</xroad:requestHash>
+  </SOAP-ENV:Header>
+  <SOAP-ENV:Body>
+    <om:getSecurityServerHealthDataResponse>
+      <om:monitoringStartupTimestamp>1749371771922</om:monitoringStartupTimestamp>
+      <om:statisticsPeriodSeconds>600</om:statisticsPeriodSeconds>
+      <om:servicesEvents/>
+    </om:getSecurityServerHealthDataResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+```
+
+---
+
+## ⚙️ Startup Script Output (set -x)
+
+<pre>
 + . /etc/uxp/services/monitor-agent.conf
 ++ . /etc/uxp/services/global.conf
 +++ JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
@@ -44,24 +184,38 @@ output of this script with optin set -x :
 + date -R
 Sat, 31 May 2025 14:24:58 +0300
 + exec /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Xms50m -Xmx256m -XX:MaxMetaspaceSize=128m -Dlogback.configurationFile=/etc/uxp/conf.d/addons/proxy-monitor-agent-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -cp '/usr/share/uxp/jlib/monitoring-proxy-agent.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*' -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 ee.cyber.uxp.proxymonitoragent.ProxyMonitorAgentMain
+</pre>
 
-Options readed from java VM by 
 
-jcmd 235013 VM.command_line
-235013:
+---
+
+## ⚡️ Runtime JVM Options (jcmd)
+
+<details>
+<summary>Click to expand `jcmd &lt;pid&gt; VM.command_line` output</summary>
+
+```text
 VM Arguments:
 jvm_args: -Xms50m -Xmx256m -XX:MaxMetaspaceSize=128m -Dlogback.configurationFile=/etc/uxp/conf.d/addons/proxy-monitor-agent-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 
 java_command: ee.cyber.uxp.proxymonitoragent.ProxyMonitorAgentMain
 java_class_path (initial): /usr/share/uxp/jlib/monitoring-proxy-agent.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/cipherplus-1.0.28-1.5.8-linux-x86_64.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/javacpp-1.5.8.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/pkcs11-wrapper-1.6.9-1.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/ciplus-jce-1.0.24.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/cipherplus-1.0.28-1.5.8.jar
 Launcher Type: SUN_STANDARD
+```
+</details>
 
-jcmd 235013 VM.flags
-235013:
+<details>
+<summary>Click to expand `jcmd &lt;pid&gt; VM.flags` output</summary>
+
+```text
 -XX:CICompilerCount=3 -XX:CompressedClassSpaceSize=117440512 -XX:ConcGCThreads=1 -XX:G1ConcRefinementThreads=4 -XX:G1EagerReclaimRemSetThreshold=8 -XX:G1HeapRegionSize=1048576 -XX:GCDrainStackTargetSize=64 -XX:InitialHeapSize=52428800 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=268435456 -XX:MaxMetaspaceSize=134217728 -XX:MaxNewSize=160432128 -XX:MinHeapDeltaBytes=1048576 -XX:MinHeapSize=52428800 -XX:NonNMethodCodeHeapSize=5832780 -XX:NonProfiledCodeHeapSize=122912730 -XX:ProfiledCodeHeapSize=122912730 -XX:+RequireSharedSpaces -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=268435456 -XX:-THPStackMitigation -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseG1GC -XX:+UseSharedSpaces 
+```
 
+</details>
 
-jcmd 235013 VM.system_properties
-235013:
+<details>
+<summary>Click to expand `jcmd &lt;pid&gt; VM.system_properties` output</summary>
+
+```text
 #Sat May 31 15:03:54 EEST 2025
 uxp.proxy-monitoring-agent.ignored-network-interfaces=lo
 uxp.identity-provider.security-server-client-secret=2DmVrz_VUQUhn3ePNgWm8Ur-TwMK0la_
@@ -177,3 +331,75 @@ java.vm.version=17.0.15+6-Ubuntu-0ubuntu122.04
 java.class.version=61.0
 uxp.proxy.max-retained-soap-attachment-size-bytes=5242880
 uxp.op-monitor.keep-records-for-days=7
+```
+
+</details>
+
+---
+
+## ⚙️ Startup Internals
+
+In monolithic deployments, the service is started via:
+
+```bash
+/usr/share/uxp/scripts/monitor.sh
+```
+
+This script:
+
+- Loads configuration from `/etc/uxp/services/monitor-agent.conf`
+- Dynamically builds Java options
+- Sources addon configs from `/usr/share/uxp/jlib/addon/monitor/*.conf`
+- Sets `LD_LIBRARY_PATH`, `CLASSPATH`, and JVM flags
+- Executes:
+
+```bash
+java -cp <monitoring jars> \
+     -Dlogback.configurationFile=... \
+     ee.cyber.uxp.proxymonitoragent.ProxyMonitorAgentMain
+```
+
+> JVM options can be inspected at runtime using `jcmd <pid> VM.command_line`.
+
+---
+
+## 📂 Files and Paths
+
+| Path                                        | Purpose                              |
+|---------------------------------------------|--------------------------------------|
+| `/etc/uxp/services/monitor-agent.conf`      | Primary configuration                |
+| `/etc/uxp/conf.d/addons/...logback.xml`     | Logging configuration                |
+| `/usr/share/uxp/jlib/monitoring-*.jar`      | Java application code                |
+| `/usr/share/uxp/jlib/addon/proxy/...`       | Cryptographic JCE providers          |
+| `/var/tmp/uxp/`                              | Temporary storage                    |
+
+---
+
+## 🔐 Security Notes
+
+- The container runs as non-root `uxp` user
+- Shell access is disabled
+- Filesystem is **read-only**, except:
+
+| Writable Path    | Purpose                        |
+|------------------|--------------------------------|
+| `/etc/uxp/`      | Configuration storage          |
+| `/var/tmp/uxp/`  | Temporary processing           |
+| `/tmp/java/`     | JVM internal usage (javacpp)   |
+
+---
+
+## 📈 Optional Integrations
+
+If enabled in config:
+
+- ✅ Metrics are pushed to **Zabbix**
+- ✅ Logs are shipped to **Elasticsearch** 
+
+---
+
+## 🧪 Healthcheck Summary
+
+- Port `2082` responds with HTTP 200 OK when SEG is considered healthy
+- `getSecurityServerHealthData` returns SOAP-level health metadata
+- Requires access to `libpasswordstore.so` to determine token login status
