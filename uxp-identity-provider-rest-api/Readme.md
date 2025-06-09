@@ -42,16 +42,20 @@ exec /usr/lib/jvm/java-17-openjdk-amd64/bin/java \
 
 <details>
 <summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.command_line</code></summary>
+
+```txt
 VM Arguments:
 jvm_args: -Xmx128m -XX:MaxMetaspaceSize=256m -Dserver.port=8087 -Dlogging.config=/etc/uxp/conf.d/identity-provider-rest-api-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ 
 java_command: org.springframework.boot.loader.PropertiesLauncher
 java_class_path (initial): /usr/share/uxp/jlib/identity-provider-rest-api.jar
 Launcher Type: SUN_STANDARD
+```
 </details>
 
 <details>
 <summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.system_properties</code></summary>
 
+```txt
 java.specification.version=17
 uxp.identity-provider.security-server-client-secret=2DmVrz_VUQUhn3ePNgWm8Ur-TwMK0la_
 uxp.common.temp-files-path=/var/tmp/uxp/
@@ -141,10 +145,13 @@ java.specification.maintenance.version=1
 uxp.common.expiration-warning-threshold-days=32
 sun.io.unicode.encoding=UnicodeLittle
 java.class.version=61.0
+```
 </details>
 
 <details>
 <summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.flags</code></summary>
+
+```txt
 -XX:CICompilerCount=3 
 -XX:CompressedClassSpaceSize=218103808 
 -XX:ConcGCThreads=1 
@@ -172,6 +179,7 @@ java.class.version=61.0
 -XX:+UseFastUnorderedTimeStamps 
 -XX:+UseG1GC 
 -XX:+UseSharedSpaces 
+```
 </details>
 
 ---
