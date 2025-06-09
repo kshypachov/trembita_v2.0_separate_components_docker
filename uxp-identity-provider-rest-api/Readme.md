@@ -1,42 +1,57 @@
-UXP-identity-provider-rest-api
-    Listen port 0.0.0.0 8087 
-    Port use for provide authentication OAuth2 API.
-    In original producat all URI with prefix /auth-api , are redirect to port 8087.
-    Full api specification you can  find in swagger on security server.
+# UXP Identity Provider REST API
 
-Files and directories
+This component provides OAuth2-based authentication services for the UXP Security Server. It is exposed via port `8087`, and in the original monolithic product, all URIs with the `/auth-api` prefix are redirected to this service.
 
-/etc/uxp/services/identity-provider-rest-api.conf - load durin startup 
-/etc/uxp/services/global.conf - load via identity-provider-rest-api.conf
-/etc/uxp/conf.d/identity-provider-rest-api-logback.xml - load via identity-provider-rest-api.conf
-/etc/uxp/services/local.conf - load via identity-provider-rest-api.conf
-/usr/share/uxp/bin/identity-provider-rest-api.sh - startup script
-/etc/uxp/conf.d/identity-provider.ini - configuration script
+The API specification is available through the Swagger UI integrated in the Trembita Security Server.
 
-+ . /etc/uxp/services/identity-provider-rest-api.conf
-++ . /etc/uxp/services/global.conf
-++ CP=/usr/share/uxp/jlib/identity-provider-rest-api.jar
-++ IDENTITY_PROVIDER_PARAMS=' -Dserver.port=8087 -Dlogging.config=/etc/uxp/conf.d/identity-provider-rest-api-logback.xml'
-++ IDENTITY_PROVIDER_JVM_OPTS=' -Xmx128m -XX:MaxMetaspaceSize=256m'
-++ . /etc/uxp/services/local.conf
-+ date -R
-Sun, 01 Jun 2025 13:17:52 +0300
-+ exec /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Xmx128m -XX:MaxMetaspaceSize=256m -Dserver.port=8087 -Dlogging.config=/etc/uxp/conf.d/identity-provider-rest-api-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -cp /usr/share/uxp/jlib/identity-provider-rest-api.jar org.springframework.boot.loader.PropertiesLauncher
+---
 
+## 📁 Files and Configuration
 
+The following configuration and script files are used during startup in the legacy deployment model:
 
-jcmd 233147  VM.command_line
-233147:
+- `/etc/uxp/services/identity-provider-rest-api.conf` – Main startup script configuration
+- `/etc/uxp/services/global.conf` – Loaded via `identity-provider-rest-api.conf`
+- `/etc/uxp/conf.d/identity-provider-rest-api-logback.xml` – Logging configuration
+- `/etc/uxp/services/local.conf` – Additional startup parameters
+- `/usr/share/uxp/bin/identity-provider-rest-api.sh` – Startup script
+- `/etc/uxp/conf.d/identity-provider.ini` – Application-specific configuration
+
+---
+
+## 🚀 Startup Command
+
+In legacy setups, the Java application is launched with:
+
+```bash
+exec /usr/lib/jvm/java-17-openjdk-amd64/bin/java \
+  -Xmx128m \
+  -XX:MaxMetaspaceSize=256m \
+  -Dserver.port=8087 \
+  -Dlogging.config=/etc/uxp/conf.d/identity-provider-rest-api-logback.xml \
+  -XX:+UseG1GC \
+  -Xshare:on \
+  -Dfile.encoding=UTF-8 \
+  -Djava.library.path=/usr/share/uxp/lib/ \
+  -cp /usr/share/uxp/jlib/identity-provider-rest-api.jar \
+  org.springframework.boot.loader.PropertiesLauncher
+```
+
+---
+## ⚡ Runtime JVM Options (jcmd)
+
+<details>
+<summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.command_line</code></summary>
 VM Arguments:
 jvm_args: -Xmx128m -XX:MaxMetaspaceSize=256m -Dserver.port=8087 -Dlogging.config=/etc/uxp/conf.d/identity-provider-rest-api-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ 
 java_command: org.springframework.boot.loader.PropertiesLauncher
 java_class_path (initial): /usr/share/uxp/jlib/identity-provider-rest-api.jar
 Launcher Type: SUN_STANDARD
+</details>
 
+<details>
+<summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.system_properties</code></summary>
 
-jcmd 233147 VM.system_properties
-233147:
-#Sun Jun 01 13:27:05 EEST 2025
 java.specification.version=17
 uxp.identity-provider.security-server-client-secret=2DmVrz_VUQUhn3ePNgWm8Ur-TwMK0la_
 uxp.common.temp-files-path=/var/tmp/uxp/
@@ -126,7 +141,55 @@ java.specification.maintenance.version=1
 uxp.common.expiration-warning-threshold-days=32
 sun.io.unicode.encoding=UnicodeLittle
 java.class.version=61.0
+</details>
 
-jcmd 233147 VM.flags
-233147:
--XX:CICompilerCount=3 -XX:CompressedClassSpaceSize=218103808 -XX:ConcGCThreads=1 -XX:G1ConcRefinementThreads=4 -XX:G1EagerReclaimRemSetThreshold=8 -XX:G1HeapRegionSize=1048576 -XX:GCDrainStackTargetSize=64 -XX:InitialHeapSize=65011712 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=134217728 -XX:MaxMetaspaceSize=268435456 -XX:MaxNewSize=79691776 -XX:MinHeapDeltaBytes=1048576 -XX:MinHeapSize=8388608 -XX:NonNMethodCodeHeapSize=5832780 -XX:NonProfiledCodeHeapSize=122912730 -XX:ProfiledCodeHeapSize=122912730 -XX:+RequireSharedSpaces -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=134217728 -XX:-THPStackMitigation -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseG1GC -XX:+UseSharedSpaces 
+<details>
+<summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.flags</code></summary>
+-XX:CICompilerCount=3 
+-XX:CompressedClassSpaceSize=218103808 
+-XX:ConcGCThreads=1 
+-XX:G1ConcRefinementThreads=4 
+-XX:G1EagerReclaimRemSetThreshold=8 
+-XX:G1HeapRegionSize=1048576 
+-XX:GCDrainStackTargetSize=64 
+-XX:InitialHeapSize=65011712 
+-XX:MarkStackSize=4194304 
+-XX:MaxHeapSize=134217728 
+-XX:MaxMetaspaceSize=268435456 
+-XX:MaxNewSize=79691776 
+-XX:MinHeapDeltaBytes=1048576 
+-XX:MinHeapSize=8388608 
+-XX:NonNMethodCodeHeapSize=5832780 
+-XX:NonProfiledCodeHeapSize=122912730 
+-XX:ProfiledCodeHeapSize=122912730 
+-XX:+RequireSharedSpaces 
+-XX:ReservedCodeCacheSize=251658240 
+-XX:+SegmentedCodeCache 
+-XX:SoftMaxHeapSize=134217728 
+-XX:-THPStackMitigation 
+-XX:+UseCompressedClassPointers 
+-XX:+UseCompressedOops 
+-XX:+UseFastUnorderedTimeStamps 
+-XX:+UseG1GC 
+-XX:+UseSharedSpaces 
+</details>
+
+---
+## 📦 Kubernetes Container Deployment
+
+The above configuration and behavior describe the legacy monolithic application setup.
+For deployment in a Kubernetes environment, a dedicated Dockerfile is provided with the following characteristics:
+
+- ✅ Multi-stage build: minimal runtime image
+- ✅ Built on top of eclipse-temurin:17-jdk-jammy
+- ✅ Runs as non-root user (uxp)
+- ✅ Logging output is configured to stdout (standard Kubernetes practice)
+- ✅ No ENTRYPOINT is specified — the entrypoint must be passed explicitly in your Kubernetes deployment or Helm chart.
+- ✅ Removed /bin/bash , /bin/sh
+- 
+---
+## 🧩 Runtime Notes (Kubernetes)
+- The container works in a read-only filesystem context.
+- Rtime state and configuration are isolated to mounted volume:
+  - /etc/uxp/db_properties – DB credentials
+- The container does not provide shall access.
