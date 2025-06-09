@@ -28,7 +28,7 @@ RUN groupadd -g 104 uxp && \
 RUN mkdir -p /app/jlib/addon/proxy/ciplus-jce/
 RUN mkdir -p /deb/
 
-COPY monitor-agent.ini /app/
+COPY monitor-agent.ini                                                                        /app/
 
 COPY --from=builder /tmp/mon/usr/share/uxp/jlib/                                              /app/jlib/
 COPY --from=builder /tmp/mon/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar             /app/jlib/addon/proxy/
