@@ -11,7 +11,7 @@ The `uxp-proxy` service is the core component of the system, responsible for sec
 
 The `uxp-proxy` container provides TLS-based communication with other Trembita instances:
 
-- `127.0.0.1:5566` — port for admin command for immediately read configuration (GET /execute)
+- `127.0.0.1:5566` — internal **admin control port** for executing management commands (e.g., triggering configuration reload via `GET /execute`).
 - `:80` — internal unsecure API endpoint;
 - `:443` — internal secure API endpoint (TLS 1.2 / 1.3);
 - `:5500` — external secure API endpoint (TLS 1.3) used for incoming connections from other proxies.
