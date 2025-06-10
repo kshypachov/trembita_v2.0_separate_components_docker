@@ -1,67 +1,113 @@
-UXP Proxy
-Main Service which used for make secure exchange into TREMBITA network.
-Listen 80 - internal api for make call to another Trembita instances
-Listen 443 - https tls 1.2 1.3 internal api for make call to another Tremita instances
-Listen 5500 - tls 1.3 external api wait conect from another Trembita instances ofer external network.
+# UXP Proxy
 
+The `uxp-proxy` service is the core component of the system, responsible for secure data exchange within the Trembita network. This service handles:
 
+- All inbound and outbound SOAP and REST calls;
+- Message encryption and signing;
+- Signature verification;
+- Interaction with external secure exchange gateways.
 
-+ . /etc/uxp/services/proxy.conf
-++ . /etc/uxp/services/global.conf
-+++ JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-+++ PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
-+++ ADDON_PATH=/usr/share/uxp/jlib/addon
-+++ umask 0027
-+++ UXP_PARAMS=' -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ '
-++ PROXY_PARAMS=
-++ CLIENT_HANDLERS=
-++ SERVICE_HANDLERS=
-++ REST_API_HANDLERS=
-++ for addon in ${ADDON_PATH}/proxy/*.conf
-++ '[' -e /usr/share/uxp/jlib/addon/proxy/certprofile-trembita.conf ']'
-++ . /usr/share/uxp/jlib/addon/proxy/certprofile-trembita.conf
-+++ ADDON_CP=:/usr/share/uxp/jlib/addon/certprofile-trembita.jar
-++ for addon in ${ADDON_PATH}/proxy/*.conf
-++ '[' -e /usr/share/uxp/jlib/addon/proxy/metaservices.conf ']'
-++ . /usr/share/uxp/jlib/addon/proxy/metaservices.conf
-+++ ADDON_CP=:/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar
-+++ SERVICE_HANDLERS=,ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl
-+++ REST_API_HANDLERS=,ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl
-+++ CLIENT_HANDLERS=,ee.cyber.uxp.proxy.clientproxy.MetadataHandler
-++ for addon in ${ADDON_PATH}/proxy/*.conf
-++ '[' -e /usr/share/uxp/jlib/addon/proxy/monitor.conf ']'
-++ . /usr/share/uxp/jlib/addon/proxy/monitor.conf
-+++ ADDON_CP=:/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar
-+++ SERVICE_HANDLERS=,ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl
-++ for addon in ${ADDON_PATH}/proxy/*.conf
-++ '[' -e /usr/share/uxp/jlib/addon/proxy/trembita-crypto.conf ']'
-++ . /usr/share/uxp/jlib/addon/proxy/trembita-crypto.conf
-+++ ADDON_CP=':/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*'
-+++ ADDON_PARAMS=' -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 '
-+++ export 'LD_PRELOAD= /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4 '
-+++ LD_PRELOAD=' /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4 '
-+++ export LD_LIBRARY_PATH=:/usr/share/uxp/lib
-+++ LD_LIBRARY_PATH=:/usr/share/uxp/lib
-++ CP=/usr/share/uxp/jlib/proxy.jar:/usr/share/uxp/jlib/signature-xades.jar
-++ PROXY_PARAMS=' -Dlogback.configurationFile=/etc/uxp/conf.d/proxy-logback.xml -Duxp.proxy.clientHandlers=ee.cyber.uxp.proxy.clientproxy.MetadataHandler -Duxp.proxy.serverServiceHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl -Duxp.proxy.serverRestApiHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl'
-++ PROXY_JVM_OPTS='-Xms150m -Xmx512m -XX:MaxMetaspaceSize=256m'
-++ . /etc/uxp/services/local.conf
-+ date -R
-Mon, 02 Jun 2025 21:18:36 +0300
-+ exec authbind /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Xms150m -Xmx512m -XX:MaxMetaspaceSize=256m -Dlogback.configurationFile=/etc/uxp/conf.d/proxy-logback.xml -Duxp.proxy.clientHandlers=ee.cyber.uxp.proxy.clientproxy.MetadataHandler -Duxp.proxy.serverServiceHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl -Duxp.proxy.serverRestApiHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -cp '/usr/share/uxp/jlib/proxy.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*' -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 ee.cyber.uxp.proxy.ProxyMain
+## Purpose
 
-jcmd 98202 VM.command_line
-98202:
+The `uxp-proxy` container provides TLS-based communication with other Trembita instances:
+
+- `:80` — internal unsecure API endpoint;
+- `:443` — internal secure API endpoint (TLS 1.2 / 1.3);
+- `:5500` — external secure API endpoint (TLS 1.3) used for incoming connections from other proxies.
+
+## Container Structure
+
+The image is based on `eclipse-temurin:17-jdk-jammy` and includes:
+
+- Main JARs: `proxy.jar`, `signature-xades.jar`;
+- Add-ons:
+  - `certprofile-trembita.jar`
+  - `monitoring-1.22.7.jar`
+  - `metaservice-1.22.7.jar`
+  - `cipher-jce-provider-1.22.7.jar`
+  - JCE drivers (Gryada-301, Cipher-HSM)
+- Utilities:
+  - `token-initializer` — initializes software tokens;
+  - `token_login` — logs into hardware tokens;
+  - `trembita-healthcheck` — verifies proxy availability.
+
+## Features
+
+- Supports operation in `read-only` filesystem mode.
+  - Requires temporary writable mount for extracting `.so` libraries (approx. 70MB).
+- Most configuration is delivered via `.ini` files.
+  - Only a minimal subset is passed via environment variables.
+- Supports external HSMs via PKCS#11 (e.g., Gryada-301, Cipher-HSM).
+- Uses `authbind` to allow binding to ports 80 and 443 as non-root user `uxp`.
+
+## Required Mounts
+
+| Container Path                            | Purpose                                                     |
+|-------------------------------------------|-------------------------------------------------------------|
+| `/etc/uxp/db.properties`                  | Configuration file for access to DB                         |
+| `/etc/uxp/license`                        | License file                                                |
+| `/etc/uxp/signer/`                        | Directory for software token data                           |
+| `/etc/uxp/globalconf/`                    | Global configuration synced via `uxp-configuration-client`  |
+| `/var/lib/uxp/messagelog/`                | Transaction logs before being archived by `uxp-message-log` |
+| `/usr/share/uxp/lib/osplm.ini` (optional) | HSM config for Gryada-301                                   |
+
+## Optional Environment Variables
+
+| Variable               | Description                                           |
+|------------------------|-------------------------------------------------------|
+| `PKCS11_PROXY_SOCKET`  | Address and port of the HSM (e.g., `tcp://ip:port`)   |
+
+## Key Dependencies
+
+- `authbind` — allows binding to privileged ports;
+- `libgomp1` — required by some crypto drivers;
+- `libcihsm.so`, `NCMGryada301PKCS11Libs-Linux` — HSM drivers included in the image.
+
+---
+
+## 🚀 Startup Command
+
+In legacy setups, the Java application is launched with:
+
+```bash
+authbind /usr/lib/jvm/java-17-openjdk-amd64/bin/java \
+  -Xms150m \
+  -Xmx512m \
+  -XX:MaxMetaspaceSize=256m \
+  -XX:+UseG1GC \
+  -Xshare:on \
+  -Dfile.encoding=UTF-8 \
+  -Djava.library.path=/usr/share/uxp/lib/ \
+  -Dlogback.configurationFile=/etc/uxp/conf.d/proxy-logback.xml \
+  -Duxp.proxy.clientHandlers=ee.cyber.uxp.proxy.clientproxy.MetadataHandler \
+  -Duxp.proxy.serverServiceHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl \
+  -Duxp.proxy.serverRestApiHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl \
+  -Dorg.bytedeco.javacpp.noPointerGC=true \
+  -Dorg.bytedeco.javacpp.maxBytes=0 \
+  -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 \
+  -cp "/usr/share/uxp/jlib/proxy.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*" \
+  ee.cyber.uxp.proxy.ProxyMain
+```
+
+---
+## ⚡ Runtime JVM Options (jcmd)
+
+<details>
+<summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.command_line</code></summary>
+
+```txt
 VM Arguments:
 jvm_args: -Xms150m -Xmx512m -XX:MaxMetaspaceSize=256m -Dlogback.configurationFile=/etc/uxp/conf.d/proxy-logback.xml -Duxp.proxy.clientHandlers=ee.cyber.uxp.proxy.clientproxy.MetadataHandler -Duxp.proxy.serverServiceHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl -Duxp.proxy.serverRestApiHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 
 java_command: ee.cyber.uxp.proxy.ProxyMain
 java_class_path (initial): /usr/share/uxp/jlib/proxy.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/cipherplus-1.0.28-1.5.8-linux-x86_64.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/javacpp-1.5.8.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/pkcs11-wrapper-1.6.9-1.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/ciplus-jce-1.0.24.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/cipherplus-1.0.28-1.5.8.jar
 Launcher Type: SUN_STANDARD
+```
+</details>
 
+<details>
+<summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.system_properties</code></summary>
 
-jcmd 98202 VM.system_properties
-98202:
-#Mon Jun 02 21:26:46 EEST 2025
+```txt
 uxp.proxy-monitoring-agent.ignored-network-interfaces=lo
 uxp.proxy.max-retained-soap-message-size-bytes=5242880
 java.specification.version=17
@@ -240,8 +286,96 @@ java.class.version=61.0
 uxp.proxy.max-retained-soap-attachment-size-bytes=5242880
 uxp.proxy.digest-algorithm-id=SHA-512
 uxp.op-monitor.keep-records-for-days=7
+```
+</details>
 
+<details>
+<summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.flags</code></summary>
 
-jcmd 98202 VM.flags
-98202:
--XX:CICompilerCount=3 -XX:CompressedClassSpaceSize=218103808 -XX:ConcGCThreads=1 -XX:G1ConcRefinementThreads=4 -XX:G1EagerReclaimRemSetThreshold=8 -XX:G1HeapRegionSize=1048576 -XX:GCDrainStackTargetSize=64 -XX:InitialHeapSize=157286400 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=536870912 -XX:MaxMetaspaceSize=268435456 -XX:MaxNewSize=321912832 -XX:MinHeapDeltaBytes=1048576 -XX:MinHeapSize=157286400 -XX:NonNMethodCodeHeapSize=5832780 -XX:NonProfiledCodeHeapSize=122912730 -XX:ProfiledCodeHeapSize=122912730 -XX:+RequireSharedSpaces -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=536870912 -XX:-THPStackMitigation -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseG1GC -XX:+UseSharedSpaces
+```txt
+-XX:CICompilerCount=3 
+-XX:CompressedClassSpaceSize=218103808 
+-XX:ConcGCThreads=1 
+-XX:G1ConcRefinementThreads=4 
+-XX:G1EagerReclaimRemSetThreshold=8 
+-XX:G1HeapRegionSize=1048576 
+-XX:GCDrainStackTargetSize=64 
+-XX:InitialHeapSize=157286400 
+-XX:MarkStackSize=4194304 
+-XX:MaxHeapSize=536870912 
+-XX:MaxMetaspaceSize=268435456 
+-XX:MaxNewSize=321912832 
+-XX:MinHeapDeltaBytes=1048576 
+-XX:MinHeapSize=157286400 
+-XX:NonNMethodCodeHeapSize=5832780 
+-XX:NonProfiledCodeHeapSize=122912730 
+-XX:ProfiledCodeHeapSize=122912730 
+-XX:+RequireSharedSpaces 
+-XX:ReservedCodeCacheSize=251658240 
+-XX:+SegmentedCodeCache 
+-XX:SoftMaxHeapSize=536870912 
+-XX:-THPStackMitigation 
+-XX:+UseCompressedClassPointers 
+-XX:+UseCompressedOops 
+-XX:+UseFastUnorderedTimeStamps 
+-XX:+UseG1GC 
+-XX:+UseSharedSpaces
+```
+</details>
+
+---
+
+## Startup Script Output
+Below is an example of the full startup script output during container initialization, showing how the environment is assembled and parameters are passed:
+
+```bash
++ . /etc/uxp/services/proxy.conf
+++ . /etc/uxp/services/global.conf
++++ JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
++++ PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
++++ ADDON_PATH=/usr/share/uxp/jlib/addon
++++ umask 0027
++++ UXP_PARAMS=' -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ '
+++ PROXY_PARAMS=
+++ CLIENT_HANDLERS=
+++ SERVICE_HANDLERS=
+++ REST_API_HANDLERS=
+++ for addon in ${ADDON_PATH}/proxy/*.conf
+++ '[' -e /usr/share/uxp/jlib/addon/proxy/certprofile-trembita.conf ']'
+++ . /usr/share/uxp/jlib/addon/proxy/certprofile-trembita.conf
++++ ADDON_CP=:/usr/share/uxp/jlib/addon/certprofile-trembita.jar
+++ for addon in ${ADDON_PATH}/proxy/*.conf
+++ '[' -e /usr/share/uxp/jlib/addon/proxy/metaservices.conf ']'
+++ . /usr/share/uxp/jlib/addon/proxy/metaservices.conf
++++ ADDON_CP=:/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar
++++ SERVICE_HANDLERS=,ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl
++++ REST_API_HANDLERS=,ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl
++++ CLIENT_HANDLERS=,ee.cyber.uxp.proxy.clientproxy.MetadataHandler
+++ for addon in ${ADDON_PATH}/proxy/*.conf
+++ '[' -e /usr/share/uxp/jlib/addon/proxy/monitor.conf ']'
+++ . /usr/share/uxp/jlib/addon/proxy/monitor.conf
++++ ADDON_CP=:/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar
++++ SERVICE_HANDLERS=,ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl
+++ for addon in ${ADDON_PATH}/proxy/*.conf
+++ '[' -e /usr/share/uxp/jlib/addon/proxy/trembita-crypto.conf ']'
+++ . /usr/share/uxp/jlib/addon/proxy/trembita-crypto.conf
++++ ADDON_CP=':/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*'
++++ ADDON_PARAMS=' -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 '
++++ export 'LD_PRELOAD= /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4 '
++++ LD_PRELOAD=' /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4 '
++++ export LD_LIBRARY_PATH=:/usr/share/uxp/lib
++++ LD_LIBRARY_PATH=:/usr/share/uxp/lib
+++ CP=/usr/share/uxp/jlib/proxy.jar:/usr/share/uxp/jlib/signature-xades.jar
+++ PROXY_PARAMS=' -Dlogback.configurationFile=/etc/uxp/conf.d/proxy-logback.xml -Duxp.proxy.clientHandlers=ee.cyber.uxp.proxy.clientproxy.MetadataHandler -Duxp.proxy.serverServiceHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl -Duxp.proxy.serverRestApiHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl'
+++ PROXY_JVM_OPTS='-Xms150m -Xmx512m -XX:MaxMetaspaceSize=256m'
+++ . /etc/uxp/services/local.conf
++ date -R
+Mon, 02 Jun 2025 21:18:36 +0300
++ exec authbind /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Xms150m -Xmx512m -XX:MaxMetaspaceSize=256m -Dlogback.configurationFile=/etc/uxp/conf.d/proxy-logback.xml -Duxp.proxy.clientHandlers=ee.cyber.uxp.proxy.clientproxy.MetadataHandler -Duxp.proxy.serverServiceHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceSOAPHandlerImpl,ee.cyber.uxp.proxy.serverproxy.MonitoringServiceHandlerImpl -Duxp.proxy.serverRestApiHandlers=ee.cyber.uxp.proxy.serverproxy.MetadataServiceRESTHandlerImpl -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -cp '/usr/share/uxp/jlib/proxy.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/certprofile-trembita.jar:/usr/share/uxp/jlib/addon/proxy/metaservice-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/monitoring-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*' -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 ee.cyber.uxp.proxy.ProxyMain
+```
+
+---
+
+## Maintainers
+Container built and maintained by Kirill Shypachov on behalf of eGA Kyiv.
+Uses official UXP modules version 1.22.7.

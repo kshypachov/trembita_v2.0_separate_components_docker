@@ -102,7 +102,7 @@ RUN apt install -y --allow-downgrades /deb/*.deb && rm -rf /deb
 #Add driver for Шифр-HSM
 COPY lib_secure_dev/libcihsm.so                                                               /usr/share/uxp/lib/
 RUN chown root:root /usr/share/uxp/lib/libcihsm.so && chmod 644 /usr/share/uxp/lib/libcihsm.so
-# Add env PKCS11_PROXY_SOCKET="tcp://<proxy-address>:<proxy-port>" with HSM address and port
+# Additionaly need to add env PKCS11_PROXY_SOCKET="tcp://<proxy-address>:<proxy-port>" with HSM address and port
 
 #Add driver for ІІТ Гряда-301
 COPY lib_secure_dev/NCMGryada301PKCS11Libs-Linux/64/*.so                                      /usr/share/uxp/lib/
