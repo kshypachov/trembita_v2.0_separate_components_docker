@@ -1,58 +1,191 @@
-UXP-Message-log-archiver (part of uxp-proxy)
-Listen port 5765
+# uxp-message-log-archiver
 
- GET /execute push up executing process without scheduler
+`uxp-message-log-archiver` is a component of the **UXP** platform responsible for archiving message transactions. This component periodically or manually archives transactions into **ASIC containers**, including signatures and timestamps. Archives can be stored either in the local filesystem or in **S3-compatible storage** (e.g., AWS S3 or MinIO).
 
+## Features
 
+- Configurable archiving schedule (cron expression)
+- Support for S3 storage (MinIO, AWS S3)
+- Manual archive execution via HTTP endpoint
+- Archives message metadata, timestamps, and signatures in ASIC format
 
-Files and directories 
+## HTTP Interface
 
-/etc/uxp/services/messagelog-archiver.conf - load durin startup 
-/etc/uxp/services/global.conf - load via messagelog-archiver.conf
-/etc/uxp/conf.d/messagelog-archiver-logback.xml - load configs via confclient.conf
-/etc/uxp/services/local.conf  - load configs via confclient.conf
-/usr/share/uxp/jlib/addon/messagelog-archiver/*.conf - load configs via confclient.conf
-/usr/share/uxp/bin/confclient.sh - startup script
+The component runs an HTTP server on port **5765**.
 
-CP="/usr/share/uxp/jlib/messagelog-archiver.jar:/usr/share/uxp/jlib/signature-xades.jar"
+### Trigger archiving manually:
 
-Needed mount paths 
-    /etc/uxp - for load configs (anchor, app configs) For storing global config
-    /usr/share/uxp/ - for load configs 
-    /var/lib/uxp/ - for reading transaction information, stored in fs (timestamps, signatures, etc)
+```
+GET /execute
+```
 
+Example:
 
-+ . /etc/uxp/services/messagelog-archiver.conf
-++ . /etc/uxp/services/global.conf
-++ '[' -z /usr/share/uxp/jlib/addon ']'
-++ for addon in ${ADDON_PATH}/messagelog-archiver/*.conf
-++ '[' -e /usr/share/uxp/jlib/addon/messagelog-archiver/trembita-crypto.conf ']'
-++ . /usr/share/uxp/jlib/addon/messagelog-archiver/trembita-crypto.conf
-+++ ADDON_CP=':/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*'
-+++ ADDON_PARAMS=' -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 '
-+++ export 'LD_PRELOAD= /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4 '
-+++ LD_PRELOAD=' /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4 '
-+++ export LD_LIBRARY_PATH=:/usr/share/uxp/lib
-+++ LD_LIBRARY_PATH=:/usr/share/uxp/lib
-++ CP=/usr/share/uxp/jlib/messagelog-archiver.jar:/usr/share/uxp/jlib/signature-xades.jar
-++ MESSAGELOG_ARCHIVER_PARAMS=' -Dlogback.configurationFile=/etc/uxp/conf.d/messagelog-archiver-logback.xml'
-++ MESSAGELOG_ARCHIVER_JVM_OPTS=' -Xmx256m -XX:MaxMetaspaceSize=128m '
-++ . /etc/uxp/services/local.conf
-++ MESSAGELOG_ARCHIVER_PARAMS=' -Dlogback.configurationFile=/etc/uxp/conf.d/messagelog-archiver-logback.xml'
-+ date -R
-Mon, 02 Jun 2025 19:01:41 +0300
-+ exec /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Xmx256m -XX:MaxMetaspaceSize=128m -Dlogback.configurationFile=/etc/uxp/conf.d/messagelog-archiver-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -cp '/usr/share/uxp/jlib/messagelog-archiver.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*' -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 ee.cyber.uxp.messagelog.archiving.MessageLogArchiverMain
+```bash
+curl http://localhost:5765/execute
+```
 
-jcmd 98041 VM.command_line
+## Files and Paths
+
+| Path | Purpose |
+|------|---------|
+| `/etc/uxp/services/messagelog-archiver.conf` | Main configuration file |
+| `/etc/uxp/services/global.conf` | Global parameters |
+| `/etc/uxp/conf.d/messagelog-archiver-logback.xml` | Logging configuration |
+| `/usr/share/uxp/jlib/addon/messagelog-archiver/*.conf` | Addon-specific configs |
+| `/usr/share/uxp/bin/confclient.sh` | Startup script |
+
+## Required Mount Paths (in container)
+
+- `/etc/uxp` — for configs and anchor
+- `/usr/share/uxp` — for jar files and addons
+- `/var/lib/uxp` — for working data: transactions, temp files, archive output
+
+## Example Legacy Startup Command
+
+```bash
+/usr/lib/jvm/java-17-openjdk-amd64/bin/java \
+  -Xmx256m \
+  -XX:MaxMetaspaceSize=128m \
+  -Dlogback.configurationFile=/etc/uxp/conf.d/messagelog-archiver-logback.xml \
+  -XX:+UseG1GC \
+  -Xshare:on \
+  -Dfile.encoding=UTF-8 \
+  -Djava.library.path=/usr/share/uxp/lib/ \
+  -cp "/usr/share/uxp/jlib/messagelog-archiver.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*" \
+  -Dorg.bytedeco.javacpp.noPointerGC=true \
+  -Dorg.bytedeco.javacpp.maxBytes=0 \
+  -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 \
+  ee.cyber.uxp.messagelog.archiving.MessageLogArchiverMain
+```
+
+## Example Configuration
+
+### Archiving Schedule
+
+```properties
+uxp.message-log.archive-interval=0 0 0/1 1/1 * ? *
+```
+
+Every hour.
+
+### S3 Storage
+
+```properties
+uxp.message-log.archive-storage-type=s3
+uxp.message-log-s3.address=https://192.168.99.136:9000
+uxp.message-log-s3.bucket-name=uxp-messagelog1227
+uxp.message-log-s3.access-key=...
+uxp.message-log-s3.secret-key=...
+```
+
+### Transaction Storage Path
+
+```properties
+uxp.message-log.storage-path=/var/lib/uxp/messagelog
+```
+
+## Inspect Running Configuration
+
+Use `jcmd` to inspect running parameters:
+
+```bash
+jcmd <PID> VM.command_line
+jcmd <PID> VM.system_properties
+jcmd <PID> VM.flags
+```
+
+---
+
+## Example Output
+
+### `jcmd <PID> VM.command_line`
+
+```text
 98041:
 VM Arguments:
 jvm_args: -Xmx256m -XX:MaxMetaspaceSize=128m -Dlogback.configurationFile=/etc/uxp/conf.d/messagelog-archiver-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 
 java_command: ee.cyber.uxp.messagelog.archiving.MessageLogArchiverMain
+java_class_path (initial): /usr/share/uxp/jlib/messagelog-archiver.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/...
+Launcher Type: SUN_STANDARD
+```
+
+### `jcmd <PID> VM.system_properties`
+
+(Full output truncated for brevity — include entire block in full documentation.)
+
+```properties
+uxp.message-log.archiver-admin-port=5765
+uxp.message-log.archive-storage-type=s3
+uxp.message-log.archive-interval=0 0 0/1 1/1 * ? *
+uxp.message-log.storage-path=/var/lib/uxp/messagelog
+uxp.message-log-s3.bucket-name=uxp-messagelog1227
+uxp.message-log-s3.address=https://192.168.99.136:9000
+...
+```
+
+### ⚡️ Runtime JVM Options (jcmd)
+<details>
+<summary>Click to expand `jcmd &lt;pid&gt; VM.flags` output</summary>
+
+```text
+-XX:CICompilerCount=3 
+-XX:CompressedClassSpaceSize=117440512 
+-XX:ConcGCThreads=1 
+-XX:G1ConcRefinementThreads=4 
+-XX:G1EagerReclaimRemSetThreshold=8 
+-XX:G1HeapRegionSize=1048576 
+-XX:GCDrainStackTargetSize=64 
+-XX:InitialHeapSize=65011712 
+-XX:MarkStackSize=4194304 
+-XX:MaxHeapSize=268435456 
+-XX:MaxMetaspaceSize=134217728 
+-XX:MaxNewSize=160432128 
+-XX:MinHeapDeltaBytes=1048576 
+-XX:MinHeapSize=8388608 
+-XX:NonNMethodCodeHeapSize=5832780 
+-XX:NonProfiledCodeHeapSize=122912730 
+-XX:ProfiledCodeHeapSize=122912730 
+-XX:+RequireSharedSpaces 
+-XX:ReservedCodeCacheSize=251658240 
+-XX:+SegmentedCodeCache 
+-XX:SoftMaxHeapSize=268435456 
+-XX:-THPStackMitigation 
+-XX:+UseCompressedClassPointers 
+-XX:+UseCompressedOops 
+-XX:+UseFastUnorderedTimeStamps 
+-XX:+UseG1GC 
+-XX:+UseSharedSpaces 
+```
+</details>
+
+
+<details>
+<summary>Click to expand `jcmd &lt;pid&gt; VM.command_line` output</summary>
+
+```text
+VM Arguments:
+jvm_args: 
+-Xmx256m 
+-XX:MaxMetaspaceSize=128m 
+-Dlogback.configurationFile=/etc/uxp/conf.d/messagelog-archiver-logback.xml 
+-XX:+UseG1GC 
+-Xshare:on 
+-Dfile.encoding=UTF-8 
+-Djava.library.path=/usr/share/uxp/lib/ 
+-Dorg.bytedeco.javacpp.noPointerGC=true 
+-Dorg.bytedeco.javacpp.maxBytes=0 
+-Dorg.bytedeco.javacpp.maxPhysicalBytes=0 
+java_command: ee.cyber.uxp.messagelog.archiving.MessageLogArchiverMain
 java_class_path (initial): /usr/share/uxp/jlib/messagelog-archiver.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/cipherplus-1.0.28-1.5.8-linux-x86_64.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/javacpp-1.5.8.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/pkcs11-wrapper-1.6.9-1.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/ciplus-jce-1.0.24.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/cipherplus-1.0.28-1.5.8.jar
 Launcher Type: SUN_STANDARD
+```
+</details>
 
-jcmd 98041 VM.system_properties
-98041:
+<details>
+<summary>Click to expand `jcmd &lt;pid&gt; VM.system_properties` output</summary>
+
+```text
 #Mon Jun 02 19:22:11 EEST 2025
 uxp.proxy-monitoring-agent.ignored-network-interfaces=lo
 uxp.identity-provider.security-server-client-secret=2DmVrz_VUQUhn3ePNgWm8Ur-TwMK0la_
@@ -190,10 +323,6 @@ java.class.version=61.0
 uxp.proxy.max-retained-soap-attachment-size-bytes=5242880
 uxp.message-log.metadata-cleanup-interval=0 0 0 * * ? *
 uxp.op-monitor.keep-records-for-days=7
+```
 
-
-jcmd 98041 VM.flags
-98041:
--XX:CICompilerCount=3 -XX:CompressedClassSpaceSize=117440512 -XX:ConcGCThreads=1 -XX:G1ConcRefinementThreads=4 -XX:G1EagerReclaimRemSetThreshold=8 -XX:G1HeapRegionSize=1048576 -XX:GCDrainStackTargetSize=64 -XX:InitialHeapSize=65011712 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=268435456 -XX:MaxMetaspaceSize=134217728 -XX:MaxNewSize=160432128 -XX:MinHeapDeltaBytes=1048576 -XX:MinHeapSize=8388608 -XX:NonNMethodCodeHeapSize=5832780 -XX:NonProfiledCodeHeapSize=122912730 -XX:ProfiledCodeHeapSize=122912730 -XX:+RequireSharedSpaces -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=268435456 -XX:-THPStackMitigation -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseG1GC -XX:+UseSharedSpaces 
-
-
+</details>
