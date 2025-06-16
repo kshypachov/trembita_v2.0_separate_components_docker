@@ -1,30 +1,101 @@
-UXP-OCSP-cache (part of uxp-proxy)
-Listen port 5766 - admin port
- GET /execute push up executing process update oscp without scheduler
-Listen port 5577 - ocsp responder
+# uxp-ocsp-cache Service
+
+## Overview
+
+`uxp-ocsp-cache` is a lightweight, Java-based service that retrieves and caches OCSP responses for certificates used by key UXP components, including `uxp-proxy`, `uxp-securityserver-rest-api`, and `uxp-verifier`. It is packaged as part of `uxp-proxy`.
+
+The service is typically deployed as a standalone container and relies on pre-built `.deb` packages, which are unpacked and embedded into the image during the build phase.
+
+## Ports
+
+- **5577** — OCSP Responder HTTP interface
+- **5766** — Admin API
+  - `GET /execute` — manually triggers OCSP response fetching, bypassing the default scheduler
+
+## Docker Image Details
+
+This service is built using a **multi-stage Dockerfile**:
+
+### Stage 1: Builder (`ubuntu:24.04`)
+- Creates `uxp` user and group
+- Unpacks `.deb` packages:
+  - `uxp-proxy`
+  - `uxp-addon-trembita-crypto`
+- Extracts necessary `.jar` files and configuration
+
+### Stage 2: Runtime (`eclipse-temurin:17-jdk-jammy`)
+- Installs native dependencies:
+  - `libtcmalloc`, `libunwind`, `libgomp`, `libgoogle-perftools`
+- Copies Java libraries to `/app/jlib/`
+- Loads log configuration (`ocsp-cache-logback.xml`)
+- Disables shell access (`/bin/bash`, `/bin/sh` removed)
+- Drops privileges: runs as `uxp` user (UID 102)
+
+### Key Environment Settings
+- `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4`
+- Container entrypoint (commented in Dockerfile) launches the Java process with memory and logging options, and sets OCSP-specific JVM properties.
+
+## Required Volume Mounts
+
+- `/etc/uxp/` – For configuration files, anchor, and global setup
+- `/usr/share/uxp/` – For Java native libraries and extended configuration
+
+## Configuration Files
+
+| Path                                                   | Purpose                                          |
+|--------------------------------------------------------|--------------------------------------------------|
+| `/etc/uxp/services/ocsp-cache.conf`                    | Main startup config                              |
+| `/etc/uxp/services/global.conf`                        | Global environment variables                     |
+| `/etc/uxp/services/local.conf`                         | Local environment overrides                      |
+| `/etc/uxp/conf.d/ocsp-cache-logback.xml`               | Logback logging configuration                    |
+| `/etc/uxp/conf.d/ocsp-cache.ini`                       | Application-level config                         |
+| `/usr/share/uxp/jlib/addon/ocsp-cache/*.conf`          | Addon configuration, e.g., crypto providers      |
+| `/usr/share/uxp/bin/ocsp-cache.sh`                     | Entrypoint script                                |
+| `/var/cache/uxp`                                       | Directory for cached OCSP responses              |
 
 
+## Java Runtime Parameters
 
-Files and directories 
+Some notable runtime JVM/system properties:
 
-/etc/uxp/services/ocsp-cache.conf - load durin startup 
-/etc/uxp/services/global.conf - load via ocsp-cache.conf
-/etc/uxp/conf.d/ocsp-cache-logback.xml - load configs via ocsp-cache.conf
-/etc/uxp/services/local.conf  - load configs via csp-cache.conf
-/usr/share/uxp/jlib/addon/ocsp-cache/*.conf - load configs via ocsp-cache.conf
-/usr/share/uxp/bin/ocsp-cache.sh - startup script
-/var/cache/uxp - dir for store cached ocsp answers
-    Config file 
-    /etc/uxp/conf.d/ocsp-cache.ini
+- `uxp.ocsp-cache.ocsp-responder-listen-port=5577`
+- `uxp.ocsp-cache.admin-port=5766`
+- `uxp.ocsp-cache.update-interval=0 0 0/6 1/1 * ? *`
+- `uxp.ocsp-cache.client-connect-timeout=10000`
+- `uxp.ocsp-cache.client-read-timeout=5000`
+- Logging config: `/etc/uxp/conf.d/ocsp-cache-logback.xml`
+- Java version: OpenJDK 17
 
+## Java Runtime
 
-CP="/usr/share/uxp/jlib/ocsp-cache.jar:/usr/share/uxp/jlib/signature-xades.jar"
+The service is executed with:
 
-Needed mount paths 
-    /etc/uxp - for load configs (anchor, app configs) For storing global config
-    /usr/share/uxp/ - for load configs
+```bash
+java \
+  -Xmx128m \
+  -XX:MaxMetaspaceSize=100m \
+  -XX:+UseG1GC \
+  -Xshare:on \
+  -Dfile.encoding=UTF-8 \
+  -Dlogback.configurationFile=/app/ocsp-cache-logback.xml \
+  -Djava.library.path=/usr/share/uxp/lib/ \
+  -cp "<resolved classpath>" \
+  -Duxp.ocsp-cache.admin-port=5766 \
+  -Duxp.ocsp-cache.ocsp-responder-listen-port=5577 \
+  -Duxp.ocsp-cache.update-interval=0 0 0/6 1/1 * ? * \
+  -Duxp.ocsp-cache.full-update-freshness-divisor=10 \
+  -Duxp.ocsp-cache.client-connect-timeout=10000 \
+  -Dorg.bytedeco.javacpp.noPointerGC=true \
+  -Dorg.bytedeco.javacpp.maxBytes=0 \
+  -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 \
+  ee.cyber.uxp.ocsp.OcspCacheMain
+```
 
+---
 
+## ⚙️ Startup Script Output (set -x)
+
+<pre>
 /usr/share/uxp/bin/ocsp-cache.sh
 + . /etc/uxp/services/ocsp-cache.conf
 ++ . /etc/uxp/services/global.conf
@@ -46,19 +117,37 @@ Needed mount paths
 + date -R
 Sun, 01 Jun 2025 09:26:00 +0300
 + exec /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Xmx128m -XX:MaxMetaspaceSize=100m -Dlogback.configurationFile=/etc/uxp/conf.d/ocsp-cache-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -cp '/usr/share/uxp/jlib/ocsp-cache.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*' -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 ee.cyber.uxp.ocsp.OcspCacheMain
+</pre>
 
+---
 
-jcmd 232276  VM.command_line
-232276:
+## ⚡️ Runtime JVM Options (jcmd)
+
+<details>
+<summary>Click to expand `jcmd &lt;pid&gt; VM.command_line` output</summary>
+
+```text
 VM Arguments:
 jvm_args: -Xmx128m -XX:MaxMetaspaceSize=100m -Dlogback.configurationFile=/etc/uxp/conf.d/ocsp-cache-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 
 java_command: ee.cyber.uxp.ocsp.OcspCacheMain
 java_class_path (initial): /usr/share/uxp/jlib/ocsp-cache.jar:/usr/share/uxp/jlib/signature-xades.jar:/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/cipherplus-1.0.28-1.5.8-linux-x86_64.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/javacpp-1.5.8.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/pkcs11-wrapper-1.6.9-1.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/ciplus-jce-1.0.24.jar:/usr/share/uxp/jlib/addon/proxy/ciplus-jce/cipherplus-1.0.28-1.5.8.jar
 Launcher Type: SUN_STANDARD
+```
+</details>
 
+<details>
+<summary>Click to expand `jcmd &lt;pid&gt; VM.flags` output</summary>
 
-jcmd 232276  VM.system_properties
-232276:
+```text
+-XX:CICompilerCount=3 -XX:CompressedClassSpaceSize=83886080 -XX:ConcGCThreads=1 -XX:G1ConcRefinementThreads=4 -XX:G1EagerReclaimRemSetThreshold=8 -XX:G1HeapRegionSize=1048576 -XX:GCDrainStackTargetSize=64 -XX:InitialHeapSize=65011712 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=134217728 -XX:MaxMetaspaceSize=104857600 -XX:MaxNewSize=79691776 -XX:MinHeapDeltaBytes=1048576 -XX:MinHeapSize=8388608 -XX:NonNMethodCodeHeapSize=5832780 -XX:NonProfiledCodeHeapSize=122912730 -XX:ProfiledCodeHeapSize=122912730 -XX:+RequireSharedSpaces -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=134217728 -XX:-THPStackMitigation -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseG1GC -XX:+UseSharedSpaces
+```
+
+</details>
+
+<details>
+<summary>Click to expand `jcmd &lt;pid&gt; VM.system_properties` output</summary>
+
+```text
 #Sat May 31 22:50:52 EEST 2025
 uxp.ocsp-cache.ocsp-responder-listen-port=5577
 uxp.proxy-monitoring-agent.ignored-network-interfaces=lo
@@ -181,8 +270,26 @@ java.vm.version=17.0.15+6-Ubuntu-0ubuntu122.04
 java.class.version=61.0
 uxp.proxy.max-retained-soap-attachment-size-bytes=5242880
 uxp.op-monitor.keep-records-for-days=7
+```
 
-jcmd 232276 VM.flags
-232276:
--XX:CICompilerCount=3 -XX:CompressedClassSpaceSize=83886080 -XX:ConcGCThreads=1 -XX:G1ConcRefinementThreads=4 -XX:G1EagerReclaimRemSetThreshold=8 -XX:G1HeapRegionSize=1048576 -XX:GCDrainStackTargetSize=64 -XX:InitialHeapSize=65011712 -XX:MarkStackSize=4194304 -XX:MaxHeapSize=134217728 -XX:MaxMetaspaceSize=104857600 -XX:MaxNewSize=79691776 -XX:MinHeapDeltaBytes=1048576 -XX:MinHeapSize=8388608 -XX:NonNMethodCodeHeapSize=5832780 -XX:NonProfiledCodeHeapSize=122912730 -XX:ProfiledCodeHeapSize=122912730 -XX:+RequireSharedSpaces -XX:ReservedCodeCacheSize=251658240 -XX:+SegmentedCodeCache -XX:SoftMaxHeapSize=134217728 -XX:-THPStackMitigation -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseFastUnorderedTimeStamps -XX:+UseG1GC -XX:+UseSharedSpaces 
+</details>
 
+## Purpose
+
+The main function of the service is to:
+- Regularly fetch and cache OCSP responses based on the configured schedule.
+- Serve OCSP responses to other components over the responder port.
+- Allow manual triggering of updates through the admin API.
+
+## Security and Performance
+
+- **No shell** access in container (`/bin/bash`, `/bin/sh` removed)
+- **Non-root user** (`uxp`) runs the process
+- **Heap/memory limits** defined explicitly
+- **Native optimizations** via `tcmalloc`, `libunwind`, `gomp`
+- **Startup classpath** includes crypto provider support from `ciplus-jce` and `signature-xades.jar`
+
+## Author
+
+Maintained by [Kirill Shypachov](https://github.com/kshypachov)  
+On behalf of eGA Kyiv
