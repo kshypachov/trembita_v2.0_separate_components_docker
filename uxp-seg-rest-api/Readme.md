@@ -101,7 +101,6 @@ java \
 | Property                                              | Description                                 |
 |-------------------------------------------------------|---------------------------------------------|
 | `server.port=8085`                                    | REST API listen port                        |
-| `uxp.proxy.server-port=5500`                          | UXP backend port                            |
 | `uxp.identity-provider.security-server-client-id`     | OAuth2 client ID                            |
 | `uxp.identity-provider.security-server-client-secret` | OAuth2 secret                               |
 | `uxp.proxy.database-properties`                       | Path to database config                     |
