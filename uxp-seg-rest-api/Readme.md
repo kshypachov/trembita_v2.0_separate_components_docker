@@ -1,9 +1,126 @@
-UXP-reas api service
-Listen port 8085 - for http api 
+# uxp-securityserver-rest-api Service
+
+## Overview
+
+`uxp-securityserver-rest-api` is a RESTful management service designed to control and interact with the entire `uxp-securityserver` instance. It exposes administrative and operational functionality over HTTP and is intended for integration with user interfaces, orchestration layers, or external management systems.
+
+> 📘 **OpenAPI UI** is available at:  
+> `/api/v1/openapi-ui`
+
+## Ports
+
+- **8085** — REST API HTTP interface
+
+## Containerized Execution in Kubernetes
+
+When deployed in Kubernetes, this service **does not use the default shell script** (`/usr/share/uxp/bin/securityserver-rest-api.sh`) because shell binaries like `/bin/sh` and `/bin/bash` are removed from the image for security hardening.
+
+Instead, the container is launched using a full `java` command passed directly as the container's `command` (in the pod spec).
 
 
-Output start script
+## Purpose
 
+The service enables:
+- Managing `uxp-securityserver` configuration and status
+- Interacting with security components via REST
+- Automating tasks otherwise performed manually in the security server UI
+
+## Docker Image Details
+
+This service is built using a **multi-stage Dockerfile** with the following stages:
+
+### Stage 1: Builder (`ubuntu:24.04`)
+- Creates `uxp` user and group
+- Extracts contents from:
+  - `uxp-securityserver-rest-api`
+  - `uxp-addon-trembita-crypto`
+  - `uxp-addon-trembita-profile`
+
+### Stage 2: Runtime (`eclipse-temurin:17-jdk-jammy`)
+- Installs required native libraries:
+  - `libgomp`, `libcihsm.so` (ШИФР-HSM), and Gryada-301 PKCS#11 libraries
+- Copies required `.jar` files and configuration into `/app`
+- Disables shell access (`/bin/bash` and `/bin/sh` removed)
+- Runs as a non-root user `uxp` (UID 102)
+
+### Environment Configuration
+
+The image sets:
+- `LD_LIBRARY_PATH=:/usr/share/uxp/lib`
+
+Optionally, HSM drivers and configuration (`osplm.ini`) must be available in `/usr/share/uxp/lib/`.
+
+## Required Volume Mounts
+
+- `/etc/uxp/` – For configuration files (including `configuration-anchor.xml`, `db.properties`, etc.)
+- `/etc/uxp/signer/` – Shared directory with software tokens or keys .p12
+
+## Startup Script
+
+The service is started using:
+```
+/usr/share/uxp/bin/securityserver-rest-api.sh
+```
+
+This script:
+- Loads the main environment file: `/etc/uxp/services/securityserver-rest-api.conf`
+- Loads global environment config: `/etc/uxp/services/global.conf`
+- Applies optional `local.conf`
+- Dynamically sources add-on configurations:
+  - `certprofile-trembita-springboot.conf`
+  - `trembita-crypto-springboot.conf`
+- Constructs the Java command and executes Spring Boot using:
+  ```bash
+  org.springframework.boot.loader.PropertiesLauncher
+  ```
+
+## Java Runtime Details
+
+The service runs with:
+
+```bash
+java \
+  -Xmx128m \
+  -XX:MaxMetaspaceSize=256m \
+  -XX:+UseG1GC \
+  -Xshare:on \
+  -Dserver.port=8085 \
+  -Dfile.encoding=UTF-8 \
+  -Dlogging.config=/app/securityserver-rest-api-logback.xml \
+  -Djava.library.path=/usr/share/uxp/lib/ \
+  -cp /app/securityserver-rest-api.jar \
+  -Dloader.path=/app/jlib/signature-xades.jar,/app/jlib/addon/certprofile-trembita.jar,/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar,/app/jlib/addon/proxy/ciplus-jce/* \
+  -Dorg.bytedeco.javacpp.noPointerGC=true \
+  -Dorg.bytedeco.javacpp.maxBytes=0 \
+  -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 \
+  org.springframework.boot.loader.PropertiesLauncher
+```
+
+## Runtime Properties (examples)
+
+| Property                                              | Description                                 |
+|-------------------------------------------------------|---------------------------------------------|
+| `server.port=8085`                                    | REST API listen port                        |
+| `uxp.proxy.server-port=5500`                          | UXP backend port                            |
+| `uxp.identity-provider.security-server-client-id`     | OAuth2 client ID                            |
+| `uxp.identity-provider.security-server-client-secret` | OAuth2 secret                               |
+| `uxp.proxy.database-properties`                       | Path to database config                     |
+| `uxp.identity-provider.database-properties`           | Same as above, shared config                |
+| `uxp.common.configuration-anchor-file`                | Path to configuration anchor XML            |
+
+## Security
+
+- **Shellless Image**: no `/bin/sh` or `/bin/bash`
+- **Non-root Execution**: runs as `uxp` user
+- **Secrets**: must be injected securely via Kubernetes secrets
+- **HSM Support**:
+  - `libcihsm.so` (ШИФР-HSM)
+  - Gryada-301 PKCS#11 `.so` files and `osplm.ini` (must be preloaded)
+
+## Startup Script Output
+Below is an example of the full startup script output during container initialization, showing how the environment is assembled and parameters are passed:
+
+```bash
 /usr/share/uxp/bin/securityserver-rest-api.sh 
 + . /etc/uxp/services/securityserver-rest-api.conf
 ++ . /etc/uxp/services/global.conf
@@ -26,19 +143,26 @@ Output start script
 + date -R
 Mon, 02 Jun 2025 12:38:49 +0300
 + exec /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Xmx128m -XX:MaxMetaspaceSize=256m -Dserver.port=8085 -Dlogging.config=/etc/uxp/conf.d/securityserver-rest-api-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -cp /usr/share/uxp/jlib/securityserver-rest-api.jar '-Dloader.path=/usr/share/uxp/jlib/signature-xades.jar,,/usr/share/uxp/jlib/addon/certprofile-trembita.jar,/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar,/usr/share/uxp/jlib/addon/proxy/ciplus-jce/*' -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 org.springframework.boot.loader.PropertiesLauncher
+```
 
+## ⚡ Runtime JVM Options (jcmd)
 
+<details>
+<summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.command_line</code></summary>
 
-jcmd 32389 VM.command_line
-32389:
+```txt
 VM Arguments:
 jvm_args: -Xmx128m -XX:MaxMetaspaceSize=256m -Dserver.port=8085 -Dlogging.config=/etc/uxp/conf.d/securityserver-rest-api-logback.xml -XX:+UseG1GC -Xshare:on -Dfile.encoding=UTF-8 -Djava.library.path=/usr/share/uxp/lib/ -Dloader.path=/usr/share/uxp/jlib/signature-xades.jar,,/usr/share/uxp/jlib/addon/certprofile-trembita.jar,/usr/share/uxp/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar,/usr/share/uxp/jlib/addon/proxy/ciplus-jce/* -Dorg.bytedeco.javacpp.noPointerGC=true -Dorg.bytedeco.javacpp.maxBytes=0 -Dorg.bytedeco.javacpp.maxPhysicalBytes=0 
 java_command: org.springframework.boot.loader.PropertiesLauncher
 java_class_path (initial): /usr/share/uxp/jlib/securityserver-rest-api.jar
 Launcher Type: SUN_STANDARD
+```
+</details>
 
-jcmd 32389 VM.system_properties
-32389:
+<details>
+<summary>Click to expand output of <code>jcmd &lt;pid&gt; VM.system_properties</code></summary>
+
+```txt
 #Mon Jun 02 12:48:46 EEST 2025
 uxp.proxy-monitoring-agent.ignored-network-interfaces=lo
 uxp.proxy.max-retained-soap-message-size-bytes=5242880
@@ -231,3 +355,11 @@ java.class.version=61.0
 uxp.proxy.max-retained-soap-attachment-size-bytes=5242880
 uxp.proxy.digest-algorithm-id=SHA-512
 uxp.op-monitor.keep-records-for-days=7
+```
+</details>
+
+
+## Author
+
+Maintained by [Kirill Shypachov](https://github.com/kshypachov)  
+On behalf of eGA Kyiv
