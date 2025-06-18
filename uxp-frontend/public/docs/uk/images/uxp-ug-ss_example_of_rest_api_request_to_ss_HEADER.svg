@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="562.45227mm"
+   height="64.517311mm"
+   viewBox="0 0 562.45227 64.51732"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="uxp-ug-ss_example_of_rest_api_request_to_ss_HEADER.svg">
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient6231"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#9b999b;stop-opacity:1;"
+         offset="0"
+         id="stop6229" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.42170799"
+     inkscape:cx="827.21287"
+     inkscape:cy="-193.45331"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="715"
+     inkscape:window-x="3832"
+     inkscape:window-y="158"
+     inkscape:window-maximized="1"
+     inkscape:pagecheckerboard="false"
+     showborder="true"
+     fit-margin-top="3"
+     fit-margin-left="3"
+     fit-margin-bottom="3"
+     fit-margin-right="3"
+     inkscape:measure-start="110.06,482.236"
+     inkscape:measure-end="110.06,456.169" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(24.4258,-181.87263)">
+    <rect
+       style="opacity:0.52999998;fill:#f5f5f5;fill-opacity:1;stroke:#cccccc;stroke-width:0.42841637;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.75294118"
+       id="rect6235"
+       width="556.02386"
+       height="58.088898"
+       x="-21.211592"
+       y="185.08684" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333311px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="11.611429"
+       y="38.839237"
+       id="text4506"><tspan
+         sodipodi:role="line"
+         id="tspan4504"
+         x="11.611429"
+         y="42.584743"
+         style="font-size:4.23333311px;stroke-width:0.26458332" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="10.450286"
+       y="36.323429"
+       id="text4510"><tspan
+         sodipodi:role="line"
+         id="tspan4508"
+         x="10.450286"
+         y="45.687199"
+         style="stroke-width:0.26458332" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88055563px;line-height:1;font-family:'Courier New';-inkscape-font-specification:'Courier New, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="-12.634992"
+       y="192.12804"
+       id="text4514"><tspan
+         sodipodi:role="line"
+         x="-12.634992"
+         y="195.09579"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.81944466px;line-height:1.75;font-family:'Courier New';-inkscape-font-specification:'Courier New, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ff0066;fill-opacity:1;stroke-width:0.26458332"
+         id="tspan1467" /><tspan
+         sodipodi:role="line"
+         x="-12.634992"
+         y="206.06079"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;line-height:1.75;font-family:'Courier New';-inkscape-font-specification:'Courier New, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#0000d4;fill-opacity:1;stroke-width:0.26458332"
+         id="tspan4637"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;line-height:1.75;font-family:'Courier New';-inkscape-font-specification:'Courier New, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#0000d4;fill-opacity:1;stroke-width:0.26458332"
+           id="tspan4639"
+           rotate="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"><tspan
+   style="font-weight:bold"
+   id="tspan7208"><tspan
+   style="fill:#000000;fill-opacity:1"
+   id="tspan843">Uxp-Client:</tspan>  EXAMPLE</tspan>/<tspan
+   style="font-weight:bold"
+   id="tspan846">COM</tspan>/<tspan
+   style="font-weight:bold"
+   id="tspan844">ACME</tspan>/<tspan
+   style="font-weight:bold"
+   id="tspan842">MATHFANS</tspan></tspan></tspan><tspan
+         sodipodi:role="line"
+         x="-12.634992"
+         y="214.52409"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;line-height:1.75;font-family:'Courier New';-inkscape-font-specification:'Courier New, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#aa00ac;fill-opacity:1;stroke-width:0.26458332"
+         id="tspan4643" /><tspan
+         sodipodi:role="line"
+         x="-12.634992"
+         y="225.37538"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.81944466px;line-height:1.75;font-family:'Courier New';-inkscape-font-specification:'Courier New, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#c00000;fill-opacity:1;stroke-width:0.26458332"
+         id="tspan4648"><tspan
+   id="tspan7219"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;line-height:1.75;font-family:'Courier New';-inkscape-font-specification:'Courier New, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#c00000;fill-opacity:1;stroke-width:0.26458332"><tspan
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.81944466px;line-height:1.75;font-family:'Courier New';-inkscape-font-specification:'Courier New, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#c00000;fill-opacity:1;stroke-width:0.26458332"
+     id="tspan4608"
+     dy="0 0 0 0 0 0 0 0 0 0 0 0 0"><tspan
+   style="fill:#000000;fill-opacity:1"
+   id="tspan912">Uxp-Service:</tspan> EXAMPLE/GOV/BOTA</tspan></tspan>/CALC/calculate/v1</tspan><tspan
+         sodipodi:role="line"
+         x="-12.634992"
+         y="233.83868"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.81944466px;line-height:1.75;font-family:'Courier New';-inkscape-font-specification:'Courier New, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ff6600;fill-opacity:0.8643216;stroke-width:0.26458332"
+         id="tspan4652" /></text>
+  </g>
+</svg>

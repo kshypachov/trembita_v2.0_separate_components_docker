@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="author" content="UXP-UG-SSAUDIT">
+<title>UXP Security Server 1.22: Transaction Auditor Guide</title>
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic"; */
+*,::before,::after{box-sizing:border-box}
+html{font-size:100%;-webkit-text-size-adjust:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:inherit;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,p,blockquote,th,td{margin:0;padding:0}
+a{background:none;color:#2156a5;text-decoration:underline;line-height:inherit}
+a:active,a:hover{cursor:pointer;outline:0}
+a:focus{outline:thin dotted}
+a:hover,a:focus{color:#1d4b8f}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+b,strong{font-weight:bold;line-height:inherit}
+strong strong{font-weight:400}
+code,kbd,pre{font-family:monospace;font-size:1em}
+code{font-weight:400;color:rgba(0,0,0,.9)}
+pre{color:rgba(0,0,0,.9);line-height:1.45;text-rendering:optimizeSpeed;white-space:pre-wrap}
+dfn{font-style:italic}
+em,i{font-style:italic;line-height:inherit}
+em em{font-style:normal}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;height:0;margin:1.25em 0 1.1875em}
+mark{background:#ff0;color:#000}
+p{line-height:1.6;margin-bottom:1.25rem;text-rendering:optimizeLegibility}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:60%;line-height:inherit}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img,object[type^="image/"],svg{display:inline-block;height:auto;max-width:100%;vertical-align:middle}
+img{border:0;-ms-interpolation-mode:bicubic}
+object{max-width:100%}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.2;word-spacing:-.05em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em;margin-left:1.125em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1{font-size:2.75em}
+    h2{font-size:2.3125em}
+    h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+    h4{font-size:1.4375em}}
+table{background:#fff;border:1px solid #dedede;border-collapse:collapse;border-spacing:0;margin-bottom:1.25em;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:"";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+body>div[id]{margin:0 auto;max-width:62.5em;position:relative;padding-left:.9375em;padding-right:.9375em;width:100%}
+body>div[id]::before,body>div[id]::after,#content #footnotes::before{content:"";display:table;clear:both}
+#content{margin-top:1.25em;margin-bottom:.625em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+    body.toc2{padding-left:15em;padding-right:0}
+    #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+    #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+    #toc.toc2>ul{font-size:.9em;margin-bottom:0}
+    #toc.toc2 ul ul{margin-left:0;padding-left:1em}
+    #toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+    body.toc2.toc-right{padding-left:0;padding-right:15em}
+    body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+    #toc.toc2{width:20em}
+    #toc.toc2 #toctitle{font-size:1.375em}
+    #toc.toc2>ul{font-size:.95em}
+    #toc.toc2 ul ul{padding-left:1.25em}
+    body.toc2.toc-right{padding-left:0;padding-right:20em}}
+@media only screen and (min-width:1480px){
+    #toc.toc2{width:25em}
+}
+@media only screen and (min-width:1680px){
+    #toc.toc2{width:30em}
+}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+    .sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#fffef7;border-radius:4px;box-shadow:0 1px 4px #e0e0dc}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+#content #toc>:first-child,.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+#content #toc>:last-child,.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos{width:.01%}
+table.linenotable td.linenos,pre.pygments .linenos,pre.rouge .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;user-select:none}
+pre.pygments span.linenos,pre.rouge span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{font:inherit;margin:0 .25em 0 0;padding:0}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.page-break{display:none}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+    html{font-size:80%}
+    a{color:inherit!important;text-decoration:underline!important}
+    a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+    a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+    abbr[title]{border-bottom:1px dotted}
+    abbr[title]::after{content:" (" attr(title) ")"}
+    pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+    thead{display:table-header-group}
+    p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+    h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+    body>div[id]{max-width:none}
+    #toc,.sidebarblock,.exampleblock>.content{background:none!important}
+    #toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+    body.book #header{text-align:center}
+    body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+    body.book #header .details{border:0!important;display:block;padding:0!important}
+    body.book #header .details span:first-child{margin-left:0!important}
+    body.book #header .details br{display:block}
+    body.book #header .details br+span::before{content:none!important}
+    body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+    body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+    .listingblock code[data-lang]::before{display:block}
+    div.page-break{display:block;page-break-after:always}
+    #footer{padding:0 .9375em}
+    .hide-on-print{display:none!important}
+    .print-only{display:block!important}
+    .hide-for-print{display:none!important}
+    .show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+    .sect1{padding:0!important}
+    .sect1+.sect1{border:0}
+    #footer{background:none}
+    #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{body>div[id]{padding:0}}
+
+</style>
+<link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>UXP Security Server 1.22: Transaction Auditor Guide</h1>
+<div class="details">
+<span id="author" class="author">UXP-UG-SSAUDIT</span><br>
+<span id="revnumber">version 1.22.7,</span>
+<span id="revdate">08.05.2025 | © 2025 Cybernetica AS</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#INT-0">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="#TUSS-2">1.1. UXP Security Server</a></li>
+<li><a href="#UXPCON-3">1.2. UXP Concepts</a></li>
+<li><a href="#REF-4">1.3. References</a></li>
+</ul>
+</li>
+<li><a href="#USEMAN-8">2. Managing My Account</a>
+<ul class="sectlevel2">
+<li><a href="#_viewing_my_roles">2.1. Viewing My Roles</a></li>
+<li><a href="#_changing_password">2.2. Changing Password</a></li>
+<li><a href="#_resetting_forgotten_password">2.3. Resetting Forgotten Password</a></li>
+</ul>
+</li>
+<li><a href="#MSG-20">3. Messages</a>
+<ul class="sectlevel2">
+<li><a href="#MSGS-21">3.1. Searching for Messages</a>
+<ul class="sectlevel3">
+<li><a href="#_basic_search">3.1.1. Basic Search</a></li>
+<li><a href="#_advanced_search">3.1.2. Advanced Search</a></li>
+</ul>
+</li>
+<li><a href="#_verifying_the_message_signature">3.2. Verifying the Message Signature</a>
+<ul class="sectlevel3">
+<li><a href="#_message_states">3.2.1. Message States</a></li>
+<li><a href="#_message_details_and_verification_result">3.2.2. Message Details and Verification Result</a></li>
+</ul>
+</li>
+<li><a href="#_downloading_the_signature_container">3.3. Downloading the Signature Container</a></li>
+<li><a href="#_downloading_the_certificates">3.4. Downloading the Certificates</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="INT-0">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide is aimed at Transaction Auditors, who are responsible for verifying signatures of messages exchanged by a security server on the Unified eXchange Platform (UXP).</p>
+</div>
+<div class="paragraph">
+<p>The guide will cover how to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>search and view messages successfully exchanged by the security server;</p>
+</li>
+<li>
+<p>verify message signatures;</p>
+</li>
+<li>
+<p>download signature containers;</p>
+</li>
+<li>
+<p>download certificates related to the signatures.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Security server stores only the signatures of messages that are successfully processed by the server. As a result, the Messages page in the security server is not suitable for getting the overview of all the messages that the server receives. To monitor all messages that arrive at the server (including messages that fail due to an error), collecting the operational monitoring data of the server must be set up (covered in <a href="#UXP-UG-PMA">[UXP-UG-PMA]</a>).</p>
+</div>
+<div class="paragraph">
+<p>The Transaction Auditor role is UXP member specific. Consequently, a Transaction Auditor can only view messages where the service client or the provider is a UXP member for whom the auditor has privileges. To view your roles and privileges on the server, go to <strong>My Account</strong>.</p>
+</div>
+<div class="paragraph">
+<p>This guide does not explain how to operate UXP Security Server, and it assumes that the operation is delegated to someone else (a <em>UXP operator</em>). Turn to your UXP operator for assistance about:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>user management;</p>
+</li>
+<li>
+<p>server health;</p>
+</li>
+<li>
+<p>system logs.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="TUSS-2">1.1. UXP Security Server</h3>
+<div class="paragraph">
+<p>The main function of a security server is to mediate requests in a way that preserves their evidential value.</p>
+</div>
+<div class="paragraph">
+<p>The security server is connected to the public Internet from one side and to the information system within the organization&#8217;s internal network from the other side. In a sense, the security server can be seen as a specialized application-level firewall that can mediate SOAP and RESTful web services; hence, it should be set up in parallel with the organization&#8217;s firewall, which mediates other protocols.</p>
+</div>
+<div class="paragraph">
+<p>The security server is equipped with the functionality needed to secure the message exchange between a client and a service provider.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Messages transmitted over the public Internet are secured using digital signatures and encryption.</p>
+</li>
+<li>
+<p>The service provider&#8217;s security server applies access control to incoming messages, thus ensuring that only those users that have signed an appropriate agreement with the service provider can access the data.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="UXPCON-3">1.2. UXP Concepts</h3>
+<div class="ulist none">
+<ul class="none">
+<li>
+<p><strong>UXP instance</strong> is a single installation of the UXP infrastructure.</p>
+</li>
+<li>
+<p><strong>UXP Governing Authority</strong> is an organization that is responsible for maintaining the UXP instance.</p>
+</li>
+<li>
+<p><strong>UXP member</strong> is a natural or legal person who has joined UXP to provide or consume services, or both.</p>
+</li>
+<li>
+<p><strong>Subsystem</strong> represents a part of a UXP member&#8217;s information system. UXP members must declare parts of their information systems as subsystems to use or provide UXP services.<br>
+Subsystems are autonomous in terms of providing and using UXP services.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>The access rights of UXP members' subsystems are independent — access rights given to one subsystem do not affect the access rights of the member&#8217;s other subsystems.</p>
+</li>
+<li>
+<p>Services provided by a subsystem are independent of the services provided by the member&#8217;s other subsystems.</p>
+<div class="paragraph">
+<p>A UXP member can associate several different subsystems with one security server, and one subsystem can be associated with several security servers.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Member identifier</strong> is the unique identifier of a UXP member. Member identifier consists of three parts: an instance identifier, a member class, and a member code. An example member identifier is <code>EE/GOV/12345678</code>.</p>
+</li>
+<li>
+<p><strong>Instance identifier</strong> is a unique code assigned to a UXP instance. E.g., the code for the Estonian development instance is <code>EE-DEV</code> and the code for production instance is <code>EE</code>.</p>
+</li>
+<li>
+<p><strong>Member class</strong> groups UXP members with similar properties under a common unit. E.g., state agencies are grouped under the member class <code>GOV</code>, private organizations are grouped under the member class <code>COM</code>.</p>
+</li>
+<li>
+<p><strong>Member code</strong> is associated with a certain UXP member and is unique within the member class. The member code remains unchanged during the entire lifetime of the UXP member. For example, the member code for organizations and state agencies in Estonia is the Business Registry code.</p>
+</li>
+<li>
+<p><strong>Subsystem code</strong> is added to the member identifier to distinguish member&#8217;s individual subsystems.</p>
+</li>
+<li>
+<p><strong>Registry Server</strong> is a UXP component operated by the Governing Authority that serves as a registry of information required to run the UXP instance. UXP registry server distributes this information to security servers in the form of global configuration.</p>
+</li>
+<li>
+<p><strong>Security Server</strong> is a UXP component that connects a UXP member&#8217;s subsystems to the UXP infrastructure.</p>
+</li>
+<li>
+<p><strong>Security server owner</strong> is a UXP member legally responsible for a particular security server.</p>
+</li>
+<li>
+<p><strong>Security server client</strong> is a subsystem registered in a security server. The registration must be confirmed by the Governing Authority and approved in the registry server.</p>
+</li>
+<li>
+<p><strong>Global configuration</strong> is a file that contains information that security servers require for operating. Security servers regularly download the global configuration from the registry server.
+Examples of information in the global configuration:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>UXP members and their subsystems;</p>
+</li>
+<li>
+<p>registered security servers;</p>
+</li>
+<li>
+<p>registered security server clients;</p>
+</li>
+<li>
+<p>registered authentication certificates;</p>
+</li>
+<li>
+<p>global groups;</p>
+</li>
+<li>
+<p>UXP system parameters;</p>
+</li>
+<li>
+<p>addresses and public keys of OCSP services (if not already available through the certificates' <em>Authority Information Access</em> extension);</p>
+</li>
+<li>
+<p>the addresses and public keys of approved certification services providers;</p>
+</li>
+<li>
+<p>public keys of intermediate CAs;</p>
+</li>
+<li>
+<p>the addresses and public keys of approved timestamping services providers.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Global group</strong> is an access rights group managed on the registry server level. All subsystems in the global group have the access rights that are assigned to the group.</p>
+</li>
+<li>
+<p><strong>Local group</strong> is an access rights group managed on the security server client level.</p>
+</li>
+<li>
+<p><strong>Timestamping Authority (TSA)</strong> is a service provider that issues timestamps.</p>
+</li>
+<li>
+<p><strong>Timestamping services</strong> are services provided by TSA to preserve the evidential value of the messages exchanged over the UXP.</p>
+</li>
+<li>
+<p><strong>Timestamp</strong> is a date and time with a signature issued by the TSA to prove that a message existed at a specific time.</p>
+</li>
+<li>
+<p><strong>Certification Authority (CA)</strong> is a certification service provider who issues digital certificates.</p>
+</li>
+<li>
+<p><strong>Certification services</strong> are services provided by CA to UXP members, offering digital certificates that verify the ownership of a public key.</p>
+</li>
+<li>
+<p><strong>OCSP</strong> stands for Online Certificate Status Protocol. OCSP responders are servers operated by the Certification Authority to allow querying for validity of certificates.</p>
+</li>
+<li>
+<p><strong>UXP keys</strong> are cryptographic keys used in the UXP. In UXP, public and private key pairs are used.<br>
+A UXP key is either:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>a <strong>signing key</strong> — used by security servers to digitally sign exchanged messages or</p>
+</li>
+<li>
+<p>an <strong>authentication key</strong> — used by security servers to establish secure communications channels.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>UXP certificates</strong> are certificates issued by a certification service provider that has been approved in the UXP Governing Authority.</p>
+</li>
+<li>
+<p><strong>Signature creation device</strong> is a mechanism external to security server for protecting cryptographic keys security server uses for signing messages. Examples of signature creation devices are hardware security modules (HSMs) and USB tokens.</p>
+</li>
+<li>
+<p><strong>Token</strong> is a storage for protecting the cryptographic keys security server uses. Security server has two types of tokens:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>software token</strong> — a software based token built-in the security server,</p>
+</li>
+<li>
+<p><strong>hardware token</strong> — a token on a signature creation device.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>UXP services</strong> are services provided over UXP infrastructure.</p>
+</li>
+<li>
+<p><strong>UXP message</strong> is a one-directional data exchange between a service client and provider within the UXP instance. Depending on its origin, a message can be either a request or a response message. UXP messages must be formed according to the UXP Message Protocol (<a href="#UXP-PR-MESS">[UXP-PR-MESS]</a>) and they are created by the information systems of UXP members.</p>
+</li>
+<li>
+<p><strong>Service client</strong> is the UXP member&#8217;s subsystem that sent the request message.</p>
+</li>
+<li>
+<p><strong>Service provider</strong> is the UXP member&#8217;s subsystem that sent the response message to the service client in response of the request message.</p>
+</li>
+<li>
+<p><strong>Signature container</strong> is a file that contains the signed UXP message, digital signature, timestamp and related certificates.</p>
+</li>
+<li>
+<p><strong>Transaction</strong> is the combination of request message and the corresponding response message.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Transaction ID</strong> is a transaction identifier the security server of the service client assigns while processing a request message from the information system. Transaction ID is automatically generated by the security server to contain a unique value for every message mediated by the security server.<br>
+The transaction ID can be used to uniquely identify a UXP message.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Query</strong> is a request message, queries are initiated by the service client.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Query ID</strong> is a transaction identifier, which is a part of the message header (<code>id</code> in SOAP headers (<a href="#UXP-PR-MESS">[UXP-PR-MESS]</a>) and <code>Uxp-Queryid</code> in HTTP headers). Query ID is assigned by the information system of the service client.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>UXP headers</strong> or message headers are specific headers used to include UXP specific metainfo in UXP messages.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For SOAP services, see headers in <a href="#UXP-PR-MESS">[UXP-PR-MESS]</a>.</p>
+</li>
+<li>
+<p>For REST services, the UXP headers are:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Uxp-Client</p>
+</li>
+<li>
+<p>Uxp-Service</p>
+</li>
+<li>
+<p>Uxp-Queryid</p>
+</li>
+<li>
+<p>Uxp-Transaction-Id</p>
+</li>
+<li>
+<p>Uxp-Userid</p>
+</li>
+<li>
+<p>Uxp-Consent-Ref</p>
+</li>
+<li>
+<p>Uxp-Issue</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/uxp_instance_diagram_for_manuals_simplified.png" alt="uxp instance diagram for manuals simplified">
+</div>
+<div class="title">Figure 1. Diagram showing components within a UXP instance</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="REF-4">1.3. References</h3>
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a id="UXP-PR-MESS"></a>[UXP-PR-MESS] Cybernetica AS. UXP: Message Protocol v4.0. Document ID: UXP-PR-MESS</p>
+</li>
+<li>
+<p><a id="UXP-UG-PMA"></a>[UXP-UG-PMA] Cybernetica AS. UXP Security Server: Configuring Monitoring of Security Server. Document ID: UXP-UG-PMA</p>
+</li>
+</ul>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="USEMAN-8">2. Managing My Account</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_viewing_my_roles">2.1. Viewing My Roles</h3>
+<div class="paragraph">
+<p>To see which roles your account has, follow these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Hover over your username in the top right corner.</p>
+</li>
+<li>
+<p>Click <strong>My Account</strong>. In the table you can see which roles you have for which members.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If you do not see your members in security server, or you do not have the roles you need, contact your Server Administrator.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_changing_password">2.2. Changing Password</h3>
+<div class="paragraph">
+<p>To change your account&#8217;s password, follow these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Hover over your username in the top right corner.</p>
+</li>
+<li>
+<p>Click <strong>Change Password</strong>.</p>
+</li>
+<li>
+<p>Enter the old and new password and click <strong>Save</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Once you have changed your password, your session will be terminated, and you must log in again.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resetting_forgotten_password">2.3. Resetting Forgotten Password</h3>
+<div class="paragraph">
+<p>If you have forgotten your password, contact your Server Administrator and ask them to reset your password.</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="MSG-20">3. Messages</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>UXP message</strong> is a one-directional data exchange between a service client and provider within the UXP instance. Depending on its origin, a message can be either a request or a response message. Each UXP message is digitally signed by the sender.</p>
+</div>
+<div class="paragraph">
+<p>Request and response message together form a <strong>transaction</strong>. A transaction has two participants:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Service client</strong> is a UXP member&#8217;s subsystem that sent the request message.</p>
+</li>
+<li>
+<p><strong>Service provider</strong> is the UXP member&#8217;s subsystem that sent the response message to the service client in response of the request message.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Signature container</strong> is the file that contains the signed UXP message, digital signature, timestamp and related certificates.</p>
+</div>
+<div class="sect2">
+<h3 id="MSGS-21">3.1. Searching for Messages</h3>
+<div class="paragraph">
+<p><strong>Access rights:</strong> Transaction Auditor</p>
+</div>
+<div class="paragraph">
+<p>To search for messages, use <strong>Basic Search</strong> or <strong>Advanced Search</strong>. <strong>Basic Search</strong> allows for quicker searching, whereas <strong>Advanced Search</strong> offers more fine-grained options.</p>
+</div>
+<div class="paragraph">
+<p>To search for a message, follow these steps in the <strong>Messages</strong> page:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open either <strong>Basic Search</strong> or <strong>Advanced Search</strong>.</p>
+</li>
+<li>
+<p>Fill the appropriate fields.</p>
+</li>
+<li>
+<p>Click <strong>Search</strong>.<br>
+The filter will display the messages that match the search criteria.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>To clear the current filter, click <strong>Clear Filter</strong>.</p>
+</div>
+<div class="paragraph">
+<p>To refresh the list of messages, either click on <strong>Search</strong> or the refresh button.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<span class="underline">Messages are not updated in real-time</span>. If you are waiting for message updates, <strong>refresh regularly</strong>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_basic_search">3.1.1. Basic Search</h4>
+<div class="paragraph">
+<p><strong>Basic Search</strong> allows searching using the following fields:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Client fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Name;</p>
+</li>
+<li>
+<p>Subsystem;</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Searching using a client&#8217;s Name requires the client to be registered in the UXP instance. If a client is missing or removed from the UXP instance, or the information about members in UXP instance is unavailable, use <strong>Advanced Search</strong> to enter the client identifier.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Service fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Code;</p>
+</li>
+<li>
+<p>Version;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Period:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>From;</p>
+</li>
+<li>
+<p>To;</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The period and processing times are in the user time zone.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>From</strong> and <strong>To</strong> fields can be specified independent of each other. Specifying time also requires the date to be specified.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When searching using dates (without specifying time), the field <strong>From</strong> sets the time to start of the day 00:00:00 in local time, and the field <strong>To</strong> sets the time to the end of the day 23:59:59 in local time.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Message Type:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Request;</p>
+</li>
+<li>
+<p>Response.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_advanced_search">3.1.2. Advanced Search</h4>
+<div class="paragraph">
+<p><strong>Advanced Search</strong> allows searching using the following fields:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Transaction ID;</p>
+</li>
+<li>
+<p>Query ID;</p>
+</li>
+<li>
+<p>User ID;</p>
+</li>
+<li>
+<p>Client fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Instance;</p>
+</li>
+<li>
+<p>Class;</p>
+</li>
+<li>
+<p>Code;</p>
+</li>
+<li>
+<p>Subsystem;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Provider fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Instance;</p>
+</li>
+<li>
+<p>Class;</p>
+</li>
+<li>
+<p>Code;</p>
+</li>
+<li>
+<p>Subsystem;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Period:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>From;</p>
+</li>
+<li>
+<p>To.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The period and processing times are in the user time zone.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<strong>From</strong> and <strong>To</strong> fields can be specified independent of each other. Specifying time also requires the date to be specified.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When searching using dates (without specifying time), <strong>From</strong> sets the time to start of the day 00:00:00 in local time, and <strong>To</strong> sets the time to the end of the day 23:59:59 in local time.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Service fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Code;</p>
+</li>
+<li>
+<p>Version;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Message Type:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Request;</p>
+</li>
+<li>
+<p>Response.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_verifying_the_message_signature">3.2. Verifying the Message Signature</h3>
+<div class="paragraph">
+<p><strong>Access rights:</strong> Transaction Auditor</p>
+</div>
+<div class="paragraph">
+<p>To verify the signature of a message, open <strong>Messages</strong> page. Search for the message and click on <strong>Details</strong>. The server will try to verify the signature and will display the result.</p>
+</div>
+<div class="sect3">
+<h4 id="_message_states">3.2.1. Message States</h4>
+<div class="paragraph">
+<p>Message state affects whether the signature can be verified.</p>
+</div>
+<div class="paragraph">
+<p>A message can be in one of four states:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Waiting for timestamp</strong> – The signature container is waiting for a timestamp. It is not possible to verify the signature or download the signature container.</p>
+</li>
+<li>
+<p><strong>Timestamped</strong> – The signature container is timestamped but not archived yet. It is possible to view the verification result and download the signature container.</p>
+</li>
+<li>
+<p><strong>Archived</strong> – The signature container is archived, it is possible to verify and download the signature container only if the container is available on the archive medium. If the container is available, all details can be viewed, including the signature details.</p>
+</li>
+<li>
+<p><strong>Data missing</strong> – No signature container (e.g., signature data was lost due to a power outage). It is not possible to verify the signature or download the container.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_message_details_and_verification_result">3.2.2. Message Details and Verification Result</h4>
+<div class="paragraph">
+<p><strong>Message Details:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Message Type;</p>
+</li>
+<li>
+<p>Transaction ID;</p>
+</li>
+<li>
+<p>Query ID;</p>
+</li>
+<li>
+<p>User ID;</p>
+</li>
+<li>
+<p>Processed At (the time when the security server processed the incoming message);</p>
+</li>
+<li>
+<p>Service Client;</p>
+</li>
+<li>
+<p>Service Provider;</p>
+</li>
+<li>
+<p>Service Code;</p>
+</li>
+<li>
+<p>Service Version;</p>
+</li>
+<li>
+<p>Protocol Version.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Signature and its verification result:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Whether signature is valid;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If security server could not verify the signature, the reason;</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If signature verification fails, the signature might still be valid but the security server lacks information to verify the signature.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Whether signature is qualified or not;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>A signature is qualified if the <a href="#SCQ-406">signing certificate is qualified</a> and the signature is valid.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Signing Time.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the parameter to check for qualified signatures is enabled in the security server, the server rejects messages with unqualified signatures — server does not forward or store these messages. Consequently, when the qualified signature requirement is enabled, only qualified signatures are logged by the server and appear in the Messages table.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Signing Certificate:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Whether certificate is valid or not;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the certificate is invalid, the reason;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Whether certificate is qualified or not;</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a id="SCQ-406"></a> Signing certificate is qualified if the issuing CA has confirmed that they issued the certificate by following the quality control standards and for a private key on a signature creation device (<code>qcStatements</code> extension in certificate includes both the <code>qcCompliance</code> and <code>qcSscd</code> attribute). In addition, the whole certificate chain must be qualified.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Serial Number;</p>
+</li>
+<li>
+<p>Subject;</p>
+</li>
+<li>
+<p>Issuer;</p>
+</li>
+<li>
+<p>Issued At;</p>
+</li>
+<li>
+<p>Expires At;</p>
+</li>
+<li>
+<p>Fingerprint (SHA-1).</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>OCSP Response of Signing Certificate:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Whether OCSP response is valid or not;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the OCSP response is invalid, the reason;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>OCSP Response;</p>
+</li>
+<li>
+<p>Produced At.</p>
+</li>
+<li>
+<p><strong>OCSP Responder Certificate:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Whether certificate is valid or not;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the certificate is invalid, the reason;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Serial Number;</p>
+</li>
+<li>
+<p>Subject;</p>
+</li>
+<li>
+<p>Issuer;</p>
+</li>
+<li>
+<p>Issued At;</p>
+</li>
+<li>
+<p>Expires At;</p>
+</li>
+<li>
+<p>Fingerprint (SHA-1).</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Timestamp:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Whether Timestamp is valid or not;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the Timestamp is invalid, the reason;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Value.</p>
+</li>
+<li>
+<p><strong>TSA Certificate:</strong></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Whether certificate is valid or not;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the certificate is invalid, the reason;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Serial Number;</p>
+</li>
+<li>
+<p>Subject;</p>
+</li>
+<li>
+<p>Issuer;</p>
+</li>
+<li>
+<p>Issued At;</p>
+</li>
+<li>
+<p>Expires At;</p>
+</li>
+<li>
+<p>Fingerprint (SHA-1).</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+OCSP responder and TSA certificates become invalid if the Governing Authority removes their certificates from the list of approved OCSP responders and TSAs in the registry server.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_downloading_the_signature_container">3.3. Downloading the Signature Container</h3>
+<div class="paragraph">
+<p><strong>Access rights:</strong> Transaction Auditor</p>
+</div>
+<div class="paragraph">
+<p>Once the signature is timestamped, the signature container becomes available for download.</p>
+</div>
+<div class="paragraph">
+<p>To download a signature container, either:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Navigate to the <strong>Messages</strong> page.</p>
+</li>
+<li>
+<p>Search for the message.</p>
+</li>
+<li>
+<p>Click <strong>Download</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>or</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Open the <strong>Message Details</strong> page of the message.</p>
+</li>
+<li>
+<p>Click <strong>Download</strong>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For archived signatures, security server can return the signature container only if the container is still available in the server storage or archive storage.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_downloading_the_certificates">3.4. Downloading the Certificates</h3>
+<div class="paragraph">
+<p><strong>Access rights:</strong> Transaction Auditor</p>
+</div>
+<div class="paragraph">
+<p>To download a certificate related to the signature, navigate to the <strong>Message Details</strong> page of the message and choose which certificate to download.</p>
+</div>
+<div class="paragraph">
+<p>The three types of certificates that can be downloaded are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Signing Certificate</strong> of the signing key message sender used to sign the message.</p>
+</li>
+<li>
+<p><strong>OCSP Responder Certificate</strong> of the OCSP responder that returned the OCSP response of the signing certificate.</p>
+</li>
+<li>
+<p><strong>TSA Certificate</strong> of the timestamping service that issued a timestamp to the message.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="author" content="UXP-UG-SSHA">
+<title>UXP Security Server 1.22: Configuring High Availability and Load Balancing</title>
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic"; */
+*,::before,::after{box-sizing:border-box}
+html{font-size:100%;-webkit-text-size-adjust:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:inherit;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,p,blockquote,th,td{margin:0;padding:0}
+a{background:none;color:#2156a5;text-decoration:underline;line-height:inherit}
+a:active,a:hover{cursor:pointer;outline:0}
+a:focus{outline:thin dotted}
+a:hover,a:focus{color:#1d4b8f}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+b,strong{font-weight:bold;line-height:inherit}
+strong strong{font-weight:400}
+code,kbd,pre{font-family:monospace;font-size:1em}
+code{font-weight:400;color:rgba(0,0,0,.9)}
+pre{color:rgba(0,0,0,.9);line-height:1.45;text-rendering:optimizeSpeed;white-space:pre-wrap}
+dfn{font-style:italic}
+em,i{font-style:italic;line-height:inherit}
+em em{font-style:normal}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;height:0;margin:1.25em 0 1.1875em}
+mark{background:#ff0;color:#000}
+p{line-height:1.6;margin-bottom:1.25rem;text-rendering:optimizeLegibility}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:60%;line-height:inherit}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img,object[type^="image/"],svg{display:inline-block;height:auto;max-width:100%;vertical-align:middle}
+img{border:0;-ms-interpolation-mode:bicubic}
+object{max-width:100%}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.2;word-spacing:-.05em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em;margin-left:1.125em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1{font-size:2.75em}
+    h2{font-size:2.3125em}
+    h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+    h4{font-size:1.4375em}}
+table{background:#fff;border:1px solid #dedede;border-collapse:collapse;border-spacing:0;margin-bottom:1.25em;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:"";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+body>div[id]{margin:0 auto;max-width:62.5em;position:relative;padding-left:.9375em;padding-right:.9375em;width:100%}
+body>div[id]::before,body>div[id]::after,#content #footnotes::before{content:"";display:table;clear:both}
+#content{margin-top:1.25em;margin-bottom:.625em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+    body.toc2{padding-left:15em;padding-right:0}
+    #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+    #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+    #toc.toc2>ul{font-size:.9em;margin-bottom:0}
+    #toc.toc2 ul ul{margin-left:0;padding-left:1em}
+    #toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+    body.toc2.toc-right{padding-left:0;padding-right:15em}
+    body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+    #toc.toc2{width:20em}
+    #toc.toc2 #toctitle{font-size:1.375em}
+    #toc.toc2>ul{font-size:.95em}
+    #toc.toc2 ul ul{padding-left:1.25em}
+    body.toc2.toc-right{padding-left:0;padding-right:20em}}
+@media only screen and (min-width:1480px){
+    #toc.toc2{width:25em}
+}
+@media only screen and (min-width:1680px){
+    #toc.toc2{width:30em}
+}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+    .sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#fffef7;border-radius:4px;box-shadow:0 1px 4px #e0e0dc}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+#content #toc>:first-child,.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+#content #toc>:last-child,.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos{width:.01%}
+table.linenotable td.linenos,pre.pygments .linenos,pre.rouge .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;user-select:none}
+pre.pygments span.linenos,pre.rouge span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{font:inherit;margin:0 .25em 0 0;padding:0}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.page-break{display:none}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+    html{font-size:80%}
+    a{color:inherit!important;text-decoration:underline!important}
+    a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+    a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+    abbr[title]{border-bottom:1px dotted}
+    abbr[title]::after{content:" (" attr(title) ")"}
+    pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+    thead{display:table-header-group}
+    p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+    h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+    body>div[id]{max-width:none}
+    #toc,.sidebarblock,.exampleblock>.content{background:none!important}
+    #toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+    body.book #header{text-align:center}
+    body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+    body.book #header .details{border:0!important;display:block;padding:0!important}
+    body.book #header .details span:first-child{margin-left:0!important}
+    body.book #header .details br{display:block}
+    body.book #header .details br+span::before{content:none!important}
+    body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+    body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+    .listingblock code[data-lang]::before{display:block}
+    div.page-break{display:block;page-break-after:always}
+    #footer{padding:0 .9375em}
+    .hide-on-print{display:none!important}
+    .print-only{display:block!important}
+    .hide-for-print{display:none!important}
+    .show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+    .sect1{padding:0!important}
+    .sect1+.sect1{border:0}
+    #footer{background:none}
+    #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{body>div[id]{padding:0}}
+
+</style>
+<link rel="stylesheet" href="../../stylesheets/font-awesome.min.css">
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>UXP Security Server 1.22: Configuring High Availability and Load Balancing</h1>
+<div class="details">
+<span id="author" class="author">UXP-UG-SSHA</span><br>
+<span id="revnumber">version 1.22.7,</span>
+<span id="revdate">08.05.2025 | © 2025 Cybernetica AS</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_introduction">1. Introduction</a>
+<ul class="sectlevel2">
+<li><a href="#_target_audience">1.1. Target Audience</a></li>
+<li><a href="#_high_availability_and_load_balancing_for_uxp_security_server">1.2. High Availability and Load Balancing for UXP Security Server</a></li>
+<li><a href="#_references">1.3. References</a></li>
+</ul>
+</li>
+<li><a href="#_security_server_cluster_for_high_availability">2. Security Server Cluster for High Availability</a>
+<ul class="sectlevel2">
+<li><a href="#CLI-CLU">2.1. Client Security Server Cluster</a></li>
+<li><a href="#PRO-CLU">2.2. Provider Security Server Cluster</a>
+<ul class="sectlevel3">
+<li><a href="#_selection_of_target_cluster_node">2.2.1. Selection of Target Cluster Node</a></li>
+<li><a href="#_disabling_faulty_cluster_nodes">2.2.2. Disabling Faulty Cluster Nodes</a></li>
+</ul>
+</li>
+<li><a href="#STAT-INF">2.3. Security Server Status Information</a>
+<ul class="sectlevel3">
+<li><a href="#SIC-56">2.3.1. Status Information Configuration</a></li>
+<li><a href="#STAT-RESP">2.3.2. Status Information Service Response</a></li>
+</ul>
+</li>
+<li><a href="#PROXY-OFF">2.4. proxyOff</a>
+<ul class="sectlevel3">
+<li><a href="#_client_clusters">2.4.1. Client Clusters</a></li>
+<li><a href="#_provider_clusters">2.4.2. Provider Clusters</a></li>
+</ul>
+</li>
+<li><a href="#SER-IMP">2.5. Setting Up and Maintaining a Security Server Cluster</a>
+<ul class="sectlevel3">
+<li><a href="#EXPORT-CONF">2.5.1. Export Services and Access Rights</a></li>
+<li><a href="#IMPORT-CONF">2.5.2. Import Services and Access Rights</a>
+<ul class="sectlevel4">
+<li><a href="#_importing_file">Importing File</a></li>
+<li><a href="#HD-575">Handling Differences</a></li>
+<li><a href="#MDATA-CLI">Comparing File Metadata</a></li>
+</ul>
+</li>
+<li><a href="#_adding_additional_security_server_node">2.5.3. Adding Additional Security Server Node</a></li>
+<li><a href="#_removing_security_server_node_from_cluster">2.5.4. Removing Security Server Node from Cluster</a></li>
+<li><a href="#_changing_security_server_node_ip_address_or_dns_name">2.5.5. Changing Security Server Node IP Address or DNS Name</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#LB">3. Load Balancers</a>
+<ul class="sectlevel2">
+<li><a href="#LB-INT">3.1. Internal Load Balancer</a>
+<ul class="sectlevel3">
+<li><a href="#_haproxy_example">3.1.1. HAProxy Example</a></li>
+</ul>
+</li>
+<li><a href="#LB-SERV">3.2. Service Load Balancer</a></li>
+</ul>
+</li>
+<li><a href="#_troubleshooting">4. Troubleshooting</a>
+<ul class="sectlevel2">
+<li><a href="#_import_configuration_file_failed_path_to_configuration_file">4.1. Import configuration file failed: &lt;path-to-configuration-file&gt;</a></li>
+<li><a href="#_failed_to_connect_to_ip_address_port_port_after_0_ms_connection_refused">4.2. Failed to connect to &lt;IP-address&gt; port &lt;port&gt; after 0 ms: Connection refused</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_target_audience">1.1. Target Audience</h3>
+<div class="paragraph">
+<p>The intended audience of this guide is the system administrators responsible for High Availability or Load Balancing solutions for the UXP Security Server software.</p>
+</div>
+<div class="paragraph">
+<p>The document is intended for readers with a good knowledge of Linux server management, computer networks, and the functioning principles of UXP technology.</p>
+</div>
+<div class="paragraph">
+<p>Most actions in this guide assume that the reader has access to the command line interface of the security server.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_high_availability_and_load_balancing_for_uxp_security_server">1.2. High Availability and Load Balancing for UXP Security Server</h3>
+<div class="paragraph">
+<p>The High Availability (HA) solution for UXP security servers relies on several security servers being able to process UXP messages for the same UXP service. In essence, this means that HA is provided by a cluster of security servers each having the same service configuration.</p>
+</div>
+<div class="paragraph">
+<p>A Security Server cluster can be combined with a third-party load balancer (LB) to also improve performance (see Section <a href="#LB">Load Balancers</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_references">1.3. References</h3>
+<div class="ulist bibliography">
+<ul class="bibliography">
+<li>
+<p><a id="Apache"></a>[Apache] Apache HTTP Server Project, <a href="https://httpd.apache.org/" class="bare">https://httpd.apache.org/</a></p>
+</li>
+<li>
+<p><a id="HAProxy"></a>[HAProxy] HAProxy TCP/HTTP Load Balancer, <a href="http://www.haproxy.org/" class="bare">http://www.haproxy.org/</a></p>
+</li>
+<li>
+<p><a id="JSON"></a>[JSON] Introducing JSON, <a href="http://json.org/" class="bare">http://json.org/</a></p>
+</li>
+<li>
+<p><a id="Nginx"></a>[Nginx] Nginx Load Balancer, <a href="https://www.nginx.com/" class="bare">https://www.nginx.com/</a></p>
+</li>
+<li>
+<p><a id="UXP-IG-SS"></a>[UXP-IG-SS] Cybernetica AS. UXP Security Server: Installation and Configuration Guide. Document ID: UXP-IG-SS</p>
+</li>
+<li>
+<p><a id="UXP-UG-PMA"></a>[UXP-UG-PMA] Cybernetica AS. UXP Security Server: Configuring Monitoring of Security Server. Document ID: UXP-UG-PMA</p>
+</li>
+<li>
+<p><a id="UXP-UG-SS"></a>[UXP-UG-SS] Cybernetica AS. UXP Security Server: User Guide. Document ID: UXP-UG-SS</p>
+</li>
+</ul>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_security_server_cluster_for_high_availability">2. Security Server Cluster for High Availability</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to ensure high availability of a UXP service, a security server cluster can be set up.</p>
+</div>
+<div class="paragraph">
+<p>For the purposes of UXP, a cluster is formed by two or more security servers (called nodes in the context of a cluster) which are capable of processing requests for the same UXP service. This means that all nodes of a cluster must have the same configuration.</p>
+</div>
+<div class="paragraph">
+<p>A cluster can be set up on the service client side or the service provider side. See the <a href="#CLI-CLU">client cluster</a> and <a href="#PRO-CLU">provider cluster</a> sections for more details about the necessary configuration for either setup.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/uxp-ug-ssha_high_availability.png" alt="Example UXP setup with service client and service provider security server clusters">
+</div>
+<div class="title">Figure 1. Example UXP setup with service client and service provider security server clusters</div>
+</div>
+<div class="sect2">
+<h3 id="CLI-CLU">2.1. Client Security Server Cluster</h3>
+<div class="paragraph">
+<p>A client security server cluster provides high availability for communication between service client information system (IS) and client security servers. In this scenario, some logic must be implemented on the client IS side so that the IS can choose to which security server it sends any given request.</p>
+</div>
+<div class="paragraph">
+<p>This means that each node of the cluster must have:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the same client(s) registered;</p>
+</li>
+<li>
+<p>a valid global configuration;</p>
+</li>
+<li>
+<p>a functional authentication key and certificate;</p>
+</li>
+<li>
+<p>a functional signing key and certificate for each client;</p>
+</li>
+<li>
+<p>if HTTPS connection is used between security server and information system, a functional security server internal TLS key and certificate and a functional internal TLS key and certificate for each information system.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more details about each of these items, see the UXP Security Server User Guide <a href="#UXP-UG-SS">[UXP-UG-SS]</a>.</p>
+</div>
+<div class="paragraph">
+<p>The client security server cluster is compatible with third-party load balancers (see Section <a href="#LB-INT">Internal Load Balancer</a>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="PRO-CLU">2.2. Provider Security Server Cluster</h3>
+<div class="paragraph">
+<p>A provider security server cluster provides high availability for communication between client security server and provider security servers.</p>
+</div>
+<div class="paragraph">
+<p>This means that each node of the cluster must have:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the same client(s) registered;</p>
+</li>
+<li>
+<p>the same services registered (with same member, subsystem and service code);</p>
+</li>
+<li>
+<p>the same access rights for the services;</p>
+</li>
+<li>
+<p>a valid global configuration;</p>
+</li>
+<li>
+<p>a functional authentication key and certificate;</p>
+</li>
+<li>
+<p>a functional signing key and certificate for each client;</p>
+</li>
+<li>
+<p>if HTTPS connection is used, a functional security server internal TLS key and certificate and a functional internal TLS key and certificate for each information system.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more details about each of these items, see the UXP Security Server User Guide <a href="#UXP-UG-SS">[UXP-UG-SS]</a>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+A node must be running to be included in the cluster - there is no built-in mechanism to turn on new nodes to replace failing nodes.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_selection_of_target_cluster_node">2.2.1. Selection of Target Cluster Node</h4>
+<div class="paragraph">
+<p>Starting from version 1.20, security servers by default use the <em>round-robin</em> strategy to forward requests to a service provider cluster as opposed to the previously used <em>fastest-connected</em> strategy.</p>
+</div>
+<div class="paragraph">
+<p>With the <em>round-robin</em> strategy, a client security server cyclically distributes the requests between the service provider&#8217;s cluster nodes that respond to the Transmission Control Protocol (TCP) connection establishment request.<br>
+The round-robin strategy balances the load between different nodes and does not prefer a single node like the fastest-connected strategy.</p>
+</div>
+<div class="paragraph">
+<p>With the <em>fastest-connected</em> strategy, a client security server forwards the request to the provider&#8217;s cluster node that responds the fastest to a TCP connection establishment request. The fast response can be affected by network topology or the order in which the nodes were contacted.<br>
+The fastest-connected strategy does not provide any load balancing.</p>
+</div>
+<div class="paragraph">
+<p>The prerequisite for both the round-robin and fastest-connected strategies to be successful is that each node can act as the service provider, i.e. each node has a functioning and <a href="#PRO-CLU">up-to-date configuration</a>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_disabling_faulty_cluster_nodes">2.2.2. Disabling Faulty Cluster Nodes</h4>
+<div class="paragraph">
+<p>Optionally, cluster owners can set up a service that turns off a node when it answers negatively to a <a href="#STAT-INF">status information</a> request (see Section <a href="#PROXY-OFF">proxyOff</a>). This helps to avoid UXP messages being sent to those cluster nodes that are unable to process UXP messages.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="STAT-INF">2.3. Security Server Status Information</h3>
+<div class="paragraph">
+<p>Each security server provides a status information service that returns whether that security server currently fulfills the main requirements to process UXP messages.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+There are some conditions that the status information service cannot check, but which still cause a security server to fail in processing UXP messages (for example, problems on the timestamping service side). For the list of conditions checked by status information, see the <a href="#STAT-RESP">Status Information Service Response</a> section.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Both the <a href="#PROXY-OFF">proxyOff feature</a> and some <a href="#LB">load balancers</a> can use this information to ensure that requests are only forwarded to security servers that can process UXP messages based on the security server status information. See the <a href="#LB">Load Balancers</a> section for more information about integrating status information with load balancers.</p>
+</div>
+<div class="sect3">
+<h4 id="SIC-56">2.3.1. Status Information Configuration</h4>
+<div class="paragraph">
+<p>To configure the status information service for a security server, the <code>[status-service]</code> section must be added to the configuration file <code>/etc/uxp/conf.d/local.ini</code> of that security server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="ini"><span class="nn">[status-service]</span>
+
+<span class="c">; The status service listen address.
+</span><span class="py">listen-address</span><span class="p">=</span><span class="s">127.0.0.1</span>
+
+<span class="c">; The status service listen HTTP port.
+</span><span class="py">listen-port</span><span class="p">=</span><span class="s">2082</span>
+
+<span class="c">; The comma-separated list of host IP-addresses and/or CIDR notations that
+; determine allowed addresses to request status information.
+</span><span class="py">allowed-hosts</span><span class="p">=</span><span class="s">127.0.0.1</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The status service listen address (<code>listen-address</code>) is <code>localhost</code> by default. If the status service must be accessed by an external service (for example, a load balancer), then the listen address must be changed to the IP address of the security server or to <code>0.0.0.0</code>.</p>
+</div>
+<div class="paragraph">
+<p>The default listening port (<code>listen-port</code>) is 2082.</p>
+</div>
+<div class="paragraph">
+<p>The only default allowed host (<code>allowed-hosts</code>) is <code>localhost</code>. The list of allowed hosts must be changed to contain the addresses where status information requests are made from (for example, load balancers).</p>
+</div>
+<div class="paragraph">
+<p>All allowed hosts (addresses written in a comma-separated list) can request the status information, for example by making the following request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">curl <span class="nt">-v</span> http://&lt;security-server-address&gt;:&lt;status-request-listen-port&gt;/status</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>using the command line tool <code>curl</code>.</p>
+</div>
+<div class="paragraph">
+<p>This service must be called using the GET method.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="STAT-RESP">2.3.2. Status Information Service Response</h4>
+<div class="paragraph">
+<p>The status information endpoint returns status code <code>HTTP 200</code> (meaning the status is <code>UP</code>) for a given security server if and only if all of the following are true:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>security server proxy process is running;</p>
+</li>
+<li>
+<p>global configuration is valid;</p>
+</li>
+<li>
+<p>the authentication key is active, valid (based on the date in the certificate) and OCSP response status is good;</p>
+</li>
+<li>
+<p>the token storing the authentication key (software token) is logged in.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If at least one of the above is not true, the endpoint returns the status code <code>HTTP 503</code> (meaning the status is <code>DOWN</code>).</p>
+</div>
+<div class="paragraph">
+<p>If request is made from unauthorized IP, the endpoint returns the HTTP error code <code>403</code>.</p>
+</div>
+<div class="paragraph">
+<p>In case of any other errors, the endpoint returns the appropriate HTTP error code.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="PROXY-OFF">2.4. proxyOff</h3>
+<div class="paragraph">
+<p>You can configure your cluster nodes to stop accepting connections if their <a href="#STAT-INF">status</a> is <code>DOWN</code>. This feature is called proxyOff and it helps to give higher reliability to security server clusters and those load balancers which cannot integrate the status information service directly. See the <a href="#LB">Load Balancers</a> section for more information about combining proxyOff with load balancers.</p>
+</div>
+<div class="paragraph">
+<p>The proxyOff feature helps to avoid UXP messages being sent to those cluster nodes that answer to a TCP request while actually being unable to process UXP messages.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You do not need to configure the <a href="#STAT-INF">status information</a> service to configure the proxyOff feature. This is because proxyOff requests the status information internally without needing to use the status information service.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To configure the proxyOff feature on a cluster node, add the <code>[proxy-status-check]</code> section to the configuration file <code>/etc/uxp/conf.d/local.ini</code> of that node:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="ini"><span class="nn">[proxy-status-check]</span>
+
+<span class="c">; Whether to stop listening for HTTP(S) connections from client applications
+; in case the proxy status is down.
+</span><span class="py">clientproxy-listening-switch-enabled</span><span class="p">=</span><span class="s">true</span>
+
+<span class="c">; Whether to stop listening for HTTPS connections from the service client's
+; security server(s) in case the proxy status is down.
+</span><span class="py">serverproxy-listening-switch-enabled</span><span class="p">=</span><span class="s">true</span>
+
+<span class="c">; Proxy status check interval in seconds (minimum value is 10).
+</span><span class="py">interval-seconds</span><span class="p">=</span><span class="s">15</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>interval-seconds</code> parameter determines how often the proxyOff feature checks the status of the security server.</p>
+</div>
+<div class="sect3">
+<h4 id="_client_clusters">2.4.1. Client Clusters</h4>
+<div class="paragraph">
+<p>If the <code>clientproxy-listening-switch-enabled</code> option is set to <code>true</code> on a security server and that security server responds to a <a href="#STAT-INF">status information request</a> with status <code>DOWN</code>, the security server stops accepting connections on the port which listens for connections from service client information systems (applications). The default ports for this are 80 and 443.</p>
+</div>
+<div class="paragraph">
+<p>When the security server status response becomes <code>UP</code> again, the port starts accepting connections again.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_provider_clusters">2.4.2. Provider Clusters</h4>
+<div class="paragraph">
+<p>If the <code>serverproxy-listening-switch-enabled</code> option is set to <code>true</code> on a security server and that security server responds to a <a href="#STAT-INF">status information request</a> with status <code>DOWN</code>, the security server stops accepting connections on the port which listens for connections from service client security servers. The default port for this is 5500.</p>
+</div>
+<div class="paragraph">
+<p>When the security server status response becomes <code>UP</code> again, the port starts accepting connections again.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SER-IMP">2.5. Setting Up and Maintaining a Security Server Cluster</h3>
+<div class="paragraph">
+<p>To achieve a security server cluster, you must set up multiple security servers with identical subsystems and services configuration.</p>
+</div>
+<div class="paragraph">
+<p>If the configuration of a security server cluster changes, you must manually propagate the changes to all cluster nodes.</p>
+</div>
+<div class="paragraph">
+<p>Objects that must be propagated to all cluster nodes are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>security server clients;</p>
+</li>
+<li>
+<p>services;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>service access rights;</p>
+</li>
+<li>
+<p>all endpoints of all REST services;</p>
+</li>
+<li>
+<p>all local groups that are used for access rights;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>connection type (for communication with information systems);</p>
+</li>
+<li>
+<p>information system internal TLS certificates.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As an alternative to manually updating all clients and services one-by-one on each cluster node, it is possible to export and import the configuration of services from one security server to another. This is done as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install and configure multiple security servers if you have not yet. Make sure that the security servers have the same server owner but different server codes.</p>
+</li>
+<li>
+<p>Choose one security server to be the one where you apply the configuration changes (source security server).</p>
+</li>
+<li>
+<p>Update the configuration of services on the source security server.</p>
+</li>
+<li>
+<p><a href="#EXPORT-CONF">Export the cluster node configuration</a> file from that source security server.</p>
+</li>
+<li>
+<p><a href="#IMPORT-CONF">Import that cluster node configuration</a> file to each other node of the cluster (target security server).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You can use the configuration import-export to setup the cluster by importing the configuration to cleanly installed security servers and also use that process to update the configuration in already functioning cluster nodes.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Signing or authentication keys and certificates must be managed manually as they are <em>not</em> contained in the cluster node configuration file.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="EXPORT-CONF">2.5.1. Export Services and Access Rights</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If the version of the target security server is different than the version of the security server where the cluster node configuration file was created, the import may fail. It is recommended to update all of the security servers first and only then create the cluster node configuration file and import it.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To export all security server clients with services, and their access rights in to a file, follow next steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The usage of the export utility:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">serverconf-export <span class="o">[</span><span class="nt">-d</span> &lt;<span class="nb">dir</span><span class="o">&gt;</span> | <span class="nt">-p</span> &lt;absolute-path-to-exported-file&gt;]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, to export the configuration to the <code>/var/tmp</code> folder, run the command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>su - uxp <span class="nt">-c</span> <span class="s2">"serverconf-export -d /var/tmp"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The utility will save the configuration in a JSON file <code>uxp-serverconf-&lt;hostname&gt;-&lt;timestamp&gt;-&lt;version&gt;.json</code> in the <code>/var/tmp/</code> directory.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The utility logs the result of the export (success or failure) directly to the console. You can change the logging configuration in the <code>/etc/uxp/conf.d/serverconf-cli-logback.xml</code> file.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If you want to have a different name for your configuration file, you can use <code>-p</code> parameter to provide the full path and name for the file. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>su - uxp <span class="nt">-c</span> <span class="s2">"serverconf-export -p /var/tmp/ss1-conf.json"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example of the exported configuration:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can trace back a configuration file to the security server it was created in, as the file contains the IP and hostname of the security server the file was exported from.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nl">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1719411206511</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"securityServerId"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"xRoadInstance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INSTANCE"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"memberClass"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GOV"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"memberCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"serverCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CODE"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"securityServerInternalIp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"192.168.12.34"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"hostname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"server-hostname"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"clients"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"xRoadInstance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INSTANCE"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"memberClass"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GOV"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"memberCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"subsystemCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Subsystem"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SSLAUTH"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"restApis"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"generated"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"addedDate"</span><span class="p">:</span><span class="w"> </span><span class="mi">1661768036942</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="nl">"disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"disabledNotice"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Out of order"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"serviceCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"serviceCode"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"serviceVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"serviceVersion"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"baseUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;url&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"sslAuthentication"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"addedDate"</span><span class="p">:</span><span class="w"> </span><span class="mi">1661768036942</span><span class="w">
+          </span><span class="p">}]</span><span class="w">
+      </span><span class="p">}]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Save the file hash so you can later compare the hash to the hash of the cluster node configuration file you will import to make sure the file is the same and unaltered.</p>
+<div class="paragraph">
+<p>You can also use the <a href="#MDATA-CLI">serverconf-metadata tool</a> to check the SHA-512 hash of a cluster node configuration file at any time.</p>
+</div>
+</li>
+<li>
+<p>Next step is to import the file to the target security server. See the next section.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="IMPORT-CONF">2.5.2. Import Services and Access Rights</h4>
+<div class="paragraph">
+<p>The cluster node configuration file can be used to import services and access rights to security server cluster nodes.</p>
+</div>
+<div class="sect4">
+<h5 id="_importing_file">Importing File</h5>
+<div class="paragraph">
+<p>You can use the configuration file exported from the source server to import services and access rights to a newly installed security server or update an already running cluster node.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Copy the exported configuration file (exporting described in Section <a href="#EXPORT-CONF">Export Services and Access Rights</a>) from the source security server to the target security server. The <code>scp</code> command requires you to have a working authentication method between the source and target security servers. Alternatively, you could use a program like WinSCP on your computer to move the file.</p>
+<div class="paragraph">
+<p>Usage of the command to be run on the source security server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>scp &lt;full-path-to-configuration-file&gt; <span class="se">\</span>
+&lt;username&gt;@&lt;target-ss-address&gt;:&lt;full-path-to-configuration-file&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>&lt;full-path-to-configuration-file&gt;</code> is the full path and name of the file with the configuration of source security server;</p>
+</li>
+<li>
+<p><code>&lt;username&gt;</code> is the username of the System Administrator account on target security server;</p>
+</li>
+<li>
+<p><code>&lt;target-ss-address&gt;</code> is the IP address or hostname of the target security server.</p>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>scp /var/tmp/uxp-serverconf-securityserver1-20240913-143423-2.json <span class="se">\</span>
+john@192.168.0.1:/var/tmp/uxp-serverconf-securityserver1-20240913-143423-2.json</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Check the <code>/var/tmp/</code> folder on the target security server to see if moving the file was successful.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">ls</span> /var/tmp/</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Change the privileges of the configuration file, for example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo chown </span>uxp:uxp /var/tmp/uxp-serverconf-securityserver1-20240913-143423-2.json</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Import services and access rights from the configuration file to the target security server:
+Usage of the import utility:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">serverconf-import <span class="o">[</span><span class="nt">-m</span> <span class="o">[</span>a|i|c]] <span class="o">[</span><span class="nt">-r</span> <span class="o">[</span>a|i]] &lt;full-path-to-configuration-file&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example usage to import the configuration, where new clients from the configuration will be added to the target security server and clients that are already in the target server are kept:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>su - uxp <span class="nt">-c</span> <span class="s2">"serverconf-import -m c -r i </span><span class="se">\</span><span class="s2">
+/var/tmp/uxp-serverconf-securityserver1-20240913-143423-2.json"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The parameters -m (missing) and -r (redundant) determine how conflicts regarding security server clients in the configuration file and target server are handled (see Section <a href="#HD-575">Handling Differences</a>).</p>
+</div>
+<div class="paragraph">
+<p>For clients that are in the configuration file but <strong>m</strong>issing (<code>-m</code>) in the target server, the available actions are: <code>a</code> (<strong>a</strong>bort), <code>i</code> (<strong>i</strong>gnore), <code>c</code> (add <strong>c</strong>lient). If no action is specified, the default action <code>c</code> (add <strong>c</strong>lient) is used.</p>
+</div>
+<div class="paragraph">
+<p>For clients that are already in the target server but not in the configuration file (<strong>r</strong>edundant (<code>-r</code>)), the available actions are: <code>a</code> (<strong>a</strong>bort), <code>i</code> (<strong>i</strong>gnore). If no action is specified, the default action <code>i</code> (<strong>i</strong>gnore) is used.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The utility logs the result of the import (success or aborted) and lists the missing and redundant clients directly to console by default. Note that the result is "aborted" only when the <code>a</code> option was chosen for missing (or redundant) clients for the import and missing (or redundant) clients were found, causing the import to be aborted. For imports failed due to system errors, the failure is also logged directly to console by default. You can change the logging configuration in the <code>/etc/uxp/conf.d/serverconf-cli-logback.xml</code> file.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>If the import was successful, you should see the subsystems and their services in the security server user interface. You can delete the subsystems that have become redundant.</p>
+</li>
+<li>
+<p>Before the service clients can start consuming the services, make sure that:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>the new security server is registered in the UXP instance;</p>
+</li>
+<li>
+<p>the new security server has at least one timestamping service chosen;</p>
+</li>
+<li>
+<p>each member has a working signing key;</p>
+</li>
+<li>
+<p>each subsystem is registered as a client in that security server on the UXP instance;</p>
+</li>
+<li>
+<p>information systems that mutually authenticate with the security server have the TLS certificate of the new security server.</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect4">
+<h5 id="HD-575">Handling Differences</h5>
+<div class="paragraph">
+<p>During import, it must be decided how to handle differences between which clients are present in the cluster node configuration file and which are present on the security server the file is being imported to.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">If there are clients present in the cluster node configuration file but missing from the target SS, you have the following choices</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>The missing clients are added to the security server. Note that they must be registered with the governing authority afterwards. See the UXP Security Server User Guide <a href="#UXP-UG-SS">[UXP-UG-SS]</a> for registration details.</p>
+</li>
+<li>
+<p>The missing clients are ignored. This means the missing clients and all of their services are not imported to the security server.</p>
+</li>
+<li>
+<p>The import is aborted if a missing client is detected. None of the cluster node configuration file contents are added to the target security server if the import is aborted.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>No matter which choice you make, the missing clients will be listed when the import is finished (unless the import fails due to a system error). If you need the missing clients to be on the target security server, you can add and register them. This can be done by a user with Server Administrator role in the security server user interface. See the UXP Security Server User Guide <a href="#UXP-UG-SS">[UXP-UG-SS]</a> for details on how to do this.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">If there are clients present in target SS but missing from cluster node configuration file, you have the following choices</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>The redundant clients are ignored. These clients and their services will be left on the security server.</p>
+</li>
+<li>
+<p>The import is aborted if a redundant client is detected. None of the cluster node configuration file contents are added to the target security server if the import is aborted.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>In both cases, the redundant clients will be listed when the import is finished (unless the import fails due to a system error). If you need the redundant clients to be removed from the target security server, you can unregister and delete them. This can be done by a user with Server Administrator role in the security server user interface. See the UXP Security Server User Guide <a href="#UXP-UG-SS">[UXP-UG-SS]</a> for details on how to do this.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For SOAP services, the WSDL file is not redownloaded or reparsed. For REST APIs added from OpenAPI descriptions, the OpenAPI description is not refreshed.<br>
+The SOAP services and REST APIs are imported exactly in the state they existed at when the cluster node configuration file was created.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="MDATA-CLI">Comparing File Metadata</h5>
+<div class="paragraph">
+<p>To help ensure you are using the correct cluster node configuration file, you can use the server configuration metadata utility to check the file metadata.</p>
+</div>
+<div class="paragraph">
+<p>Usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">serverconf-metadata &lt;full-path-to-configuration-file&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, run the command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>su - uxp <span class="nt">-c</span> <span class="s2">"serverconf-metadata </span><span class="se">\</span><span class="s2">
+/var/tmp/uxp-serverconf-securityserver1-20240913-143423-2.json"</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sample output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">Exported configuration metadata
+
+Generation <span class="nb">date</span>:         2024-09-13 14:34:23
+Security server ID:      UXP_EX/COM/MEMBER1/SAMPLESUB
+Security server address: uxp-example-ss1 <span class="o">(</span>192.168.113.6<span class="o">)</span>
+File version:            1
+File <span class="nb">hash</span> <span class="o">(</span>SHA-512<span class="o">)</span>:
+
+55:7B:26:A6:98:64:AA:7E:95:CB:34:3D:5B:34:D9:A5:
+CC:EC:27:79:11:65:CF:C3:38:5E:5A:B2:C1:17:32:31:
+51:A3:42:CE:44:31:0D:B9:C7:25:B1:F7:16:98:C8:D0:
+D0:9F:53:28:5A:BF:E2:B1:7B:A7:84:58:52:48:55:AF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can check this output to confirm that the cluster node configuration file you are using is generated at the expected time in the expected security server. Furthermore, you can compare the file hash from this output to the file hash you stored after exporting configuration from security server. If the hashes do not match, then either different files were used or the file contents were manually changed at some point.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_adding_additional_security_server_node">2.5.3. Adding Additional Security Server Node</h4>
+<div class="paragraph">
+<p>To add an additional security server node, follow these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install and configure a new security server following the instructions in the <a href="#UXP-IG-SS">UXP Security Server: Installation and Configuration Guide</a>. Make sure that the new security server has the same server owner as the existing node(s) in the cluster, but different server code.</p>
+<div class="paragraph">
+<p>Each node must independently manage and utilize its singing and authentication keys and certificates, as they are not transferable between nodes. This principle also applies to other TLS keys and certificates used within the security server, such as the internal TLS certificate.</p>
+</div>
+</li>
+<li>
+<p>If Zabbix and/or Elasticsearch are configured for the security server cluster, configure them for the new node as well by following the instructions in the <a href="#UXP-UG-PMA">UXP Security Server: Configuring Monitoring of Security Server</a>.</p>
+</li>
+<li>
+<p>Export the cluster node configuration file from the existing security server node by following the instructions in Section <a href="#EXPORT-CONF">Export Services and Access Rights</a>.</p>
+</li>
+<li>
+<p>Import that cluster node configuration file to the new node by following the instructions in Section <a href="#IMPORT-CONF">Import Services and Access Rights</a>.</p>
+</li>
+<li>
+<p>Ensure that information systems that mutually authenticate with the security server have the internal TLS certificate of the new security server. To export the internal TLS certificate, follow the instructions in the <a href="#UXP-UG-SS">UXP Security Server: User Guide</a>.</p>
+</li>
+<li>
+<p>Configure for every imported member a signing key and certificate by following the instructions in the <a href="#UXP-UG-SS">UXP Security Server: User Guide</a>.</p>
+</li>
+<li>
+<p>Register every imported subsystem as a client in that security server on the UXP instance by following the instructions in the <a href="#UXP-UG-SS">UXP Security Server: User Guide</a>.</p>
+</li>
+<li>
+<p>If load balancers are used, update their configuration if necessary.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_removing_security_server_node_from_cluster">2.5.4. Removing Security Server Node from Cluster</h4>
+<div class="paragraph">
+<p>To remove the security server node from the cluster, follow these steps.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If the security server is already registered in the UXP governing authority (GA), notify the GA about its removal in accordance with the organizational procedures of your UXP instance (e.g., through email or support portal). Include the server code in your removal request.</p>
+<div class="paragraph">
+<p>After the GA has applied the changes, the security server will be removed from the global configuration.</p>
+</div>
+</li>
+<li>
+<p>Remove the internal TLS certificate(s) of the security server from the relevant (client/server) information systems connected to the security server for cleanup if configured.</p>
+</li>
+<li>
+<p>Remove the node address from the load balancer(s) if configured.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_changing_security_server_node_ip_address_or_dns_name">2.5.5. Changing Security Server Node IP Address or DNS Name</h4>
+<div class="paragraph">
+<p>To change the IP address or DNS name of the security server node, follow these steps.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Complete the steps outlined in the <a href="#UXP-UG-SS">Changing Security Server IP Address or DNS Name</a> section of the <a href="#UXP-UG-SS">UXP Security Server: User Guide</a>.</p>
+</li>
+<li>
+<p>If load balancer(s) are used, update their configuration if necessary.</p>
+</li>
+</ol>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="LB">3. Load Balancers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To add more performance advantage, a third-party load balancer (LB) must be used.</p>
+</div>
+<div class="paragraph">
+<p>There are two supported load balancing scenarios, with some instructions for setting them up:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Internal load balancing&#8201;&#8212;&#8201;LB between service client information system and service client security server cluster (see Section <a href="#LB-INT">Internal Load Balancer</a>);</p>
+</li>
+<li>
+<p>Service load balancing&#8201;&#8212;&#8201;LB between provider security server and service provider information system (see Section <a href="#LB-SERV">Service Load Balancer</a>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Load balancers in other scenarios are not officially supported.</p>
+</div>
+<div class="paragraph">
+<p>Some LBs (e.g., <a href="http://www.haproxy.org/">HAProxy</a> <a href="#HAProxy">[HAProxy]</a>) are capable of directly integrating the <a href="#STAT-INF">status information service</a> and can remove non-functioning nodes of your cluster themselves. If you are using such a LB for internal load balancing, it is recommended to keep the <a href="#PROXY-OFF">proxyOff feature</a> disabled (it is disabled by default).</p>
+</div>
+<div class="paragraph">
+<p>However, if your internal LB cannot integrate the status information service (e.g., <a href="https://httpd.apache.org/">Apache</a> or <a href="https://www.nginx.com/">Nginx</a>), it is recommended to enable the proxyOff feature.</p>
+</div>
+<div class="paragraph">
+<p>proxyOff stops accepting connections to listening ports of security servers with <code>DOWN</code> status. This helps to keep messages from being relayed to cluster nodes that are unable to process UXP messages.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/uxp-ug-ssha_load_balancers.png" alt="Example UXP setup with internal load balancer and service load balancer">
+</div>
+<div class="title">Figure 2. Example UXP setup with internal load balancer and service load balancer</div>
+</div>
+<div class="sect2">
+<h3 id="LB-INT">3.1. Internal Load Balancer</h3>
+<div class="paragraph">
+<p>An <em>internal</em> load balancer can be set up between service client information system and service client security server cluster.</p>
+</div>
+<div class="sect3">
+<h4 id="_haproxy_example">3.1.1. HAProxy Example</h4>
+<div class="paragraph">
+<p>This is a specific example of setting up and using the <a href="http://www.haproxy.org/">HAProxy</a> <a href="#HAProxy">[HAProxy]</a> load balancer. While the details for other load balancers can be different, the main approach should be similar.</p>
+</div>
+<div class="paragraph">
+<p>To set up HAProxy as an internal LB, follow these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Have a cluster of security servers in service client role, with nodes SS-1, &#8230;&#8203;, SS-N.</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Make sure each node can act as client to a UXP service by adding a client in each node and registering a signing certificate for the client.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Install HAProxy on a separate server:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install </span>haproxy haproxyctl</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Allow the HAProxy server to request security server status information:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>In each node of the security server cluster:</p>
+<div class="olist lowerroman">
+<ol class="lowerroman" type="i">
+<li>
+<p>add HAProxy server to allowed hosts field (<code>allowed-hosts</code>) in the <code>[status-service]</code> section of the <code>/etc/uxp/conf.d/local.ini</code> file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="ini"><span class="nn">[status-service]</span>
+
+<span class="c">; The comma-separated list of host IP-addresses and/or CIDR notations that
+; determine allowed addresses to request status information.
+</span><span class="py">allowed-hosts</span><span class="p">=</span><span class="s">&lt;HAProxy-server-IP&gt;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>if you have not already, set up the status information service for the security server, see instructions in Section <a href="#SIC-56">Status Information Configuration</a>.</p>
+</li>
+<li>
+<p>restart the monitoring service on the security server:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>systemctl restart uxp-monitor</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>On the HAProxy server, add UXP security servers to the HAProxy configuration file <code>/etc/haproxy/haproxy.cfg</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="conf"><span class="n">listen</span> <span class="n">inside</span>-<span class="n">service</span>
+        <span class="n">bind</span> *:<span class="m">80</span>
+        <span class="n">option</span> <span class="n">httpchk</span> <span class="n">GET</span> /<span class="n">status</span>
+        <span class="n">http</span>-<span class="n">check</span> <span class="n">expect</span> <span class="n">rstatus</span> <span class="m">200</span>
+        <span class="n">default</span>-<span class="n">server</span> <span class="n">inter</span> <span class="m">15</span><span class="n">s</span> <span class="n">check</span> <span class="n">port</span> <span class="m">2082</span>
+        <span class="n">server</span> <span class="n">SS</span>-<span class="m">1</span> &lt;<span class="n">security</span>-<span class="n">server</span>-<span class="m">1</span>-<span class="n">ip</span>&gt;:<span class="m">80</span>
+        <span class="n">server</span> <span class="n">SS</span>-<span class="m">2</span> &lt;<span class="n">security</span>-<span class="n">server</span>-<span class="m">2</span>-<span class="n">ip</span>&gt;:<span class="m">80</span>
+        <span class="n">retries</span> <span class="m">1</span>
+        <span class="n">option</span> <span class="n">redispatch</span>
+        <span class="n">balance</span> <span class="n">roundrobin</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example configures HAProxy to listen on HTTP port 80 and load balance incoming requests between two security servers SS-1 (deployed on <code>&lt;security-server-1-ip&gt;</code>) and SS-2 (deployed on <code>&lt;security-server-2-ip&gt;</code>), both listening for requests on default service client&#8217;s security server HTTP port 80. HAProxy is configured to use security server&#8217;s status service <code>/status</code> on port 2082, which it queries in 15 second intervals to check whether the security server can be used (expecting a response with HTTP status 200)&#8201;&#8212;&#8201;if a server is down, it is removed from rotation. Since checks are made in 15 second intervals, a security server node may become unavailable before it is determined to be down, for this reason retries with <code>redispatch</code> option are configured, which will make HAProxy retry the connection attempt to a different node. It should be sufficient to set the number of retries to the number of nodes in the cluster to ensure availability in cases where at least one node is operational.</p>
+</div>
+</li>
+<li>
+<p>Check validity of HAProxy configuration file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>haproxyctl configcheck</code></pre>
+</div>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Expected response is:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">Configuration file is valid</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Load the new configuration file:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>systemctl restart haproxy</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Check that the setup was successful by using the status information service through HAProxy:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>haproxyctl show health</code></pre>
+</div>
+</div>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Expected response lists all security server cluster nodes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="c"># pxname                       svname                         status  weight</span>
+inside-service                 FRONTEND                       OPEN
+inside-service                 SS-1                           UP        1
+...
+inside-service                 SS-N                           UP        1
+inside-service                 BACKEND                        UP        2</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Note that in this example, the weight of all security servers is set to be equal.</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>After setting this up, the LB forwards each request from the service client information system to one of the cluster nodes with a positive status information response.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="LB-SERV">3.2. Service Load Balancer</h3>
+<div class="paragraph">
+<p>A <em>service</em> load balancer can be set up between service provider information system and provider security server.</p>
+</div>
+<div class="paragraph">
+<p>In this setup, multiple instances of the service provider information system exist and a LB is used to choose which information system instance the service provider security server communicates with.</p>
+</div>
+<div class="paragraph">
+<p>No special action must be taken on the security server to use a service LB.</p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_troubleshooting">4. Troubleshooting</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_import_configuration_file_failed_path_to_configuration_file">4.1. Import configuration file failed: &lt;path-to-configuration-file&gt;</h3>
+<div class="paragraph">
+<p>Example error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">Import configuration file failed: /var/tmp/uxp-serverconf-securityserver1-20240913-143423-2.json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you get the import configuration file failed error when you are <a href="#IMPORT-CONF">importing the configuration to the target security server</a>, make sure that the file has correct privileges (<code>uxp uxp</code>).</p>
+</div>
+<div class="paragraph">
+<p>Check the current privileges of the configuration file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">ls</span> <span class="nt">-l</span> /var/tmp/uxp-serverconf-securityserver1-20240913-143423-2.json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You might see that the file is owned by the user you used to move the file between servers (<code>john</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nt">-rw-r-----</span> 1 john john 52831 Jan 14 14:01 uxp-serverconf-securityserver1-20240913-143423-2.json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Change the file ownership to <code>uxp</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo chown </span>uxp:uxp /var/tmp/uxp-serverconf-securityserver1-20240913-143423-2.json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Retry to import the configuration on target server.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_failed_to_connect_to_ip_address_port_port_after_0_ms_connection_refused">4.2. Failed to connect to &lt;IP-address&gt; port &lt;port&gt; after 0 ms: Connection refused</h3>
+<div class="paragraph">
+<p>Example error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">Failed to connect to 192.168.12.34 port 2082 after 0 ms: Connection refused</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When an external request to the security server status information endpoint results in <code>Connection refused</code>, make sure that you have changed the default value of <code>listen-address</code> to the security server IP or a wildcard IP (<code>0.0.0.0</code> for IPv4 / <code>[::]</code> for IPv6). The default value <code>127.0.0.1</code> allows status requests only from the same server.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the <code>/etc/uxp/conf.d/local.ini</code> file, set the <code>listen-address</code> to the security server IP address.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="ini"><span class="nn">[status-service]</span>
+
+<span class="c">; The status service listen address.
+</span><span class="py">listen-address</span><span class="p">=</span><span class="s">&lt;security-server-IP&gt;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Restart the monitoring service on the security server:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash"><span class="nb">sudo </span>systemctl restart uxp-monitor</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Retry the request from an external server (the IP of the external server must be listed in <code>allowed-hosts</code> in the <code>local.ini</code> file).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge .cm {
+  color: #999988;
+  font-style: italic;
+}
+pre.rouge .cp {
+  color: #999999;
+  font-weight: bold;
+}
+pre.rouge .c1 {
+  color: #999988;
+  font-style: italic;
+}
+pre.rouge .cs {
+  color: #999999;
+  font-weight: bold;
+  font-style: italic;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
+  color: #999988;
+  font-style: italic;
+}
+pre.rouge .err {
+  color: #a61717;
+  background-color: #e3d2d2;
+}
+pre.rouge .gd {
+  color: #000000;
+  background-color: #ffdddd;
+}
+pre.rouge .ge {
+  color: #000000;
+  font-style: italic;
+}
+pre.rouge .gr {
+  color: #aa0000;
+}
+pre.rouge .gh {
+  color: #999999;
+}
+pre.rouge .gi {
+  color: #000000;
+  background-color: #ddffdd;
+}
+pre.rouge .go {
+  color: #888888;
+}
+pre.rouge .gp {
+  color: #555555;
+}
+pre.rouge .gs {
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #aaaaaa;
+}
+pre.rouge .gt {
+  color: #aa0000;
+}
+pre.rouge .kc {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kd {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kn {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kp {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kr {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .kt {
+  color: #445588;
+  font-weight: bold;
+}
+pre.rouge .k, pre.rouge .kv {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .mf {
+  color: #009999;
+}
+pre.rouge .mh {
+  color: #009999;
+}
+pre.rouge .il {
+  color: #009999;
+}
+pre.rouge .mi {
+  color: #009999;
+}
+pre.rouge .mo {
+  color: #009999;
+}
+pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
+  color: #009999;
+}
+pre.rouge .sb {
+  color: #d14;
+}
+pre.rouge .sc {
+  color: #d14;
+}
+pre.rouge .sd {
+  color: #d14;
+}
+pre.rouge .s2 {
+  color: #d14;
+}
+pre.rouge .se {
+  color: #d14;
+}
+pre.rouge .sh {
+  color: #d14;
+}
+pre.rouge .si {
+  color: #d14;
+}
+pre.rouge .sx {
+  color: #d14;
+}
+pre.rouge .sr {
+  color: #009926;
+}
+pre.rouge .s1 {
+  color: #d14;
+}
+pre.rouge .ss {
+  color: #990073;
+}
+pre.rouge .s, pre.rouge .sa, pre.rouge .dl {
+  color: #d14;
+}
+pre.rouge .na {
+  color: #008080;
+}
+pre.rouge .bp {
+  color: #999999;
+}
+pre.rouge .nb {
+  color: #0086B3;
+}
+pre.rouge .nc {
+  color: #445588;
+  font-weight: bold;
+}
+pre.rouge .no {
+  color: #008080;
+}
+pre.rouge .nd {
+  color: #3c5d5d;
+  font-weight: bold;
+}
+pre.rouge .ni {
+  color: #800080;
+}
+pre.rouge .ne {
+  color: #990000;
+  font-weight: bold;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #990000;
+  font-weight: bold;
+}
+pre.rouge .nl {
+  color: #990000;
+  font-weight: bold;
+}
+pre.rouge .nn {
+  color: #555555;
+}
+pre.rouge .nt {
+  color: #000080;
+}
+pre.rouge .vc {
+  color: #008080;
+}
+pre.rouge .vg {
+  color: #008080;
+}
+pre.rouge .vi {
+  color: #008080;
+}
+pre.rouge .nv, pre.rouge .vm {
+  color: #008080;
+}
+pre.rouge .ow {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .o {
+  color: #000000;
+  font-weight: bold;
+}
+pre.rouge .w {
+  color: #bbbbbb;
+}
+pre.rouge {
+  background-color: #f8f8f8;
+}
+</style>
+</body>
+</html>
