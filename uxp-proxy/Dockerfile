@@ -27,8 +27,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update &&  \
     apt install -y cmake gcc
 
-RUN mkdir /token_login
+RUN mkdir -p /token_login/build
 COPY token_login /token_login
+
 RUN cd /token_login/build && cmake .. && make
 
 RUN chmod 111 /token_login/build/token_login # set rights only for execute
