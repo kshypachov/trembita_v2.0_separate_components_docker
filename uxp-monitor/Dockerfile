@@ -67,30 +67,30 @@ RUN cp /bin/true /bin/systemctl &&  chmod +x /bin/systemctl && \
 RUN rm /bin/bash && rm /bin/sh
 
 USER uxp
-#ENTRYPOINT ["java", \
-#            "-Xms50m", \
-#            "-Xmx256m", \
-#            "-XX:MaxMetaspaceSize=128m", \
-#            "-XX:+UseG1GC", \
-#            "-Xshare:on", \
-#            "-Dfile.encoding=UTF-8", \
-#            "-Djava.library.path=/usr/share/uxp/lib/", \
-#            "-Duxp.common.temp-files-path=/tmp/java/", \
-#            "-Duxp.center.allowed-certificate-profiles=ee.cyber.uxp.common.certificateprofile.ua.UaCertificateProfileInfoProvider", \
-#            "-Duxp.common.license-file=/etc/uxp/license.lic" ,\
-#            "-Dlogback.configurationFile=/app/proxy-monitor-agent-logback.xml", \
-#            "-cp", "/app/jlib/monitoring-proxy-agent.jar:/app/jlib/signature-xades.jar:/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/app/jlib/addon/proxy/ciplus-jce/*", \
-#            "-Dorg.bytedeco.javacpp.noPointerGC=true", \
-#            "-Dorg.bytedeco.javacpp.maxBytes=0", \
-#            "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
-#            "-Duxp.proxy-monitoring-agent.monitor-agent-conf-file=/app/monitor-agent.ini", \
-#            "-Duser.country=UA", \
-#            #admin port for connecting to monitor agent port = port + 1.
-#            "-Duxp.proxy-monitoring-agent.admin-port=5588", \
-#             # status port port = port + 1
-#             "-Duxp.status-service.listen-port=2082", \
-#             # port for recieve transactions from uxp - proxy port = port + 1
-#             "-Duxp.proxy-monitoring-agent.port=2080", \
-#             #Readed from /etc/uxp/conf.d/local.ini must be the same in all component configs
-##            "-Duxp.identity-provider.security-server-client-secret=2DmVrz_VUQUhn3ePNgWm8Ur-TwMK0la_", \
-#            "ee.cyber.uxp.proxymonitoragent.ProxyMonitorAgentMain"]
+ENTRYPOINT ["java", \
+            "-Xms50m", \
+            "-Xmx256m", \
+            "-XX:MaxMetaspaceSize=128m", \
+            "-XX:+UseG1GC", \
+            "-Xshare:on", \
+            "-Dfile.encoding=UTF-8", \
+            "-Djava.library.path=/usr/share/uxp/lib/", \
+            "-Duxp.common.temp-files-path=/tmp/java/", \
+            "-Duxp.center.allowed-certificate-profiles=ee.cyber.uxp.common.certificateprofile.ua.UaCertificateProfileInfoProvider", \
+            "-Duxp.common.license-file=/etc/uxp/license.lic" ,\
+            "-Dlogback.configurationFile=/app/proxy-monitor-agent-logback.xml", \
+            "-cp", "/app/jlib/monitoring-proxy-agent.jar:/app/jlib/signature-xades.jar:/app/jlib/addon/proxy/cipher-jce-provider-1.22.7.jar:/app/jlib/addon/proxy/ciplus-jce/*", \
+            "-Dorg.bytedeco.javacpp.noPointerGC=true", \
+            "-Dorg.bytedeco.javacpp.maxBytes=0", \
+            "-Dorg.bytedeco.javacpp.maxPhysicalBytes=0", \
+            "-Duxp.proxy-monitoring-agent.monitor-agent-conf-file=/app/monitor-agent.ini", \
+            "-Duser.country=UA", \
+            #admin port for connecting to monitor agent port = port + 1.
+            "-Duxp.proxy-monitoring-agent.admin-port=5588", \
+             # status port port = port + 1
+             "-Duxp.status-service.listen-port=2082", \
+             # port for recieve transactions from uxp - proxy port = port + 1
+             "-Duxp.proxy-monitoring-agent.port=2080", \
+             #Readed from /etc/uxp/conf.d/local.ini must be the same in all component configs
+#            "-Duxp.identity-provider.security-server-client-secret=2DmVrz_VUQUhn3ePNgWm8Ur-TwMK0la_", \
+            "ee.cyber.uxp.proxymonitoragent.ProxyMonitorAgentMain"]

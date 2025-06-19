@@ -32,13 +32,7 @@ ARG REPO_URI="deb http://192.168.99.247/ testing-1.22.7 trembita2-1-22-7"
 
 
 RUN sed -i 's/^[A-Za-z0-9]/#&/' /etc/apt/sources.list
-#    && rm -rf /etc/apt/sources.list.d/*
 RUN echo $REPO_URI | tee -a /etc/apt/sources.list
-#RUN echo "deb http://192.168.99.189/dependencies2 jammy main" | tee -a /etc/apt/sources.list
-#RUN echo "deb http://192.168.99.189/minio jammy main" | tee -a /etc/apt/sources.list
-#RUN echo "deb http://192.168.99.189/elasticsearch/8.x jammy main" | tee -a /etc/apt/sources.list
-#RUN echo "deb http://192.168.99.189/zabbix/6.0 jammy main" | tee -a /etc/apt/sources.list
-#RUN echo "deb http://192.168.99.189/graylog jammy main" | tee -a /etc/apt/sources.list
 
 ADD ["$REPO_KEY","/tmp/repokey.gpg"]
 RUN apt-key add '/tmp/repokey.gpg'
@@ -59,7 +53,6 @@ RUN printf  '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbi
     && printf '#!/bin/sh\nexit 0\n' > /bin/systemctl && chmod +x /bin/systemctl
 
 RUN groupadd -g 104 uxp && useradd -m -u 102 -g 104 -d /var/lib/uxp -s /usr/sbin/nologin -p '' uxp
-
 
 RUN pg_ctlcluster 16 main start \
     && apt-get -qq update \
