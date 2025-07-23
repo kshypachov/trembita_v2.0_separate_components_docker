@@ -1,7 +1,14 @@
 FROM ubuntu:24.04
-ENV DEBIAN_FRONTEND=noninteractive
 
-LABEL authors="Kirill Shypachov @kshypachov"
+LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
+LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
+LABEL org.opencontainers.image.vendor="eGA Kyiv"
+LABEL org.opencontainers.image.title="trembita configuration client"
+LABEL org.opencontainers.image.url="URI documentation"
+LABEL org.opencontainers.image.source=""
+LABEL org.opencontainers.image.version=""
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
 

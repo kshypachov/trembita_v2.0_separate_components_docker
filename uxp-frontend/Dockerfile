@@ -1,6 +1,14 @@
 
 FROM ubuntu:22.04
 
+LABEL authors="Kirill Shypachov (@kshypachov), on behalf of eGA Kyiv"
+LABEL org.opencontainers.image.authors="Kirill Shypachov <kiril.shypachov@ega.ee> (eGA Kyiv)"
+LABEL org.opencontainers.image.vendor="eGA Kyiv"
+LABEL org.opencontainers.image.title="trembita configuration client"
+LABEL org.opencontainers.image.url="URI documentation"
+LABEL org.opencontainers.image.source=""
+LABEL org.opencontainers.image.version=""
+
 RUN groupadd -g 114 nginx && \
     useradd -m -u 112 -g 114 -d /var/www -s /usr/sbin/nologin -p '' nginx
 
